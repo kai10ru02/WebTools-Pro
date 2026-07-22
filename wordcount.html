@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>高機能文字数カウントツール | 読了時間・文字種分析・文章整形 - WebTools Pro</title>
+    <meta name="description" content="文章の文字数、バイト数、行数に加え、読了時間や文字種別（漢字・ひらがな・カタカナ・英数字）の内訳を自動分析！大文字小文字や全角半角の変換機能も搭載した完全無料の文字数カウントツールです。">
+    
+    <meta property="og:title" content="高機能文字数カウントツール - WebTools Pro">
+    <meta property="og:description" content="文字数・バイト数・読了時間・文字種別内訳を即座に分析。テキスト変換機能も備えた無料Webツール。">
+    <meta property="og:type" content="website">
+    
+    <link rel="icon" href="logo.jpg">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        h1 {
+            text-align: center;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+            margin-top: 0;
+            margin-bottom: 35px;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        /* カウンター数値表示パネル */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        @media (min-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        .stat-card {
+            background-color: #161b22;
+            border: 1.5px solid #30363d;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card.primary {
+            border-color: #00e5ff;
+            background-color: rgba(0, 229, 255, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #8b949e;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1;
+        }
+
+        .stat-card.primary .stat-value { color: #00e5ff; }
+        .stat-unit { font-size: 0.8rem; color: #8b949e; margin-left: 2px; }
+
+        /* 文字種別分析パネル */
+        .analysis-section {
+            background-color: #161b22;
+            border: 1.5px solid #30363d;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .analysis-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #c9d1d9;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .type-bars {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        @media (min-width: 600px) {
+            .type-bars { grid-template-columns: repeat(5, 1fr); }
+        }
+        .type-item {
+            background-color: #0d1117;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #21262d;
+            text-align: center;
+        }
+        .type-name { font-size: 0.75rem; color: #8b949e; margin-bottom: 4px; }
+        .type-count { font-size: 1.1rem; font-weight: bold; color: #00e5ff; }
+        .type-ratio { font-size: 0.75rem; color: #8b949e; }
+
+        /* テキストエリア領域 */
+        .textarea-container { margin-bottom: 20px; }
+
+        textarea {
+            width: 100%;
+            height: 280px;
+            padding: 15px;
+            background-color: #0d1117;
+            border: 1.5px solid #30363d;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
+            box-sizing: border-box;
+            resize: vertical;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        textarea:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15); }
+
+        /* テキスト変換・整形ボタンエリア */
+        .tools-panel {
+            background-color: #161b22;
+            border: 1.5px solid #30363d;
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 25px;
+        }
+        .tools-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #8b949e;
+            margin-bottom: 12px;
+        }
+        .tools-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .tool-btn {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tool-btn:hover {
+            background-color: #30363d;
+            color: #00e5ff;
+            border-color: #00e5ff;
+        }
+
+        /* オプション＆メイン操作エリア */
+        .controls-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        @media (min-width: 600px) {
+            .controls-wrapper {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .options-group label {
+            color: #c9d1d9; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
+        }
+        .options-group input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #00e5ff; }
+
+        .action-bar { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 6px; font-size: 0.9rem; font-weight: bold;
+            cursor: pointer; border: none; transition: all 0.2s;
+        }
+        .btn-primary { background-color: #00e5ff; color: #0f1123; }
+        .btn-primary:hover { background-color: #00c4db; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
+        .btn-secondary { background-color: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
+        .btn-secondary:hover { background-color: #30363d; color: #ffffff; }
+        .btn-danger { background-color: rgba(218, 54, 51, 0.2); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.4); }
+        .btn-danger:hover { background-color: #da3633; color: #ffffff; }
+
+        /* SEO用テキストセクション */
+        .seo-content { margin-top: 60px; padding-top: 40px; border-top: 1px solid #30363d; }
+        .seo-content h2 {
+            font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; text-align: left;
+            border-left: 4px solid #00e5ff; padding-left: 12px; text-shadow: none;
+        }
+        .seo-content p, .seo-content li, .seo-content dd { color: #8b949e; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+        .seo-content li { margin-bottom: 8px; }
+        .seo-content strong { color: #c9d1d9; }
+        .seo-content dt { font-weight: bold; color: #00e5ff; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">
+        <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+        <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+    </a>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="terms.html">利用規約</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+    </nav>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <h1>高機能文字数カウントツール</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-label">文字数 (全体)</div>
+                <span id="char-count-all" class="stat-value">0</span><span class="stat-unit">字</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">文字数 (空白・改行除く)</div>
+                <span id="char-count-no-space" class="stat-value">0</span><span class="stat-unit">字</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">推定読了時間</div>
+                <span id="read-time" class="stat-value">0分</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">バイト数 (UTF-8)</div>
+                <span id="byte-count" class="stat-value">0</span><span class="stat-unit">B</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">行数</div>
+                <span id="line-count" class="stat-value">0</span><span class="stat-unit">行</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">段落数</div>
+                <span id="paragraph-count" class="stat-value">0</span><span class="stat-unit">段落</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">単語数 (英単語)</div>
+                <span id="word-count" class="stat-value">0</span><span class="stat-unit">語</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">原稿用紙換算</div>
+                <span id="manuscript-count" class="stat-value">0</span><span class="stat-unit">枚</span>
+            </div>
+        </div>
+
+        <div class="analysis-section">
+            <div class="analysis-title">📊 文字種別の詳細内訳</div>
+            <div class="type-bars">
+                <div class="type-item">
+                    <div class="type-name">ひらがな</div>
+                    <div class="type-count" id="count-hiragana">0</div>
+                    <div class="type-ratio" id="ratio-hiragana">0%</div>
+                </div>
+                <div class="type-item">
+                    <div class="type-name">カタカナ</div>
+                    <div class="type-count" id="count-katakana">0</div>
+                    <div class="type-ratio" id="ratio-katakana">0%</div>
+                </div>
+                <div class="type-item">
+                    <div class="type-name">漢字</div>
+                    <div class="type-count" id="count-kanji">0</div>
+                    <div class="type-ratio" id="ratio-kanji">0%</div>
+                </div>
+                <div class="type-item">
+                    <div class="type-name">英数字</div>
+                    <div class="type-count" id="count-alpha">0</div>
+                    <div class="type-ratio" id="ratio-alpha">0%</div>
+                </div>
+                <div class="type-item">
+                    <div class="type-name">記号・その他</div>
+                    <div class="type-count" id="count-other">0</div>
+                    <div class="type-ratio" id="ratio-other">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="textarea-container">
+            <textarea id="text-input" placeholder="ここに文章を入力または貼り付けてください..." oninput="handleInput()"></textarea>
+        </div>
+
+        <div class="tools-panel">
+            <div class="tools-title">⚡ 迅速テキスト整形・変換ツール</div>
+            <div class="tools-buttons">
+                <button class="tool-btn" onclick="transformText('uppercase')">大文字に変換</button>
+                <button class="tool-btn" onclick="transformText('lowercase')">小文字に変換</button>
+                <button class="tool-btn" onclick="transformText('toFull')">半角 ➔ 全角</button>
+                <button class="tool-btn" onclick="transformText('toHalf')">全角 ➔ 半角</button>
+                <button class="tool-btn" onclick="transformText('removeSpace')">空白をすべて削除</button>
+                <button class="tool-btn" onclick="transformText('removeLineBreak')">改行をすべて削除</button>
+                <button class="tool-btn" onclick="transformText('removeDuplicates')">重複行を削除</button>
+            </div>
+        </div>
+
+        <div class="controls-wrapper">
+            <div class="options-group">
+                <label>
+                    <input type="checkbox" id="realtime-check" checked onchange="toggleRealtime()"> 
+                    リアルタイムにカウントする
+                </label>
+            </div>
+            <div class="action-bar">
+                <button class="btn btn-primary" id="manual-count-btn" style="display: none;" onclick="countText()">カウントする</button>
+                <button class="btn btn-secondary" onclick="copyText()">テキストをコピー</button>
+                <button class="btn btn-danger" onclick="clearText()">クリア</button>
+            </div>
+        </div>
+
+        <section class="seo-content">
+            <h2>この文字数カウントツールの特徴・メリット</h2>
+            <ul>
+                <li><strong>高機能な分析・カウント機能：</strong> 全体文字数やバイト数（UTF-8）だけでなく、一般的な読書スピード（約500字/分）に基づいた「推定読了時間」や「英単語数」「原稿用紙枚数」まで一括計算できます。</li>
+                <li><strong>漢字・ひらがな等の文字種内訳：</strong> 文章内のひらがな・カタカナ・漢字・英数字・記号の割合（％）を可視化。文章の読みやすさ（漢字率の調整など）を確認するライティングツールとしても活用できます。</li>
+                <li><strong>ワンクリックテキスト整形：</strong> 「全角/半角変換」「大文字/小文字化」「不要な空白・改行の除去」「重複行の削除」など、作業効率を高める変換ツールが充実しています。</li>
+                <li><strong>端末内完結でセキュリティ安心：</strong> 入力・変換処理はすべてブラウザ上のJavaScriptで行われます。サーバー送信が一切ないため、機密情報や個人情報の含まれるテキストでも安心です。</li>
+            </ul>
+
+            <h2>各分析項目と整形機能の使い方</h2>
+            <dl>
+                <dt>推定読了時間</dt>
+                <dd>大人が標準的なスピード（1分間に約500文字）で読んだ場合にかかる目安時間です。ブログ記事やスピーチ原稿の長さ調整に最適です。</dd>
+
+                <dt>文字種別の詳細内訳</dt>
+                <dd>一般的に読みやすい日本語文章は「漢字3割・ひらがな7割前後」と言われています。このパネルで漢字やひらがなのバランスをリアルタイムにチェックできます。</dd>
+
+                <dt>テキスト整形ツール</dt>
+                <dd>入力欄の文章に対して、ワンクリックで全角・半角変換や空白の削除などの加工を行えます。変換後もすぐに元に戻せるようコピー機能を併用することをおすすめします。</dd>
+            </dl>
+        </section>
+
+    </div>
+</main>
+
+<footer>
+    <div class="footer-links">
+        <a href="index.html">ホーム</a>
+        <a href="terms.html">利用規約</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+    </div>
+    <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+    <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+</footer>
+
+<script>
+    function toggleRealtime() {
+        const isRealtime = document.getElementById("realtime-check").checked;
+        const manualBtn = document.getElementById("manual-count-btn");
+        if (isRealtime) {
+            manualBtn.style.display = "none";
+            countText();
+        } else {
+            manualBtn.style.display = "inline-block";
+        }
+    }
+
+    function handleInput() {
+        if (document.getElementById("realtime-check").checked) {
+            countText();
+        }
+    }
+
+    function countText() {
+        const text = document.getElementById("text-input").value;
+
+        // 1. 全体文字数 & 空白除外
+        const countAll = text.length;
+        const countNoSpace = text.replace(/\s/g, "").length;
+
+        // 2. 推定読了時間 (500字/分)
+        let readTimeStr = "0分";
+        if (countAll > 0) {
+            const minutes = Math.floor(countAll / 500);
+            const seconds = Math.round(((countAll % 500) / 500) * 60);
+            if (minutes > 0) {
+                readTimeStr = `${minutes}分${seconds}秒`;
+            } else {
+                readTimeStr = `${seconds}秒`;
+            }
+        }
+
+        // 3. バイト数 (UTF-8)
+        const byteCount = new Blob([text]).size;
+
+        // 4. 行数 & 段落数
+        const countLine = text === "" ? 0 : text.split("\n").length;
+        const paragraphs = text.split(/\n+/).filter(p => p.trim() !== "");
+        const countParagraph = text === "" ? 0 : paragraphs.length;
+
+        // 5. 単語数 (英単語)
+        const words = text.match(/[a-zA-Z0-9_]+/g);
+        const countWord = words ? words.length : 0;
+
+        // 6. 原稿用紙枚数
+        const manuscriptSheets = countAll === 0 ? "0" : (countAll / 400).toFixed(1);
+
+        // 7. 文字種別カウント
+        const hiragana = (text.match(/[\u3040-\u309F]/g) || []).length;
+        const katakana = (text.match(/[\u30A0-\u30FF]/g) || []).length;
+        const kanji = (text.match(/[\u4E00-\u9FFF]/g) || []).length;
+        const alpha = (text.match(/[a-zA-Z0-9]/g) || []).length;
+        const other = countAll - (hiragana + katakana + kanji + alpha);
+
+        // 割合計算
+        const calcRatio = (val) => countAll === 0 ? "0%" : ((val / countAll) * 100).toFixed(1) + "%";
+
+        // メイン数値の表示
+        document.getElementById("char-count-all").innerText = countAll.toLocaleString();
+        document.getElementById("char-count-no-space").innerText = countNoSpace.toLocaleString();
+        document.getElementById("read-time").innerText = readTimeStr;
+        document.getElementById("byte-count").innerText = byteCount.toLocaleString();
+        document.getElementById("line-count").innerText = countLine.toLocaleString();
+        document.getElementById("paragraph-count").innerText = countParagraph.toLocaleString();
+        document.getElementById("word-count").innerText = countWord.toLocaleString();
+        document.getElementById("manuscript-count").innerText = manuscriptSheets;
+
+        // 文字種内訳の表示
+        document.getElementById("count-hiragana").innerText = hiragana;
+        document.getElementById("ratio-hiragana").innerText = calcRatio(hiragana);
+        document.getElementById("count-katakana").innerText = katakana;
+        document.getElementById("ratio-katakana").innerText = calcRatio(katakana);
+        document.getElementById("count-kanji").innerText = kanji;
+        document.getElementById("ratio-kanji").innerText = calcRatio(kanji);
+        document.getElementById("count-alpha").innerText = alpha;
+        document.getElementById("ratio-alpha").innerText = calcRatio(alpha);
+        document.getElementById("count-other").innerText = other;
+        document.getElementById("ratio-other").innerText = calcRatio(other);
+    }
+
+    // テキスト整形ツール機能
+    function transformText(action) {
+        const textarea = document.getElementById("text-input");
+        let text = textarea.value;
+        if (!text) return;
+
+        switch (action) {
+            case 'uppercase':
+                text = text.toUpperCase();
+                break;
+            case 'lowercase':
+                text = text.toLowerCase();
+                break;
+            case 'toFull':
+                text = text.replace(/[!-~]/g, function(s) {
+                    return String.fromCharCode(s.charCodeAt(0) + 0xFEE0);
+                }).replace(/ /g, " ");
+                break;
+            case 'toHalf':
+                text = text.replace(/[！-～]/g, function(s) {
+                    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+                }).replace(/ /g, " ");
+                break;
+            case 'removeSpace':
+                text = text.replace(/[ \t\u3000]/g, "");
+                break;
+            case 'removeLineBreak':
+                text = text.replace(/[\r\n]/g, "");
+                break;
+            case 'removeDuplicates':
+                text = Array.from(new Set(text.split('\n'))).join('\n');
+                break;
+        }
+
+        textarea.value = text;
+        countText(); // 変換後に数値を再計算
+    }
+
+    function copyText() {
+        const textarea = document.getElementById("text-input");
+        if (!textarea.value) return;
+
+        navigator.clipboard.writeText(textarea.value).then(() => {
+            alert("テキストをクリップボードにコピーしました！");
+        }).catch(err => alert("コピーに失敗しました: " + err));
+    }
+
+    function clearText() {
+        if (confirm("入力した文章を全消去してもよろしいですか？")) {
+            document.getElementById("text-input").value = "";
+            countText();
+        }
+    }
+</script>
+
+</body>
+</html>
