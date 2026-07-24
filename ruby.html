@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>自動ルビ（ふりがな）振りツール | ブラウザ完結で安全・無料 - WebTools Pro</title>
+    <meta name="description" content="漢字を含む日本語の文章に、自動でふりがな（ルビ）を振る完全無料のWebツールです。入力された文章はブラウザ内部の解析エンジンで処理されるため、外部サーバーへの送信は一切なく安全です。HTMLタグ付きでのコピーにも対応。">
+    
+    <meta property="og:title" content="自動ルビ（ふりがな）振りツール - WebTools Pro">
+    <meta property="og:description" content="サーバー送信なしで安心！文章の漢字に自動でふりがなを振ってHTML化できる無料Webツール。">
+    <meta property="og:type" content="website">
+    
+    <link rel="icon" href="logo.jpg">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
+
+    <style>
+        /* ==== ツール固有のスタイル ==== */
+        h1 {
+            text-align: center;
+            color: #00e5ff;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .status-container {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+        .status-loading { color: #f39c12; }
+        .status-ready { color: #2ecc71; }
+        .status-error { color: #e74c3c; }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        @media (min-width: 768px) {
+            .app-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group label {
+            color: #c9d1d9;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border-left: 3px solid #00e5ff;
+            padding-left: 8px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            background-color: #0d1117;
+            border: 1.5px solid #30363d;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            line-height: 1.6;
+            box-sizing: border-box;
+            resize: vertical;
+            transition: all 0.2s;
+            font-family: 'Hiragino Kaku Gothic ProN', sans-serif;
+        }
+        textarea:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15); }
+
+        .result-box {
+            background-color: #161b22;
+            border: 1.5px solid #30363d;
+            border-radius: 10px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+            color: #ffffff;
+            font-size: 1.1rem;
+            line-height: 2.2;
+            word-wrap: break-word;
+        }
+
+        /* 変換実行ボタンエリア */
+        .action-bar {
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00e5ff 0%, #007bb5 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 229, 255, 0.5);
+        }
+        .btn-primary:disabled {
+            background: #30363d;
+            color: #8b949e;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background-color: #21262d;
+            color: #c9d1d9;
+            border: 1px solid #30363d;
+        }
+        .btn-secondary:hover { background-color: #30363d; color: #ffffff; }
+
+        /* HTML出力エリア */
+        .html-output-area {
+            margin-top: 15px;
+            display: none;
+        }
+        .html-output-area label {
+            color: #c9d1d9;
+            font-weight: bold;
+            font-size: 0.95rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* ルビのデザイン調整 */
+        ruby { font-family: inherit; }
+        rt { color: #00e5ff; font-size: 0.7em; font-weight: bold; }
+
+        /* SEO用テキストセクション */
+        .seo-content { margin-top: 60px; padding-top: 40px; border-top: 1px solid #30363d; }
+        .seo-content h2 { font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; text-align: left; border-left: 4px solid #00e5ff; padding-left: 12px; text-shadow: none; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #8b949e; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+        .seo-content li { margin-bottom: 8px; }
+        .seo-content strong { color: #c9d1d9; }
+        .seo-content dt { font-weight: bold; color: #00e5ff; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="logo">
+        <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+        <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+    </a>
+    <nav>
+        <a href="index.html">ホーム</a>
+        <a href="terms.html">利用規約</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+    </nav>
+</header>
+
+<main class="main-content">
+    <div class="container">
+        <h1>自動ルビ（ふりがな）振りツール</h1>
+        
+        <div class="status-container" id="engine-status">
+            <span class="status-loading">🔄 解析エンジン（辞書データ）を読み込み中... 少々お待ちください</span>
+        </div>
+
+        <div class="app-grid">
+            <div class="input-group">
+                <label>変換元の文章 (漢字入り)</label>
+                <textarea id="input-text" placeholder="ここにふりがなを振りたい文章を入力してください。"></textarea>
+            </div>
+            <div class="input-group">
+                <label>ルビ（ふりがな）付きのプレビュー</label>
+                <div class="result-box" id="ruby-preview">変換結果がここに表示されます。</div>
+            </div>
+        </div>
+
+        <div class="action-bar">
+            <button class="btn btn-primary" id="convert-btn" disabled onclick="convertRuby()">ふりがなを振る</button>
+            <button class="btn btn-secondary" onclick="copyHTML()">HTMLコードをコピー</button>
+        </div>
+
+        <div class="html-output-area" id="html-area">
+            <label>Webサイト用 HTMLコード</label>
+            <textarea id="output-html" readonly style="height: 120px; background-color: #0a0e17;"></textarea>
+        </div>
+
+        <section class="seo-content">
+            <h2>自動ルビ（ふりがな）振りツールの特徴・メリット</h2>
+            <ul>
+                <li><strong>ブラウザ内で完結する安全な処理：</strong> 一般的なルビ振りツールは入力テキストを外部のAPI（サーバー）に送信しますが、本ツールはブラウザ内部で形態素解析を行うため、機密情報が含まれる文章でも安全にふりがなを振ることができます。</li>
+                <li><strong>HTMLタグ (&lt;ruby&gt;) を自動生成：</strong> ブログやWebサイトの制作に便利な「ふりがな付きHTMLタグ」をワンクリックで生成し、コピーすることが可能です。</li>
+                <li><strong>高精度な解析エンジンを搭載：</strong> オープンソースの高精度な日本語形態素解析エンジンを利用しており、自然なふりがなをスピーディーに付与します。</li>
+            </ul>
+
+            <h2>ふりがな振りツールの使い方</h2>
+            <ol>
+                <li>ページを開き、上部のメッセージが「解析エンジン 準備完了」になるまで数秒お待ちください。</li>
+                <li>左側のテキストエリアに、ふりがなを振りたい文章を入力または貼り付けます。</li>
+                <li>「ふりがなを振る」ボタンを押すと、右側にルビ付きのプレビューが表示されます。</li>
+                <li>Webサイトで使いたい場合は、「HTMLコードをコピー」ボタンを押してHTMLタグを取得してください。</li>
+            </ol>
+
+            <h2>よくある質問 (FAQ)</h2>
+            <dl>
+                <dt>Q. 全ての漢字に完璧に正しいふりがなが振られますか？</dt>
+                <dd>A. 当ツールはAI（形態素解析）を用いて文脈からふりがなを推測しますが、特殊な人名や地名、読み方が複数ある漢字などでは誤ったふりがなが振られる場合があります。生成されたプレビューを一度ご確認いただくことを推奨します。</dd>
+
+                <dt>Q. スマホからでも利用可能ですか？</dt>
+                <dd>A. はい、PC・スマホ問わずご利用いただけます。ただし、初回読み込み時に辞書データ（数MB）をダウンロードするため、Wi-Fi環境でのご利用をおすすめします。</dd>
+            </dl>
+        </section>
+
+    </div>
+</main>
+
+<footer>
+    <div class="footer-links">
+        <a href="index.html">ホーム</a>
+        <a href="terms.html">利用規約</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="contact.html">お問い合わせ</a>
+    </div>
+    <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+    <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+</footer>
+
+<script>
+    let isReady = false;
+    const kuroshiro = new Kuroshiro();
+
+    // ページの読み込みが完了したら辞書データを初期化する
+    window.onload = async function() {
+        const statusEl = document.getElementById("engine-status");
+        const convertBtn = document.getElementById("convert-btn");
+        
+        try {
+            // CDNからKuromojiの辞書データを読み込む（サーバー通信なしのローカル処理に必須）
+            await kuroshiro.init(new KuromojiAnalyzer({
+                dictPath: "https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict"
+            }));
+            
+            isReady = true;
+            statusEl.innerHTML = '<span class="status-ready">✅ 解析エンジン 準備完了！ふりがなを振ることができます。</span>';
+            convertBtn.disabled = false;
+        } catch (error) {
+            console.error(error);
+            statusEl.innerHTML = '<span class="status-error">❌ 辞書データの読み込みに失敗しました。ページを再読み込みしてください。</span>';
+        }
+    };
+
+    // 変換処理
+    async function convertRuby() {
+        if (!isReady) return;
+        
+        const inputText = document.getElementById("input-text").value;
+        const previewArea = document.getElementById("ruby-preview");
+        const htmlArea = document.getElementById("html-area");
+        const outputHtml = document.getElementById("output-html");
+        const convertBtn = document.getElementById("convert-btn");
+
+        if (!inputText.trim()) {
+            alert("文章を入力してください。");
+            return;
+        }
+
+        convertBtn.disabled = true;
+        convertBtn.innerText = "変換中...";
+
+        try {
+            // kuroshiroを使ってふりがな付きのHTML文字列を生成
+            const result = await kuroshiro.convert(inputText, {
+                mode: "furigana",
+                to: "hiragana"
+            });
+
+            // プレビュー画面に表示
+            previewArea.innerHTML = result.replace(/\n/g, '<br>');
+            
+            // HTMLコード入力欄に表示
+            outputHtml.value = result.replace(/\n/g, '<br>\n');
+            htmlArea.style.display = "block";
+            
+        } catch (error) {
+            alert("変換中にエラーが発生しました。");
+            console.error(error);
+        } finally {
+            convertBtn.disabled = false;
+            convertBtn.innerText = "ふりがなを振る";
+        }
+    }
+
+    // クリップボードにコピー
+    function copyHTML() {
+        const outputHtml = document.getElementById("output-html");
+        if (!outputHtml.value) {
+            alert("先に変換を行ってください。");
+            return;
+        }
+
+        navigator.clipboard.writeText(outputHtml.value).then(() => {
+            alert("HTMLコードをクリップボードにコピーしました！Webサイトにそのまま貼り付けられます。");
+        }).catch(err => {
+            alert("コピーに失敗しました: " + err);
+        });
+    }
+</script>
+
+</body>
+</html>

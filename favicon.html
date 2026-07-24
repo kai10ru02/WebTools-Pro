@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>ファビコン(Favicon)一括生成器 | 無料・ブラウザ完結 - WebTools Pro</title>
+    <meta name="description" content="1枚の画像からWebサイトに必要なファビコン（16x16, 32x32）やスマホ用アイコン（Apple Touch Icon）をブラウザ上で一括自動生成し、ZIP形式でダウンロードできる完全無料ツールです。サーバー送信なしで安全に処理されます。">
+    
+    <meta property="og:title" content="ファビコン(Favicon)一括生成器 - WebTools Pro">
+    <meta property="og:description" content="1枚の画像から様々なサイズのファビコンとHTMLタグを一括で自動生成！ZIPで丸ごとダウンロードできる無料ツール。">
+    <meta property="og:type" content="website">
+    
+    <link rel="icon" href="logo.jpg">
+    
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        /* ==== ツール固有のスタイルのみを記述 ==== */
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, var(--primary-cyan, #00f2fe), #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted, #b3b3cc);
+            margin-bottom: 30px;
+        }
+
+        .tool-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(0, 242, 254, 0.5);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary-cyan, #00f2fe);
+            background-color: rgba(0, 242, 254, 0.05);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15) inset;
+        }
+        .upload-area p {
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .upload-area span {
+            color: var(--text-muted, #b3b3cc);
+            font-size: 0.85rem;
+        }
+
+        .preview-container {
+            display: none;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .preview-container img {
+            max-width: 150px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+        }
+
+        .action-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        /* style.css の .btn-primary に合わせた上書き・調整 */
+        button.btn-primary {
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 16px;
+            cursor: pointer;
+            border: none;
+        }
+        button.btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: none;
+            color: rgba(255, 255, 255, 0.3);
+            transform: none;
+        }
+
+        .html-output-area {
+            display: none;
+            margin-top: 25px;
+            border-top: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            padding-top: 25px;
+        }
+        .html-output-area label {
+            color: var(--primary-cyan, #00f2fe);
+            font-weight: bold;
+            font-size: 1rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 160px;
+            padding: 15px;
+            background-color: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 0.9rem;
+            font-family: 'Courier New', Consolas, monospace;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+
+        /* ==== SEO用テキストセクション ==== */
+        .seo-content { padding-top: 20px; }
+        .seo-content h2 {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            margin-top: 40px;
+            text-align: left;
+            border-left: 4px solid var(--primary-cyan, #00f2fe);
+            padding-left: 12px;
+        }
+        .seo-content p, .seo-content li, .seo-content dd {
+            color: var(--text-muted, #b3b3cc);
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+        .seo-content li { margin-bottom: 8px; }
+        .seo-content strong { color: var(--primary-cyan, #00f2fe); }
+        .seo-content dt {
+            font-weight: bold;
+            color: var(--primary-cyan, #00f2fe);
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
+        .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        </a>
+        </a>
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>ファビコン一括生成器</h1>
+            <div class="subtitle">1枚の画像から、Webサイトに必要なすべてのアイコンを自動生成します。</div>
+            
+            <div class="tool-panel">
+                <div class="upload-area" id="drop-zone">
+                    <p>📤 画像をドラッグ＆ドロップ、またはクリックして選択</p>
+                    <span>※512x512px 以上の正方形画像（PNG/JPG/SVG）を推奨</span>
+                    <input type="file" id="file-input" accept="image/png, image/jpeg, image/svg+xml" style="display: none;">
+                </div>
+
+                <div class="preview-container" id="preview-container">
+                    <img id="image-preview" src="" alt="プレビュー">
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary" id="generate-btn" disabled>一括生成してZIPダウンロード</button>
+                </div>
+
+                <div class="html-output-area" id="html-output-area">
+                    <label>📋 HTMLタグ (head内にコピー＆ペースト)</label>
+                    <textarea id="html-code" readonly onclick="this.select()"></textarea>
+                </div>
+            </div>
+
+            <section class="seo-content">
+                <h2>ファビコン(Favicon)生成ツールの特徴・メリット</h2>
+                <ul>
+                    <li><strong>完全無料で無制限：</strong> 面倒な会員登録やインストールは不要。ブラウザを開くだけですぐに利用できます。</li>
+                    <li><strong>サーバー送信なしで安全：</strong> アップロードした画像は、すべてお使いの端末（ブラウザ内）で処理されます。未公開の企業ロゴやプロジェクト画像が外部サーバーに保存されることは一切ありません。</li>
+                    <li><strong>最適なコードを自動生成：</strong> PC用のアイコンだけでなく、スマホ向け（Apple Touch Iconなど）のリサイズ処理と、サイトに貼り付けるだけのHTMLタグも同時に生成します。</li>
+                </ul>
+
+                <h2>ファビコン生成の使い方・手順</h2>
+                <ol>
+                    <li>「画像をドラッグ＆ドロップ」のエリアに、元となる正方形の画像ファイルを入れます。</li>
+                    <li>自動でプレビューが表示されるので、問題なければ「一括生成してZIPダウンロード」ボタンを押します。</li>
+                    <li>ダウンロードされたZIPファイルを解凍し、中身の画像群をサーバー（ドキュメントルート）にアップロードします。</li>
+                    <li>画面に表示されたHTMLタグをコピーし、ご自身のWebサイトの<code>&lt;head&gt;</code>内に貼り付けて完了です。</li>
+                </ol>
+
+                <h2>よくある質問 (FAQ)</h2>
+                <dl>
+                    <dt>Q. どんなサイズの画像を用意すればいいですか？</dt>
+                    <dd>A. 一番大きなアイコンサイズに合わせて、<strong>512×512ピクセル以上の「正方形」の画像</strong>をご用意いただくのが最適です。</dd>
+                    
+                    <dt>Q. 推奨される画像フォーマットは何ですか？</dt>
+                    <dd>A. 背景を透過できる <strong>PNG形式</strong> を推奨しています。JPGやSVG形式にも対応しています。</dd>
+                    
+                    <dt>Q. ダウンロードされるZIPには何が含まれますか？</dt>
+                    <dd>A. PCブラウザ用の `favicon.ico` `favicon-16x16.png` `favicon-32x32.png` に加え、iOSデバイス用の `apple-touch-icon.png (180x180)`、Android用のアイコンなど、現代のWeb制作のベストプラクティスに基づいたファイル群が含まれます。</dd>
+                </dl>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </div>
+        <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+        <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+    </footer>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const previewContainer = document.getElementById('preview-container');
+        const imagePreview = document.getElementById('image-preview');
+        const generateBtn = document.getElementById('generate-btn');
+        const htmlOutputArea = document.getElementById('html-output-area');
+        const htmlCode = document.getElementById('html-code');
+
+        let uploadedImageObj = new Image();
+
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file.type.match('image.*')) {
+                alert('画像ファイル（PNG, JPG, SVG）を選択してください。');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imagePreview.src = e.target.result;
+                uploadedImageObj.src = e.target.result;
+                uploadedImageObj.onload = () => {
+                    previewContainer.style.display = 'block';
+                    generateBtn.disabled = false;
+                    htmlOutputArea.style.display = 'none';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resizeImage(size) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, size, size);
+            ctx.drawImage(uploadedImageObj, 0, 0, size, size);
+            const dataUrl = canvas.toDataURL('image/png');
+            return dataUrl.split(',')[1]; 
+        }
+
+        generateBtn.addEventListener('click', async () => {
+            generateBtn.disabled = true;
+            generateBtn.textContent = "生成中...";
+
+            try {
+                const zip = new JSZip();
+                const sizes = [
+                    { name: 'favicon-16x16.png', size: 16 },
+                    { name: 'favicon-32x32.png', size: 32 },
+                    { name: 'apple-touch-icon.png', size: 180 },
+                    { name: 'android-chrome-192x192.png', size: 192 },
+                    { name: 'android-chrome-512x512.png', size: 512 }
+                ];
+
+                sizes.forEach(icon => {
+                    zip.file(icon.name, resizeImage(icon.size), { base64: true });
+                });
+
+                zip.file('favicon.ico', resizeImage(32), { base64: true });
+
+                const content = await zip.generateAsync({ type: 'blob' });
+                const downloadUrl = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = 'favicons.zip';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(downloadUrl);
+
+                const htmlTags = 
+`<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">`;
+                
+                htmlCode.value = htmlTags;
+                htmlOutputArea.style.display = 'block';
+            } catch (error) {
+                console.error(error);
+                alert('生成中にエラーが発生しました。');
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.textContent = "一括生成してZIPダウンロード";
+            }
+        });
+    </script>
+
+</body>
+</html>
