@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スクリーンレコーダー(画面録画) | 無料・ブラウザ完結 - WebTools Pro</title>
+    <meta name="description" content="インストール不要！ブラウザ上でPCの画面（ウィンドウやタブ）を録画し、そのまま保存できる無料のスクリーンレコーダーです。サーバー送信なしで安全に録画できます。">
+    
+    <link rel="icon" href="logo.jpg">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ==== ツール固有のスタイル ==== */
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #b3b3cc;
+            margin-bottom: 30px;
+        }
+
+        .tool-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .video-wrapper {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto 25px auto;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            aspect-ratio: 16 / 9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            color: #6e7681;
+            font-weight: bold;
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button, .btn-download {
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: #0f1123;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+        }
+        .btn-start:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+        }
+        .btn-stop:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 75, 43, 0.4);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+            display: none; /* 初期状態は非表示 */
+        }
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+        }
+
+        button:disabled {
+            background: #30363d;
+            color: #8b949e;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 録画中インジケーター */
+        .recording-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 75, 43, 0.9);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            animation: pulse 1.5s infinite;
+        }
+        .recording-indicator .dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* ==== SEO用テキストセクション（既存スタイル） ==== */
+        .seo-content { padding-top: 20px; }
+        .seo-content h2 { font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #00f2fe; padding-left: 12px; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #b3b3cc; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+        .seo-content li { margin-bottom: 8px; }
+        .seo-content strong { color: #00f2fe; }
+        .seo-content dt { font-weight: bold; color: #00f2fe; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        </a>
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>スクリーンレコーダー</h1>
+            <div class="subtitle">ソフトのインストール不要。ブラウザ上で画面を録画して保存します。</div>
+            
+            <div class="tool-panel">
+                <div class="video-wrapper">
+                    <span class="video-placeholder" id="placeholder-text">プレビュー画面</span>
+                    <video id="preview-video" autoplay muted playsinline></video>
+                    <div class="recording-indicator" id="recording-indicator">
+                        <div class="dot"></div> REC
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn-start" id="start-btn">🎥 画面共有＆録画スタート</button>
+                    <button class="btn-stop" id="stop-btn" disabled>⏹ 録画を停止する</button>
+                    <a class="btn-download" id="download-btn">⬇️ 動画を保存 (WebM)</a>
+                </div>
+            </div>
+
+            <section class="seo-content">
+                <h2>スクリーンレコーダーの特徴・メリット</h2>
+                <ul>
+                    <li><strong>完全無料で無制限：</strong> 時間制限やウォーターマーク（透かしロゴ）は一切ありません。</li>
+                    <li><strong>サーバー送信なしで安全：</strong> 録画処理はすべてお使いのブラウザ内部で行われます。画面の映像が外部サーバーに送信されることはないため、機密情報が含まれる作業画面の録画でも安心です。</li>
+                    <li><strong>選べる録画範囲：</strong> 画面全体、特定のウィンドウ、特定のブラウザタブなど、録画したい範囲を自由に選択できます（※ブラウザの標準機能を使用します）。</li>
+                </ul>
+
+                <h2>画面録画の使い方・手順</h2>
+                <ol>
+                    <li>「画面共有＆録画スタート」ボタンをクリックします。</li>
+                    <li>ブラウザのダイアログが表示されるので、録画したい画面（タブやウィンドウ）を選択し、「共有」を押すと同時に録画が開始されます。</li>
+                    <li>録画を終える時は「録画を停止する」ボタンを押します。</li>
+                    <li>「動画を保存」ボタンが表示されるので、クリックして動画ファイル（WebM形式）をダウンロードします。</li>
+                </ol>
+
+                <h2>よくある質問 (FAQ)</h2>
+                <dl>
+                    <dt>Q. 動画はどのような形式で保存されますか？</dt>
+                    <dd>A. Web標準の動画フォーマットである「WebM形式」で保存されます。ChromeやEdgeなどのブラウザでそのまま再生できるほか、YouTubeなどへのアップロードにも対応しています。</dd>
+                    
+                    <dt>Q. 音声も一緒に録音できますか？</dt>
+                    <dd>A. はい、可能です。画面選択のダイアログで「タブの音声も共有」または「システムオーディオを共有」にチェックを入れることで、PCから出る音も一緒に録音できます。</dd>
+
+                    <dt>Q. スマートフォンでも使えますか？</dt>
+                    <dd>A. 本機能は主にPCブラウザ（Chrome, Edge, Firefoxなど）向けの機能です。スマートフォンのOS制限により、モバイルブラウザからの画面録画には対応していない場合があります。</dd>
+                </dl>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </div>
+        <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+        <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+    </footer>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const stopBtn = document.getElementById('stop-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const videoElement = document.getElementById('preview-video');
+        const placeholderText = document.getElementById('placeholder-text');
+        const recordingIndicator = document.getElementById('recording-indicator');
+
+        let mediaRecorder;
+        let recordedChunks = [];
+        let stream;
+
+        // 録画開始
+        startBtn.addEventListener('click', async () => {
+            try {
+                // 画面と音声のストリームを取得
+                stream = await navigator.mediaDevices.getDisplayMedia({
+                    video: true,
+                    audio: true
+                });
+
+                // プレビュー表示
+                videoElement.srcObject = stream;
+                placeholderText.style.display = 'none';
+                downloadBtn.style.display = 'none';
+                
+                // MediaRecorderの初期化
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm; codecs=vp9' });
+
+                mediaRecorder.ondataavailable = function(e) {
+                    if (e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+                };
+
+                mediaRecorder.onstop = function() {
+                    // 録画データをBlob(ファイル)化
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    // ダウンロードボタンの設定
+                    downloadBtn.href = url;
+                    downloadBtn.download = `screen_record_${new Date().getTime()}.webm`;
+                    downloadBtn.style.display = 'inline-flex';
+                    
+                    // プレビュー用に録画した動画をセット
+                    videoElement.srcObject = null;
+                    videoElement.src = url;
+                    videoElement.controls = true; // 再生コントロールを表示
+
+                    // UIリセット
+                    recordingIndicator.style.display = 'none';
+                    startBtn.disabled = false;
+                    stopBtn.disabled = true;
+                };
+
+                // ブラウザ側の「共有を停止」ボタンが押された時の処理
+                stream.getVideoTracks()[0].onended = () => {
+                    if (mediaRecorder.state !== 'inactive') {
+                        stopRecording();
+                    }
+                };
+
+                // 録画スタート
+                mediaRecorder.start();
+                recordedChunks = [];
+                
+                // UI切り替え
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                recordingIndicator.style.display = 'flex';
+                videoElement.controls = false;
+
+            } catch (err) {
+                console.error("Error: " + err);
+                if(err.name !== "NotAllowedError") {
+                    alert('画面の取得に失敗しました。お使いのブラウザが対応していない可能性があります。');
+                }
+            }
+        });
+
+        // 録画停止用の関数
+        function stopRecording() {
+            mediaRecorder.stop();
+            // ストリーム(カメラ/マイクのアクセス)を完全に停止
+            stream.getTracks().forEach(track => track.stop());
+        }
+
+        // 停止ボタンクリック時
+        stopBtn.addEventListener('click', stopRecording);
+
+    </script>
+</body>
+</html>

@@ -56,7 +56,7 @@
         }
         .seo-content dd { margin-bottom: 20px; margin-left: 0; }
 
-        /* ==== 新規追加：検索＆カテゴリフィルタリングのスタイル ==== */
+        /* ==== 検索＆カテゴリフィルタリングのスタイル ==== */
         .filter-container {
             max-width: 1200px;
             margin: 0 auto 30px auto;
@@ -140,6 +140,16 @@
         .tool-card.hidden {
             display: none !important;
         }
+
+        /* 新機能リクエストカード用の特別装飾 */
+        .request-card {
+            border: 1px dashed rgba(165, 94, 234, 0.5) !important;
+            background: rgba(165, 94, 234, 0.03) !important;
+        }
+        .request-card:hover {
+            border-color: rgba(165, 94, 234, 0.8) !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(165, 94, 234, 0.2) !important;
+        }
     </style>
 </head>
 <body>
@@ -176,6 +186,7 @@
                 <button class="filter-btn" data-filter="utility">便利ツール</button>
             </div>
         </div>
+
         <section class="tools-container" id="tools-container">
             <div class="tool-card" data-category="image">
                 <div class="tool-icon">🖼️</div>
@@ -274,6 +285,54 @@
                 <div class="tool-desc">1枚の画像から、Webサイトに必要なすべてのサイズのファビコンとスマホ用アイコン(Apple Touch Icon)を自動生成しZIPでダウンロード。</div>
                 <a href="favicon.html" class="btn-primary">ツールを開く</a>
             </div>
+
+            <div class="tool-card" data-category="audio">
+                <div class="tool-icon">🎥</div>
+                <div class="tool-title">スクリーンレコーダー</div>
+                <div class="tool-desc">ブラウザ上で画面録画やマイク音声の録音が可能なツールです。ソフトのインストール不要で手軽に高画質な録画データを保存できます。</div>
+                <a href="screen_record.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="image">
+                <div class="tool-icon">✂️</div>
+                <div class="tool-title">画像トリミング＆切り抜きツール</div>
+                <div class="tool-desc">画像の不要な部分を自由にトリミングしたり、特定の比率で切り抜いたりできる直感的な画像編集ツールです。</div>
+                <a href="image_crop.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="utility">
+                <div class="tool-icon">📑</div>
+                <div class="tool-title">PDF分割・ページ抽出</div>
+                <div class="tool-desc">複数ページのPDFから必要なページだけを抽出したり、ファイルを個別に分割して保存できる安全なブラウザ完結ツールです。</div>
+                <a href="pdf_split.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="text">
+                <div class="tool-icon">🔄</div>
+                <div class="tool-title">CSV ↔ JSON 変換ツール</div>
+                <div class="tool-desc">エクセルのデータ(CSV)をプログラミング用(JSON)に、またはその逆を瞬時に行います。データの整形や確認がブラウザ上で完結します。</div>
+                <a href="csv_json.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="text">
+                <div class="tool-icon">✍️</div>
+                <div class="tool-title">リアルタイム Markdown エディタ</div>
+                <div class="tool-desc">入力したマークダウン記法をリアルタイムでHTMLプレビュー。ブログ執筆やメモ書きに最適。PDFやHTMLファイルとしての出力も可能です。</div>
+                <a href="markdown_editor.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="utility">
+                <div class="tool-icon">🍅</div>
+                <div class="tool-title">ポモドーロ・タイマー＆環境音</div>
+                <div class="tool-desc">25分の集中と5分の休憩で生産性を最大化するタイマー。ホワイトノイズなどの環境音をブラウザで自動生成し、深い集中をサポートします。</div>
+                <a href="pomodoro.html" class="btn-primary">ツールを開く</a>
+            </div>
+            <div class="tool-card request-card" data-category="all">
+                <div class="tool-icon">💡</div>
+                <div class="tool-title">欲しいツールがありませんか？</div>
+                <div class="tool-desc">「こんな機能があったら便利なのに…」「あの作業をもっと自動化したい！」というアイデアをぜひお聞かせください。お問い合わせフォームより、新機能のリクエストをいつでも気軽に受け付けています。</div>
+                <a href="contact.html" class="btn-primary" style="background: linear-gradient(135deg, #a55eea 0%, #7d5fff 100%); color: #ffffff; box-shadow: 0 4px 15px rgba(165, 94, 234, 0.3);">新機能のリクエストを送る</a>
+            </div>
         </section>
 
         <section class="seo-content">
@@ -324,6 +383,12 @@
                 const activeCategory = document.querySelector('.filter-btn.active').dataset.filter;
 
                 toolCards.forEach(card => {
+                    // ★リクエストカードは常に表示させる特別処理★
+                    if (card.classList.contains('request-card')) {
+                        card.classList.remove('hidden');
+                        return;
+                    }
+
                     const title = card.querySelector('.tool-title').textContent.toLowerCase();
                     const desc = card.querySelector('.tool-desc').textContent.toLowerCase();
                     const category = card.dataset.category;

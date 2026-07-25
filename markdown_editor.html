@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リアルタイム Markdown エディタ | 無料・ブラウザ完結 - WebTools Pro</title>
+    <meta name="description" content="ブラウザ上で動作する高速なMarkdown(マークダウン)エディタです。入力と同時にリアルタイムプレビューされ、HTMLやPDFとして出力可能。サーバー送信なしで安全です。">
+    
+    <link rel="icon" href="logo.jpg">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        /* ==== ツール固有のスタイル ==== */
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #b3b3cc;
+            margin-bottom: 25px;
+        }
+
+        .tool-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        /* エディタレイアウト（左：入力、右：プレビュー） */
+        .editor-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+        @media(min-width: 850px) {
+            .editor-layout {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .box-container {
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            height: 100%;
+        }
+        .box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .box-title {
+            color: #00f2fe;
+            font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 入力用テキストエリア */
+        textarea {
+            flex: 1;
+            width: 100%;
+            min-height: 450px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            color: #e6edf3;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.95rem;
+            resize: vertical;
+            box-sizing: border-box;
+            line-height: 1.6;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+        
+        /* プレビュー表示エリア（GitHub Dark風スタイル） */
+        .preview-content {
+            flex: 1;
+            width: 100%;
+            min-height: 450px;
+            background: #0d1117; /* GitHub Dark風の背景色 */
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            color: #c9d1d9;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+        
+        /* プレビュー内のMarkdown装飾 */
+        .preview-content h1, .preview-content h2 {
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 0.3em;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            color: #ffffff;
+            font-size: 1.5rem;
+        }
+        .preview-content h2 { font-size: 1.3rem; }
+        .preview-content h3 { font-size: 1.15rem; color: #ffffff; }
+        .preview-content a { color: #58a6ff; text-decoration: none; }
+        .preview-content a:hover { text-decoration: underline; }
+        .preview-content blockquote {
+            padding: 0 1em;
+            color: #8b949e;
+            border-left: 0.25em solid #30363d;
+            margin: 0 0 16px 0;
+        }
+        .preview-content code {
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            background-color: rgba(110, 118, 129, 0.4);
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+        }
+        .preview-content pre {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            background-color: #161b22;
+            border-radius: 6px;
+        }
+        .preview-content pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        .preview-content table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        .preview-content th, .preview-content td {
+            padding: 6px 13px;
+            border: 1px solid #30363d;
+        }
+        .preview-content th { background-color: #161b22; font-weight: bold; }
+        .preview-content img { max-width: 100%; box-sizing: content-box; }
+
+        /* スクロールバー装飾 */
+        textarea::-webkit-scrollbar, .preview-content::-webkit-scrollbar { width: 8px; height: 8px; }
+        textarea::-webkit-scrollbar-track, .preview-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb, .preview-content::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.3); border-radius: 4px; }
+
+        /* アクションボタン群 */
+        .action-bar {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn-action {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-action:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            border-color: #00f2fe;
+        }
+        .btn-action.primary {
+            background: linear-gradient(135deg, #a55eea 0%, #7d5fff 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(165, 94, 234, 0.25);
+        }
+        .btn-action.primary:hover {
+            box-shadow: 0 6px 20px rgba(165, 94, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* ==== SEO用テキストセクション ==== */
+        .seo-content { padding-top: 20px; }
+        .seo-content h2 { font-size: 1.2rem; color: #ffffff; margin-bottom: 15px; margin-top: 35px; text-align: left; border-left: 4px solid #00f2fe; padding-left: 10px; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #b3b3cc; font-size: 0.9rem; line-height: 1.7; }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 25px; }
+        .seo-content li { margin-bottom: 6px; }
+        .seo-content strong { color: #00f2fe; }
+        .seo-content dt { font-weight: bold; color: #00f2fe; margin-top: 15px; margin-bottom: 5px; }
+        .seo-content dd { margin-bottom: 15px; margin-left: 0; }
+
+        /* 印刷（PDF保存）時のスタイル設定 */
+        @media print {
+            body * { visibility: hidden; }
+            #preview-pane, #preview-pane * { visibility: visible; color: #000 !important; background: #fff !important; }
+            #preview-pane { position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0; }
+            #preview-pane pre { background-color: #f6f8fa !important; border: 1px solid #d0d7de !important; }
+            #preview-pane table th { background-color: #f6f8fa !important; }
+            #preview-pane table th, #preview-pane table td { border-color: #d0d7de !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        </a>
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>リアルタイム Markdown エディタ</h1>
+            <div class="subtitle">打った文字が瞬時にリッチな文書に変換されます。HTMLやPDFとして保存可能。</div>
+            
+            <div class="tool-panel">
+                <div class="editor-layout">
+                    
+                    <div class="box-container">
+                        <div class="box-header">
+                            <span class="box-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 4a1.5 1.5 0 0 1 1.5 1.5v13a1.5 1.5 0 0 1-1.5 1.5h-17A1.5 1.5 0 0 1 2 18.5v-13A1.5 1.5 0 0 1 3.5 4h17zm-9 12l3-4h-2V7h-2v5H8.5l3 4zm6.5 0l3-4h-2V7h-2v5h-1.5l3 4z"/></svg>
+                                Markdown入力
+                            </span>
+                        </div>
+                        <textarea id="markdown-input" placeholder="ここにMarkdownを入力してください..."></textarea>
+                    </div>
+
+                    <div class="box-container">
+                        <div class="box-header">
+                            <span class="box-title" style="color: #a55eea;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                プレビュー
+                            </span>
+                        </div>
+                        <div class="preview-content" id="preview-pane"></div>
+                    </div>
+
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-action" onclick="copyHtml()">📋 HTMLをコピー</button>
+                    <button class="btn-action" onclick="downloadFile('md')">📥 Markdown (.md) 保存</button>
+                    <button class="btn-action" onclick="downloadFile('html')">📥 HTML (.html) 保存</button>
+                    <button class="btn-action primary" onclick="printToPdf()">📄 PDFとして印刷 / 保存</button>
+                </div>
+            </div>
+
+            <section class="seo-content">
+                <h2>Markdown（マークダウン）エディタとは？</h2>
+                <p>Markdownとは、見出しやリスト、太字などの装飾を、記号を使って簡単に記述できる軽量マークアップ言語です。プログラマーのドキュメント作成ツールとして人気ですが、近年はブログ執筆やメモ帳としても広く普及しています。<br>このツールでは、記述したMarkdownがリアルタイムでHTMLに変換され、右側のパネルで仕上がりを確認しながら快適に執筆できます。</p>
+
+                <h2>主要な書き方（チートシート）</h2>
+                <ul>
+                    <li><code># 見出し1</code>, <code>## 見出し2</code>（見出し）</li>
+                    <li><code>**太字**</code>, <code>*イタリック*</code>（文字装飾）</li>
+                    <li><code>- リスト</code>, <code>1. 番号付きリスト</code>（箇条書き）</li>
+                    <li><code>> 引用文</code>（引用）</li>
+                    <li><code>[リンクテキスト](https://...)</code>（リンク）</li>
+                    <li><code>`コード`</code>（インラインコード）</li>
+                </ul>
+
+                <h2>よくある質問 (FAQ)</h2>
+                <dl>
+                    <dt>Q. 入力した文章が外部に保存されることはありますか？</dt>
+                    <dd>A. 一切ありません。入力データの解析とプレビュー表示はすべてお使いの端末（ブラウザ）上で処理されています。機密性の高い社内ドキュメントの作成にも安全にご利用いただけます。</dd>
+
+                    <dt>Q. PDFとして保存するにはどうすればいいですか？</dt>
+                    <dd>A. 「PDFとして印刷 / 保存」ボタンをクリックしてください。印刷ダイアログが開くので、送信先を「PDFに保存」に設定することで、レイアウトが整ったPDFファイルをダウンロードできます。</dd>
+
+                    <dt>Q. HTMLタグを直接入力することはできますか？</dt>
+                    <dd>A. はい、可能です。Markdown記法だけでなく、<code>&lt;span style="color:red;"&gt;</code> のようなHTMLタグを記述した場合も、プレビューに適切に反映されます。</dd>
+                </dl>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </div>
+        <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+        <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+    </footer>
+
+    <script>
+        // DOM要素の取得
+        const mdInput = document.getElementById('markdown-input');
+        const previewPane = document.getElementById('preview-pane');
+
+        // デフォルトのプレースホルダーテキストをセット
+        const defaultText = `# リアルタイム Markdown エディタへようこそ！
+
+左側にMarkdownを入力すると、**右側に即座にプレビュー**が表示されます。
+
+## 機能ハイライト
+- ⚡ サーバー通信なしの超高速プレビュー
+- 🔒 データは外部に送信されないため安全
+- 📄 PDF、HTML、Markdown形式で保存可能
+
+### 記述例
+
+1. **太字** や *斜体*
+2. ~~取り消し線~~
+3. [WebTools Pro ホームへ](index.html)
+
+> 引用ブロックも綺麗に表示されます。
+> 階層化することも可能です。
+
+\`\`\`javascript
+// コードブロック（シンタックス風）
+function helloWorld() {
+    console.log("Hello, Markdown!");
+}
+\`\`\`
+
+| ツール名 | 用途 |
+| -------- | -------- |
+| 画像圧縮 | 画像を軽くする |
+| PDF分割 | PDFを取り出す |
+`;
+
+        // 初期表示の設定
+        mdInput.value = defaultText;
+
+        // 入力時のリアルタイム変換処理
+        mdInput.addEventListener('input', () => {
+            // marked.js を使って Markdown を HTML に変換
+            const htmlContent = marked.parse(mdInput.value);
+            previewPane.innerHTML = htmlContent;
+        });
+
+        // 初回ロード時に1回変換を実行
+        previewPane.innerHTML = marked.parse(mdInput.value);
+
+
+        // ==== アクションボタンの機能 ====
+
+        // HTMLコードをクリップボードにコピー
+        function copyHtml() {
+            const htmlContent = marked.parse(mdInput.value);
+            navigator.clipboard.writeText(htmlContent).then(() => {
+                alert("HTMLコードをクリップボードにコピーしました！\nブログなどのエディタに貼り付けてご利用ください。");
+            }).catch(err => {
+                alert("コピーに失敗しました。");
+            });
+        }
+
+        // ファイルをダウンロードする共通関数 (.md / .html)
+        function downloadFile(type) {
+            let content = "";
+            let fileName = "";
+            let mimeType = "";
+
+            if (type === 'md') {
+                content = mdInput.value;
+                fileName = "document.md";
+                mimeType = "text/markdown";
+            } else if (type === 'html') {
+                // 完全なHTMLファイルとして保存できるようにメタタグ等を付与
+                const bodyContent = marked.parse(mdInput.value);
+                content = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Markdown Export</title>
+<style>
+  body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: auto; }
+  pre { background: #f4f4f4; padding: 15px; border-radius: 5px; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #ddd; padding: 8px; }
+  th { background-color: #f2f2f2; }
+</style>
+</head>
+<body>
+${bodyContent}
+</body>
+</html>`;
+                fileName = "document.html";
+                mimeType = "text/html";
+            }
+
+            if (!content) return;
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // PDFとして印刷/保存（ブラウザの印刷機能を利用）
+        function printToPdf() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

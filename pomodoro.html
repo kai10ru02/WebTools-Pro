@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポモドーロ・タイマー＆環境音ジェネレーター - WebTools Pro</title>
+    <meta name="description" content="25分の集中と5分の休憩を繰り返すポモドーロ・テクニック用タイマー。ホワイトノイズやブラウンノイズなどの環境音をブラウザ上で自動生成し、集中力を極限まで高めます。">
+    
+    <link rel="icon" href="logo.jpg">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ==== ツール固有のスタイル ==== */
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #b3b3cc;
+            margin-bottom: 25px;
+        }
+
+        .tool-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* タイマー表示部 */
+        .timer-display {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .mode-label {
+            font-size: 1.2rem;
+            color: #00f2fe;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: inline-block;
+            background: rgba(0, 242, 254, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+        .time {
+            font-size: 5rem;
+            font-weight: 800;
+            color: #ffffff;
+            font-family: 'Courier New', Consolas, monospace;
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        /* コントロールボタン */
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-start {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+        .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4); }
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-reset:hover { background: rgba(255, 255, 255, 0.2); }
+
+        /* 環境音ジェネレーター部 */
+        .ambient-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .ambient-title {
+            color: #a55eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 10px;
+        }
+        .sound-control {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .sound-control:last-child { margin-bottom: 0; }
+        .sound-label {
+            color: #ffffff;
+            font-size: 0.95rem;
+            width: 140px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* ボリュームスライダー */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none; /* ★警告解消のため追記 */
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none; /* ★警告解消のため追記 */
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #a55eea;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 0 10px rgba(165, 94, 234, 0.4);
+        }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+        /* ==== SEO用テキストセクション ==== */
+        .seo-content { padding-top: 20px; }
+        .seo-content h2 { font-size: 1.2rem; color: #ffffff; margin-bottom: 15px; margin-top: 35px; text-align: left; border-left: 4px solid #00f2fe; padding-left: 10px; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #b3b3cc; font-size: 0.9rem; line-height: 1.7; }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 25px; }
+        .seo-content li { margin-bottom: 6px; }
+        .seo-content strong { color: #00f2fe; }
+        .seo-content dt { font-weight: bold; color: #00f2fe; margin-top: 15px; margin-bottom: 5px; }
+        .seo-content dd { margin-bottom: 15px; margin-left: 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        </a>
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>ポモドーロ・タイマー＆環境音</h1>
+            <div class="subtitle">25分の集中と5分の休憩のサイクルで生産性を最大化。環境音で集中をサポートします。</div>
+            
+            <div class="tool-panel">
+                <div class="timer-display">
+                    <div class="mode-label" id="mode-label">WORK MODE</div>
+                    <div class="time" id="time-display">25:00</div>
+                </div>
+
+                <div class="timer-controls">
+                    <button class="btn btn-start" id="btn-toggle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        START
+                    </button>
+                    <button class="btn btn-reset" id="btn-reset">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                        RESET
+                    </button>
+                    <button class="btn btn-reset" id="btn-skip">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+                        SKIP
+                    </button>
+                </div>
+
+                <div class="ambient-section">
+                    <div class="ambient-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+                        集中用ノイズ・ジェネレーター
+                    </div>
+                    
+                    <div class="sound-control">
+                        <div class="sound-label">📺 ホワイトノイズ</div>
+                        <input type="range" id="vol-white" min="0" max="100" value="0">
+                    </div>
+                    
+                    <div class="sound-control">
+                        <div class="sound-label">🌊 ブラウンノイズ</div>
+                        <input type="range" id="vol-brown" min="0" max="100" value="0">
+                    </div>
+                    
+                    <p style="font-size: 0.8rem; color: #b3b3cc; margin-top: 15px; text-align: center;">※スライダーを動かすと音声が再生されます。音量にご注意ください。</p>
+                </div>
+            </div>
+
+            <section class="seo-content">
+                <h2>ポモドーロ・テクニックとは？</h2>
+                <p>1980年代に考案された時間管理術で、<strong>「25分の集中作業」と「5分の短い休憩」を繰り返す</strong>手法です。人間の集中力が持続する最適なサイクルとされており、プログラミングや勉強、執筆活動など、深い集中が必要なタスクに絶大な効果を発揮します。</p>
+
+                <h2>ノイズ（環境音）の効果</h2>
+                <ul>
+                    <li><strong>ホワイトノイズ：</strong> テレビの砂嵐のような「ザーッ」という音。すべての周波数が均等に含まれており、周囲の雑音（話し声や車の音など）をかき消すマスキング効果があります。</li>
+                    <li><strong>ブラウンノイズ：</strong> 滝や低い波の音に近い「ゴーッ」という重低音。高音がカットされているため耳障りが良く、深いリラックス効果と集中の維持に役立ちます。</li>
+                </ul>
+
+                <h2>よくある質問 (FAQ)</h2>
+                <dl>
+                    <dt>Q. 音声ファイルはダウンロードされていますか？通信量が心配です。</dt>
+                    <dd>A. ご安心ください。当ジェネレーターは外部の音声ファイル（mp3など）を一切読み込まず、<strong>ブラウザに搭載されているWeb Audio APIを利用して、数式からリアルタイムにノイズを自動生成</strong>しています。そのため通信量はゼロで、完全なオフライン状態でも動作します。</dd>
+
+                    <dt>Q. タイマー終了時に音は鳴りますか？</dt>
+                    <dd>A. はい。作業時間や休憩時間が終了したタイミングで、ブラウザ内で生成された「チーン」という通知音が鳴り、自動的に次のモードへ切り替わります。（※端末のミュート設定が解除されているかご確認ください）</dd>
+                </dl>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </div>
+        <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+        <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+    </footer>
+
+    <script>
+        // ==== タイマー関連の変数と処理 ====
+        const WORK_TIME = 25 * 60; // 25分
+        const BREAK_TIME = 5 * 60; // 5分
+        let timeLeft = WORK_TIME;
+        let isWorkMode = true;
+        let isRunning = false;
+        let timerInterval = null;
+
+        const timeDisplay = document.getElementById('time-display');
+        const modeLabel = document.getElementById('mode-label');
+        const btnToggle = document.getElementById('btn-toggle');
+        const btnReset = document.getElementById('btn-reset');
+        const btnSkip = document.getElementById('btn-skip');
+
+        // 時間のフォーマット (MM:SS)
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        // 表示の更新
+        function updateDisplay() {
+            timeDisplay.textContent = formatTime(timeLeft);
+            if (isWorkMode) {
+                modeLabel.textContent = "WORK MODE (25min)";
+                modeLabel.style.color = "#00f2fe";
+                modeLabel.style.background = "rgba(0, 242, 254, 0.1)";
+                modeLabel.style.borderColor = "rgba(0, 242, 254, 0.2)";
+            } else {
+                modeLabel.textContent = "BREAK MODE (5min)";
+                modeLabel.style.color = "#00ff88";
+                modeLabel.style.background = "rgba(0, 255, 136, 0.1)";
+                modeLabel.style.borderColor = "rgba(0, 255, 136, 0.2)";
+            }
+        }
+
+        // タイマーのトグル (Start/Pause)
+        function toggleTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                btnToggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> START';
+            } else {
+                initAudio(); // 音声コンテキストの初期化（ブラウザ制限回避）
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        playBellSound();
+                        isWorkMode = !isWorkMode;
+                        timeLeft = isWorkMode ? WORK_TIME : BREAK_TIME;
+                    }
+                    updateDisplay();
+                }, 1000);
+                btnToggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg> PAUSE';
+            }
+            isRunning = !isRunning;
+        }
+
+        // リセット処理
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timeLeft = isWorkMode ? WORK_TIME : BREAK_TIME;
+            btnToggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg> START';
+            updateDisplay();
+        }
+
+        // スキップ処理
+        function skipTimer() {
+            isWorkMode = !isWorkMode;
+            resetTimer();
+        }
+
+        btnToggle.addEventListener('click', toggleTimer);
+        btnReset.addEventListener('click', resetTimer);
+        btnSkip.addEventListener('click', skipTimer);
+
+
+        // ==== Web Audio API による環境音生成 ====
+        let audioCtx;
+        let whiteGain, brownGain;
+        let whiteSource, brownSource;
+
+        // オーディオ初期化（ユーザーのジェスチャー時に呼び出す）
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            // 2秒間のバッファを生成
+            const bufferSize = audioCtx.sampleRate * 2;
+            const whiteBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const brownBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            
+            const whiteData = whiteBuffer.getChannelData(0);
+            const brownData = brownBuffer.getChannelData(0);
+            
+            let lastOut = 0;
+            
+            // ノイズの波形データを計算
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                whiteData[i] = white; // ホワイトノイズ
+                
+                // ブラウンノイズ（ホワイトノイズにローパスをかけたような重低音）
+                brownData[i] = (lastOut + (0.02 * white)) / 1.02;
+                lastOut = brownData[i];
+                brownData[i] *= 3.5; // 音量補正
+            }
+            
+            // ホワイトノイズのノード設定
+            whiteSource = audioCtx.createBufferSource();
+            whiteSource.buffer = whiteBuffer;
+            whiteSource.loop = true;
+            whiteGain = audioCtx.createGain();
+            whiteGain.gain.value = 0;
+            whiteSource.connect(whiteGain);
+            whiteGain.connect(audioCtx.destination);
+            whiteSource.start();
+            
+            // ブラウンノイズのノード設定
+            brownSource = audioCtx.createBufferSource();
+            brownSource.buffer = brownBuffer;
+            brownSource.loop = true;
+            brownGain = audioCtx.createGain();
+            brownGain.gain.value = 0;
+            brownSource.connect(brownGain);
+            brownGain.connect(audioCtx.destination);
+            brownSource.start();
+        }
+
+        // スライダー操作イベント
+        document.getElementById('vol-white').addEventListener('input', (e) => {
+            initAudio();
+            // 0-100の値を0.0 - 0.2程度の適切な音量に変換
+            whiteGain.gain.setTargetAtTime(e.target.value * 0.002, audioCtx.currentTime, 0.01);
+        });
+
+        document.getElementById('vol-brown').addEventListener('input', (e) => {
+            initAudio();
+            brownGain.gain.setTargetAtTime(e.target.value * 0.005, audioCtx.currentTime, 0.01);
+        });
+
+        // 終了時の通知音（サイン波で「チーン」という音を生成）
+        function playBellSound() {
+            if (!audioCtx) initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, audioCtx.currentTime); // 800Hz
+            
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.05); // アタック
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5); // リリース
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1.5);
+        }
+
+        // 初期表示設定
+        updateDisplay();
+    </script>
+</body>
+</html>

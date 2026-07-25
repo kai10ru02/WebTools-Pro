@@ -19,21 +19,24 @@
         /* ベースレイアウト */
         .contact-modern-wrapper {
             max-width: 1000px;
-            margin: 40px auto;
+            margin: 40px auto 60px auto;
             padding: 0 20px;
             display: grid;
             grid-template-columns: 1fr 1.2fr;
-            gap: 50px;
+            gap: 40px;
             align-items: start;
         }
 
-        /* 左側：インフォメーションエリア（terms.html風のカードスタイルに変更） */
+        /* 左側：インフォメーションエリア（グラスモーフィズム調） */
         .contact-info-side {
-            background: #f8f9fa; /* 背景色を追加 */
-            padding: 40px 30px; /* 余白を追加 */
-            border-radius: 16px; /* 角丸 */
-            border: 1px solid rgba(0, 0, 0, 0.05); /* うっすらとした枠線 */
-            position: sticky; /* terms.htmlのようにスクロール追従させる */
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            position: sticky;
             top: 100px;
             height: fit-content;
         }
@@ -41,20 +44,21 @@
             font-size: 2.2rem;
             margin-top: 0;
             margin-bottom: 20px;
-            color: #333;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         .contact-info-side p {
             line-height: 1.8;
-            color: #555; /* 背景色に合わせて少し濃いグレーに調整 */
+            color: #b3b3cc;
             margin-bottom: 30px;
             font-size: 1.05rem;
         }
+        
+        /* 案内カード */
         .info-card {
-            background: rgba(0, 242, 254, 0.08); /* 背景があるため少し濃く調整 */
+            background: rgba(0, 242, 254, 0.05);
             border-left: 4px solid #00f2fe;
             padding: 20px;
             border-radius: 0 8px 8px 0;
@@ -64,21 +68,23 @@
             margin-top: 0;
             margin-bottom: 10px;
             font-size: 1.1rem;
-            color: #333;
+            color: #ffffff;
         }
         .info-card p {
             margin: 0;
-            font-size: 0.9rem;
-            color: #555;
+            font-size: 0.95rem;
+            color: #c4c4d4;
         }
 
-        /* 右側：フォームエリア */
+        /* 右側：フォームエリア（グラスモーフィズム調） */
         .contact-form-side {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .form-group {
@@ -89,7 +95,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
-            color: #444;
+            color: #ffffff;
             font-size: 0.95rem;
         }
         
@@ -101,20 +107,25 @@
             position: absolute;
             left: 15px;
             top: 14px;
-            color: #999;
+            color: #8b949e;
             transition: 0.3s;
         }
         .form-group input, 
         .form-group textarea {
             width: 100%;
             padding: 14px 14px 14px 45px; /* アイコンの分の余白 */
-            border: 2px solid #eee;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             font-size: 1rem;
             box-sizing: border-box;
-            background: #fdfdfd;
+            background: rgba(0, 0, 0, 0.25);
+            color: #ffffff;
             transition: all 0.3s ease;
             font-family: inherit;
+        }
+        .form-group input::placeholder, 
+        .form-group textarea::placeholder {
+            color: #6e7681;
         }
         .form-group textarea {
             min-height: 150px;
@@ -122,13 +133,13 @@
             padding-top: 14px;
         }
         
-        /* フォーカス時のアクション */
+        /* フォーカス時のアクション（ネオンブルーの光） */
         .form-group input:focus, 
         .form-group textarea:focus {
             outline: none;
             border-color: #00f2fe;
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(0, 242, 254, 0.1);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
         }
         .form-group input:focus + svg, 
         .form-group textarea:focus + svg,
@@ -141,18 +152,21 @@
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            color: #fff;
+            color: #0f1123; /* 背景のグラデーションに負けないよう暗い色を指定 */
             border: none;
             border-radius: 10px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 10px;
+        }
+        .btn-submit svg {
+            color: #0f1123;
         }
         .btn-submit:hover {
             transform: translateY(-2px);
@@ -171,7 +185,7 @@
                 padding: 30px 20px;
             }
             .contact-form-side {
-                padding: 25px;
+                padding: 30px 20px;
             }
         }
     </style>

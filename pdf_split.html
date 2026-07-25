@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF分割・ページ抽出ツール | 無料・ブラウザ完結 - WebTools Pro</title>
+    <meta name="description" content="PDFから特定のページだけを抜き出したり、1ページずつバラバラに分割できる無料ツール。プレビュー画面でページ番号もひと目で確認。サーバー送信なしで安全に処理されます。">
+    
+    <link rel="icon" href="logo.jpg">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <style>
+        /* ==== ツール固有のスタイル ==== */
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #b3b3cc;
+            margin-bottom: 30px;
+        }
+
+        .tool-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* アップロードエリア */
+        .upload-area {
+            border: 2px dashed rgba(0, 242, 254, 0.5);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #00f2fe;
+            background-color: rgba(0, 242, 254, 0.05);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15) inset;
+        }
+        .upload-area p { color: #ffffff; margin-bottom: 10px; font-size: 1rem; font-weight: bold; }
+        .upload-area span { color: #b3b3cc; font-size: 0.85rem; }
+
+        /* エディタ部分（初期状態は非表示） */
+        .editor-container {
+            display: none;
+        }
+
+        .pdf-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #00f2fe;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .pdf-info-text strong {
+            color: #00f2fe;
+            font-size: 1.1rem;
+        }
+
+        /* プレビューエリア */
+        .preview-section {
+            margin-bottom: 30px;
+        }
+        .preview-title {
+            font-size: 1rem;
+            color: #ffffff;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px;
+            max-height: 380px;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* カスタムスクロールバー */
+        .preview-grid::-webkit-scrollbar { width: 8px; }
+        .preview-grid::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+        .preview-grid::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.3); border-radius: 4px; }
+
+        .page-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .page-card:hover {
+            transform: translateY(-3px);
+            border-color: #00f2fe;
+        }
+        .page-card canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            background: #fff;
+        }
+        .page-badge {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #b3b3cc;
+            font-weight: bold;
+        }
+
+        /* 操作セクション */
+        .action-section {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .action-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+        .action-section p {
+            color: #b3b3cc;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .input-group input {
+            flex: 1;
+            padding: 12px 15px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 1rem;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #00f2fe;
+        }
+        
+        .btn-primary {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: #0f1123;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #a55eea 0%, #7d5fff 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(165, 94, 234, 0.3);
+        }
+
+        .btn-reupload {
+            background: transparent;
+            color: #b3b3cc;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-reupload:hover { color: #ffffff; }
+
+        /* SEOセクション */
+        .seo-content { padding-top: 20px; }
+        .seo-content h2 { font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #00f2fe; padding-left: 12px; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #b3b3cc; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+        .seo-content li { margin-bottom: 8px; }
+        .seo-content strong { color: #00f2fe; }
+        .seo-content dt { font-weight: bold; color: #00f2fe; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        </a>
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>PDF分割・ページ抽出</h1>
+            <div class="subtitle">プレビューを見ながら必要なページだけを抽出したり、1ページずつ分割します。</div>
+            
+            <div class="tool-panel">
+                <div class="upload-area" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                    <p>📄 ここにPDFファイルをドラッグ＆ドロップ、またはクリックして選択</p>
+                    <span>※機密文書も安全。データはサーバーに送信されません。</span>
+                    <input type="file" id="file-input" accept="application/pdf" style="display: none;">
+                </div>
+
+                <div class="editor-container" id="editor-container">
+                    
+                    <div class="pdf-info">
+                        <div class="pdf-info-text" id="pdf-info-text">
+                            </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <div class="preview-title">👁️ 全ページプレビュー一覧</div>
+                        <div class="preview-grid" id="preview-grid">
+                            </div>
+                    </div>
+
+                    <div class="action-section">
+                        <h3>✂️ モード1: 必要なページだけを抽出して1つのPDFにする</h3>
+                        <p>抽出したいページ番号をカンマやハイフンで入力してください。（例: 1, 3, 5-8）</p>
+                        <div class="input-group">
+                            <input type="text" id="page-input" placeholder="例: 1, 3, 5-8">
+                            <button class="btn-primary" id="extract-btn">抽出して保存</button>
+                        </div>
+                    </div>
+
+                    <div class="action-section">
+                        <h3>📑 モード2: 全ページをバラバラに分割する</h3>
+                        <p>全てのページを1ページずつのPDFファイルに分割し、まとめてZIP形式でダウンロードします。</p>
+                        <button class="btn-secondary" id="split-btn">全ページを分割してZIPダウンロード</button>
+                    </div>
+
+                    <button class="btn-reupload" onclick="location.reload()">別のPDFを選び直す</button>
+                </div>
+            </div>
+
+            <section class="seo-content">
+                <h2>PDF分割・抽出ツールの特徴</h2>
+                <ul>
+                    <li><strong>便利なページプレビュー機能：</strong> PDFを読み込むと全ページのサムネイルが一覧表示されるため、「何ページ目を取り出すべきか」を目で確かめながら迷わず選択できます。</li>
+                    <li><strong>完全オフライン処理で機密文書も安心：</strong> PDFデータはお使いのブラウザ内（ローカル環境）でのみ処理されます。当サイトのサーバーにアップロードされないため、契約書や個人情報が含まれるPDFでも情報漏洩の心配が一切ありません。</li>
+                    <li><strong>柔軟なページ指定：</strong> 「1, 3, 5」のような個別指定や、「5-10」のような範囲指定を組み合わせて、欲しいページだけを正確に抜き出すことができます。</li>
+                    <li><strong>一括分割機能：</strong> 数十ページのPDFでも、ワンクリックで全ページを個別のPDFファイルにバラバラに分割し、ZIPでまとめてダウンロード可能です。</li>
+                </ul>
+
+                <h2>使い方・手順</h2>
+                <ol>
+                    <li>枠内にPDFファイルをドラッグ＆ドロップして読み込ませます。</li>
+                    <li>表示された「プレビュー一覧」で、抜き出したいページの番号を確認します。</li>
+                    <li><strong>【一部を抽出したい場合】</strong> ページ番号（例：1, 3, 5-8）を入力して「抽出して保存」を押します。</li>
+                    <li><strong>【すべて分割したい場合】</strong> 「全ページを分割してZIPダウンロード」を押します。</li>
+                </ol>
+
+                <h2>よくある質問 (FAQ)</h2>
+                <dl>
+                    <dt>Q. 抽出や分割を行っても、元のPDFファイルは消えませんか？</dt>
+                    <dd>A. はい、元ファイルには一切影響ありません。加工された新しいPDF（またはZIPファイル）が別ファイルとしてダウンロードされます。</dd>
+
+                    <dt>Q. パスワードがかかっているPDFでも分割できますか？</dt>
+                    <dd>A. 安全上の仕様により、パスワードで保護されたPDFファイルは読み込むことができません。事前にパスワードを解除したファイルをご用意ください。</dd>
+
+                    <dt>Q. 何ページくらいのPDFまで処理できますか？</dt>
+                    <dd>A. お使いのPC・スマートフォンのスペックに依存しますが、一般的な数十〜数百ページのPDFであれば問題なくブラウザ内で一瞬で処理が完了します。</dd>
+                </dl>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </div>
+        <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+        <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+    </footer>
+
+    <script>
+        // PDF.js ワーカーの設定
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const editorContainer = document.getElementById('editor-container');
+        const pdfInfoText = document.getElementById('pdf-info-text');
+        const previewGrid = document.getElementById('preview-grid');
+        
+        const pageInput = document.getElementById('page-input');
+        const extractBtn = document.getElementById('extract-btn');
+        const splitBtn = document.getElementById('split-btn');
+
+        let originalPdfBytes = null;
+        let originalFileName = "";
+        let totalPages = 0;
+
+        // ドラッグ＆ドロップ処理
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFile(e.target.files[0]);
+        });
+
+        // PDFファイルの読み込み＆プレビュー描画
+        async function handleFile(file) {
+            if (file.type !== 'application/pdf') {
+                alert('PDFファイルを選択してください。');
+                return;
+            }
+
+            originalFileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    originalPdfBytes = e.target.result;
+                    
+                    // pdf-libでロードしてページ数を取得
+                    const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
+                    totalPages = pdfDoc.getPageCount();
+
+                    // UIの切り替え
+                    dropZone.style.display = 'none';
+                    editorContainer.style.display = 'block';
+                    pdfInfoText.innerHTML = `ファイル名: ${file.name} <br><strong>総ページ数: ${totalPages} ページ</strong>`;
+
+                    // ▼ PDF.js による全ページプレビュー描画
+                    renderPreviews(originalPdfBytes);
+
+                } catch (error) {
+                    alert('PDFの読み込みに失敗しました。パスワード保護されている可能性があります。');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // 全ページのサムネイルをレンダリングする関数
+        async function renderPreviews(arrayBuffer) {
+            previewGrid.innerHTML = ''; // クリア
+            
+            try {
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                const pdf = await loadingTask.promise;
+
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    
+                    // サムネイル用スケール
+                    const viewport = page.getViewport({ scale: 0.25 });
+                    
+                    const card = document.createElement('div');
+                    card.className = 'page-card';
+
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    const badge = document.createElement('div');
+                    badge.className = 'page-badge';
+                    badge.textContent = `${pageNum} ページ`;
+
+                    card.appendChild(canvas);
+                    card.appendChild(badge);
+                    previewGrid.appendChild(card);
+
+                    // Canvas描画実行
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    await page.render(renderContext).promise;
+                }
+            } catch (err) {
+                console.error("プレビューレンダリングエラー:", err);
+            }
+        }
+
+        // 入力されたページ番号文字列を解析する関数 (例: "1, 3, 5-7" -> [0, 2, 4, 5, 6])
+        function parsePageNumbers(inputStr, maxPage) {
+            const pages = new Set();
+            const parts = inputStr.split(',');
+
+            for (let part of parts) {
+                part = part.trim();
+                if (!part) continue;
+
+                if (part.includes('-')) {
+                    const [start, end] = part.split('-').map(num => parseInt(num.trim(), 10));
+                    if (!isNaN(start) && !isNaN(end) && start <= end) {
+                        for (let i = start; i <= end; i++) {
+                            if (i >= 1 && i <= maxPage) pages.add(i - 1);
+                        }
+                    }
+                } else {
+                    const num = parseInt(part, 10);
+                    if (!isNaN(num) && num >= 1 && num <= maxPage) {
+                        pages.add(num - 1);
+                    }
+                }
+            }
+            return Array.from(pages).sort((a, b) => a - b);
+        }
+
+        // ▼ モード1: ページ抽出処理
+        extractBtn.addEventListener('click', async () => {
+            const inputVal = pageInput.value;
+            const pagesToExtract = parsePageNumbers(inputVal, totalPages);
+
+            if (pagesToExtract.length === 0) {
+                alert('有効なページ番号が指定されていません。');
+                return;
+            }
+
+            extractBtn.textContent = "処理中...";
+            extractBtn.disabled = true;
+
+            try {
+                const originalPdf = await PDFLib.PDFDocument.load(originalPdfBytes);
+                const newPdf = await PDFLib.PDFDocument.create();
+
+                const copiedPages = await newPdf.copyPages(originalPdf, pagesToExtract);
+                copiedPages.forEach((page) => newPdf.addPage(page));
+
+                const pdfBytes = await newPdf.save();
+                downloadFile(pdfBytes, `${originalFileName}_extracted.pdf`, 'application/pdf');
+
+            } catch (error) {
+                console.error(error);
+                alert('抽出中にエラーが発生しました。');
+            } finally {
+                extractBtn.textContent = "抽出して保存";
+                extractBtn.disabled = false;
+            }
+        });
+
+        // ▼ モード2: 全ページ分割処理 (ZIPダウンロード)
+        splitBtn.addEventListener('click', async () => {
+            splitBtn.textContent = "ZIP生成中...";
+            splitBtn.disabled = true;
+
+            try {
+                const originalPdf = await PDFLib.PDFDocument.load(originalPdfBytes);
+                const zip = new JSZip();
+
+                for (let i = 0; i < totalPages; i++) {
+                    const singlePdf = await PDFLib.PDFDocument.create();
+                    const [copiedPage] = await singlePdf.copyPages(originalPdf, [i]);
+                    singlePdf.addPage(copiedPage);
+                    const singlePdfBytes = await singlePdf.save();
+                    
+                    zip.file(`${originalFileName}_page_${i + 1}.pdf`, singlePdfBytes);
+                }
+
+                const zipContent = await zip.generateAsync({ type: 'blob' });
+                const zipUrl = URL.createObjectURL(zipContent);
+                
+                const link = document.createElement('a');
+                link.href = zipUrl;
+                link.download = `${originalFileName}_split.zip`;
+                link.click();
+                URL.revokeObjectURL(zipUrl);
+
+            } catch (error) {
+                console.error(error);
+                alert('分割中にエラーが発生しました。');
+            } finally {
+                splitBtn.textContent = "全ページを分割してZIPダウンロード";
+                splitBtn.disabled = false;
+            }
+        });
+
+        // ダウンロード共通関数
+        function downloadFile(bytes, fileName, mimeType) {
+            const blob = new Blob([bytes], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

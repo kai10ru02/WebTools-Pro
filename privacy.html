@@ -9,33 +9,42 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
+        /* ページ全体のスムーズスクロール */
+        html {
+            scroll-behavior: smooth;
+        }
+
         /* ベースレイアウト */
         .privacy-modern-wrapper {
             max-width: 1100px;
-            margin: 40px auto;
+            margin: 40px auto 60px auto;
             padding: 0 20px;
             display: grid;
             grid-template-columns: 260px 1fr;
-            gap: 50px;
+            gap: 40px;
             align-items: start;
         }
 
-        /* 左側：サイドナビゲーション（目次） */
+        /* 左側：サイドナビゲーション（目次 / グラスモーフィズム調） */
         .privacy-sidebar {
             position: sticky;
-            top: 100px; /* 固定ヘッダーの下に収まるように調整 */
-            background: #f8f9fa;
+            top: 100px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 24px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
         .privacy-sidebar h3 {
             margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1rem;
-            color: #888;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            color: #00f2fe;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
+            font-weight: bold;
         }
         .privacy-sidebar ul {
             list-style: none;
@@ -43,35 +52,41 @@
             margin: 0;
         }
         .privacy-sidebar li {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
         .privacy-sidebar a {
-            color: #555;
+            color: #b3b3cc;
             text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s;
+            font-size: 0.92rem;
+            transition: all 0.2s ease;
             display: block;
-            line-height: 1.4;
+            line-height: 1.5;
+            padding: 6px 10px;
+            border-radius: 6px;
         }
         .privacy-sidebar a:hover {
-            color: #4facfe;
+            color: #ffffff;
+            background: rgba(0, 242, 254, 0.1);
+            transform: translateX(4px);
         }
 
-        /* 右側：本文コンテンツエリア */
+        /* 右側：本文コンテンツエリア（グラスモーフィズム調） */
         .privacy-content-side {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 45px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
 
         .privacy-content-side h1 {
             font-size: 2.2rem;
             margin-top: 0;
             margin-bottom: 20px;
-            color: #333;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            color: #ffffff;
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -80,8 +95,16 @@
         .privacy-lead {
             font-size: 1.05rem;
             line-height: 1.8;
-            color: #555;
+            color: #b3b3cc;
             margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* 目次ジャンプ時のヘッダー被り防止 */
+        .article-block {
+            scroll-margin-top: 100px;
+            margin-bottom: 35px;
         }
 
         /* 見出し（H2）の装飾 */
@@ -89,60 +112,71 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 1.4rem;
-            margin-top: 40px;
-            margin-bottom: 20px;
+            font-size: 1.35rem;
+            margin-top: 0;
+            margin-bottom: 18px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
-            color: #333;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
         }
         .privacy-content-side h2 svg {
-            color: #4facfe;
+            color: #00f2fe;
             flex-shrink: 0;
         }
 
         .privacy-content-side p {
-            font-size: 1rem;
+            font-size: 0.98rem;
             line-height: 1.8;
-            color: #444;
-            margin-bottom: 20px;
+            color: #c4c4d4;
+            margin-bottom: 16px;
         }
 
-        /* データのローカル処理に関する特別カード */
+        /* データのローカル処理に関する特別カード（ネオンブルーグラデーション） */
         .security-highlight-card {
-            background: linear-gradient(135deg, rgba(0, 242, 254, 0.03) 0%, rgba(79, 172, 254, 0.07) 100%);
-            border: 2px solid rgba(79, 172, 254, 0.2);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            position: relative;
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.08) 0%, rgba(79, 172, 254, 0.15) 100%);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1);
         }
         .security-highlight-card h2 {
             border-bottom: none;
             padding-bottom: 0;
             margin-top: 0;
-            color: #0076c6;
+            color: #00f2fe;
+            font-size: 1.25rem;
         }
         .security-highlight-card h2 svg {
-            color: #4facfe;
+            color: #00f2fe;
         }
         .security-highlight-card p {
+            color: #e0e0f0;
             margin-bottom: 0;
+        }
+        .security-highlight-card strong {
+            color: #ffffff;
+            background: rgba(0, 242, 254, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
         .date-badge {
             margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
             text-align: right;
             font-size: 0.9rem;
-            color: #888;
+            color: #8b949e;
         }
 
-        /* レスポンシブ対応（スマホ表示） */
+        /* レスポンシブ対応（スマートフォン表示） */
         @media (max-width: 900px) {
             .privacy-modern-wrapper {
                 grid-template-columns: 1fr;
-                gap: 30px;
+                gap: 25px;
                 padding: 0 15px;
+                margin: 20px auto 40px auto;
             }
             .privacy-sidebar {
                 position: static;
@@ -155,7 +189,10 @@
                 font-size: 1.8rem;
             }
             .privacy-content-side h2 {
-                font-size: 1.25rem;
+                font-size: 1.2rem;
+            }
+            .security-highlight-card {
+                padding: 20px;
             }
         }
     </style>
@@ -193,16 +230,16 @@
                 <h1>プライバシーポリシー</h1>
                 <p class="privacy-lead">WebTools Pro（以下、「当サイト」といいます）は、ユーザーの皆さまの個人情報およびプライバシーの保護を最重要視しています。本ポリシーでは、当サイトにおける情報の取り扱いについてご説明いたします。</p>
 
-                <div id="local-processing" class="security-highlight-card">
+                <div id="local-processing" class="security-highlight-card article-block">
                     <h2>
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                         データのローカル処理について（重要）
                     </h2>
                     <p>当サイトが提供する画像編集、音声処理、PDF結合、パスワード生成などのすべてのツールは、<strong>ユーザーのウェブブラウザ上（ローカル環境）でのみ実行されます。</strong></p>
-                    <p style="margin-top: 10px;">ユーザーがツールに読み込ませた画像、音声、ドキュメントなどのファイルデータや、生成されたパスワード等の機密情報が、当サイトのサーバーにアップロードされることや、外部へ送信されることは一切ありません。完全にオフラインと同様の安全性でご利用いただけます。</p>
+                    <p style="margin-top: 12px;">ユーザーがツールに読み込ませた画像、音声、ドキュメントなどのファイルデータや、生成されたパスワード等の機密情報が、当サイトのサーバーにアップロードされることや、外部へ送信されることは一切ありません。完全にオフラインと同様の安全性でご利用いただけます。</p>
                 </div>
 
-                <div id="collected-info">
+                <div id="collected-info" class="article-block">
                     <h2>
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         収集する情報について
@@ -210,7 +247,7 @@
                     <p>当サイトのツールを利用するにあたり、ユーザー登録や個人情報（氏名、住所、メールアドレス等）の入力は一切不要であり、当サイトがこれらの情報を意図的に収集することはありません。</p>
                 </div>
 
-                <div id="analytics">
+                <div id="analytics" class="article-block">
                     <h2>
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
                         アクセス解析ツールについて
@@ -218,7 +255,7 @@
                     <p>当サイトでは、サービスの向上や利便性の改善を目的として、アクセス解析ツール（Google Analytics等）を使用する場合があります。これらのツールはトラフィックデータの収集のためにCookie（クッキー）を使用しています。<br>このトラフィックデータは匿名で収集されており、個人を特定するものではありません。ユーザーはブラウザの設定によりCookieを無効にすることで、この収集を拒否することができます。</p>
                 </div>
 
-                <div id="disclaimer">
+                <div id="disclaimer" class="article-block">
                     <h2>
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
                         免責事項
@@ -226,7 +263,7 @@
                     <p>当サイトからのリンクやバナーなどで移動した先の外部サイトで提供される情報、サービス等について、当サイトは一切の責任を負いません。<br>また、当サイトのツールの利用によって生じたソフトウェア、ハードウェア上のトラブルやその他の損害についても責任を負いかねます。</p>
                 </div>
 
-                <div id="changes">
+                <div id="changes" class="article-block">
                     <h2>
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
                         プライバシーポリシーの変更

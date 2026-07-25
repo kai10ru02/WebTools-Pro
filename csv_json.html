@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV ↔ JSON 相互変換ツール | 無料・ブラウザ完結 - WebTools Pro</title>
+    <meta name="description" content="CSVデータとJSONデータをブラウザ上で安全かつ瞬時に相互変換できる無料ツールです。サーバー送信なしのため、機密データや顧客リストの変換にも最適です。">
+    
+    <link rel="icon" href="logo.jpg">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <style>
+        /* ==== ツール固有のスタイル ==== */
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #b3b3cc;
+            margin-bottom: 30px;
+        }
+
+        .tool-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        /* エディタレイアウト（PCは横並び、スマホは縦並び） */
+        .editor-layout {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: stretch;
+        }
+        @media(min-width: 800px) {
+            .editor-layout {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+        .box-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 0; /* フレックスアイテムの崩れ防止 */
+        }
+        .box-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .box-title {
+            color: #00f2fe;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        /* テキストエリア */
+        textarea {
+            width: 100%;
+            height: 350px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            color: #e6edf3;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.85rem;
+            resize: vertical;
+            box-sizing: border-box;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+        
+        /* スクロールバー装飾 */
+        textarea::-webkit-scrollbar { width: 8px; height: 8px; }
+        textarea::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.3); border-radius: 4px; }
+
+        /* 中央の変換ボタンエリア（アイコンのみに最適化） */
+        .convert-actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 5px 10px;
+            align-self: center;
+        }
+
+        .btn-convert {
+            background: linear-gradient(135deg, #a55eea 0%, #7d5fff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px; /* 綺麗な角丸 */
+            width: 48px;  /* アイコンボタンとしてのサイズ固定 */
+            height: 48px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(165, 94, 234, 0.25);
+        }
+        .btn-convert:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(165, 94, 234, 0.4);
+            filter: brightness(1.1);
+        }
+
+        /* サブアクションボタン（コピー、DLなど） */
+        .sub-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-sub {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            color: #b3b3cc;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 7px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .btn-sub:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+        }
+
+        .error-msg {
+            color: #ff4b2b;
+            font-size: 0.8rem;
+            margin-top: 2px;
+            margin-bottom: 8px;
+            min-height: 16px;
+        }
+
+        /* ファイルアップロード用（非表示） */
+        input[type="file"] { display: none; }
+
+        /* レスポンシブ切り替え（スマホ時は横並び） */
+        .mobile-only { display: none; }
+        @media(max-width: 799px) {
+            .desktop-only { display: none; }
+            .mobile-only { display: inline; }
+            .convert-actions { 
+                flex-direction: row; 
+                width: 100%; 
+                padding: 10px 0;
+            }
+            .btn-convert { 
+                width: 52px; 
+                height: 52px; 
+                font-size: 1.3rem; 
+            }
+        }
+
+        /* ==== SEO用テキストセクション ==== */
+        .seo-content { padding-top: 20px; }
+        .seo-content h2 { font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #00f2fe; padding-left: 12px; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #b3b3cc; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+        .seo-content li { margin-bottom: 8px; }
+        .seo-content strong { color: #00f2fe; }
+        .seo-content dt { font-weight: bold; color: #00f2fe; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        </a>
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>CSV ↔ JSON 変換ツール</h1>
+            <div class="subtitle">データをブラウザ上で安全に相互変換。ExcelデータのWeb用フォーマット化に最適です。</div>
+            
+            <div class="tool-panel">
+                <div class="editor-layout">
+                    
+                    <div class="box-container">
+                        <div class="box-header">
+                            <span class="box-title">📊 CSV データ</span>
+                            <button class="btn-sub" onclick="document.getElementById('csv-file').click()" style="flex: none;">📁 ファイル読込</button>
+                            <input type="file" id="csv-file" accept=".csv">
+                        </div>
+                        <textarea id="csv-input" placeholder="ここにCSVデータを貼り付けるか、ファイルから読み込んでください...&#10;&#10;id,name,age&#10;1,山田太郎,28&#10;2,鈴木花子,32"></textarea>
+                        <div class="error-msg" id="csv-error"></div>
+                        <div class="sub-actions">
+                            <button class="btn-sub" onclick="copyToClipboard('csv-input')">📋 コピー</button>
+                            <button class="btn-sub" onclick="downloadFile('csv-input', 'data.csv', 'text/csv')">📥 保存 (.csv)</button>
+                            <button class="btn-sub" onclick="clearArea('csv-input', 'csv-error')">🗑 クリア</button>
+                        </div>
+                    </div>
+
+                    <div class="convert-actions">
+                        <button class="btn-convert" onclick="convertCsvToJson()" title="CSV を JSON に変換">
+                            <span class="desktop-only">▶</span><span class="mobile-only">▼</span>
+                        </button>
+                        <button class="btn-convert" onclick="convertJsonToCsv()" title="JSON を CSV に変換">
+                            <span class="desktop-only">◀</span><span class="mobile-only">▲</span>
+                        </button>
+                    </div>
+
+                    <div class="box-container">
+                        <div class="box-header">
+                            <span class="box-title">｛｝ JSON データ</span>
+                            <button class="btn-sub" onclick="document.getElementById('json-file').click()" style="flex: none;">📁 ファイル読込</button>
+                            <input type="file" id="json-file" accept=".json">
+                        </div>
+                        <textarea id="json-input" placeholder="ここにJSONデータを貼り付けるか、ファイルから読み込んでください...&#10;&#10;[&#10;  {&#10;    &quot;id&quot;: &quot;1&quot;,&#10;    &quot;name&quot;: &quot;山田太郎&quot;,&#10;    &quot;age&quot;: &quot;28&quot;&#10;  }&#10;]"></textarea>
+                        <div class="error-msg" id="json-error"></div>
+                        <div class="sub-actions">
+                            <button class="btn-sub" onclick="copyToClipboard('json-input')">📋 コピー</button>
+                            <button class="btn-sub" onclick="downloadFile('json-input', 'data.json', 'application/json')">📥 保存 (.json)</button>
+                            <button class="btn-sub" onclick="clearArea('json-input', 'json-error')">🗑 クリア</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <section class="seo-content">
+                <h2>CSV ↔ JSON 変換ツールの特徴</h2>
+                <ul>
+                    <li><strong>完全ブラウザ完結で安全：</strong> 顧客リストや売上データなど、機密性の高いCSV/JSONデータを扱っても外部サーバーに一切送信されません。安全なオフライン環境（ローカル）で瞬時に変換処理を行います。</li>
+                    <li><strong>双方向への変換に対応：</strong> 「CSVからJSON」への変換だけでなく、「JSONからCSV」への逆変換も中央の矢印ボタン1つでスムーズに行えます。</li>
+                    <li><strong>高度な解析エンジン搭載：</strong> カンマ(,)や改行が含まれる複雑なセル内容のCSVでも、Papa Parseライブラリによって正確にJSONへとパース（解析）されます。</li>
+                </ul>
+
+                <h2>使い方・手順</h2>
+                <ol>
+                    <li>変換元のデータを該当の枠に直接貼り付けるか、「ファイル読込」ボタンからファイルを選択して読み込みます。</li>
+                    <li>中央の「▶（または▼）」ボタンをクリックして変換処理を行います。</li>
+                    <li>反対側の枠に変換されたデータが出力されます。「コピー」または「保存」ボタンで取得してください。</li>
+                </ol>
+
+                <h2>よくある質問 (FAQ)</h2>
+                <dl>
+                    <dt>Q. CSVをJSONにする際、1行目はどう扱われますか？</dt>
+                    <dd>A. 当ツールでは、CSVの「1行目（ヘッダー行）」をJSONの「キー（プロパティ名）」として自動認識し、各行をオブジェクトの配列として出力します。</dd>
+
+                    <dt>Q. 変換ボタンを押しても何も起こりません。</dt>
+                    <dd>A. 元データ（特にJSON）の構文にエラーがある可能性があります。余分なカンマや括弧の閉じ忘れがないか確認してください。エラーがある場合はテキストエリアの下に赤文字で警告が表示されます。</dd>
+
+                    <dt>Q. 文字化けしてしまいます。</dt>
+                    <dd>A. ファイルから読み込む際、文字コードは「UTF-8」を基準としています。Excelで保存したCSVがShift-JISなどで保存されている場合は、メモ帳等で開き「UTF-8」で保存し直してから読み込むと解決します。</dd>
+                </dl>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </div>
+        <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+        <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+    </footer>
+
+    <script>
+        const csvInput = document.getElementById('csv-input');
+        const jsonInput = document.getElementById('json-input');
+        const csvError = document.getElementById('csv-error');
+        const jsonError = document.getElementById('json-error');
+
+        // ==== 変換ロジック ====
+
+        // 1. CSV -> JSON
+        function convertCsvToJson() {
+            resetErrors();
+            const csvText = csvInput.value.trim();
+            if (!csvText) {
+                csvError.textContent = "CSVデータが入力されていません。";
+                return;
+            }
+
+            Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    if (results.errors.length > 0 && results.data.length === 0) {
+                        csvError.textContent = "CSVの解析に失敗しました。フォーマットを確認してください。";
+                    } else {
+                        jsonInput.value = JSON.stringify(results.data, null, 2);
+                    }
+                }
+            });
+        }
+
+        // 2. JSON -> CSV
+        function convertJsonToCsv() {
+            resetErrors();
+            const jsonText = jsonInput.value.trim();
+            if (!jsonText) {
+                jsonError.textContent = "JSONデータが入力されていません。";
+                return;
+            }
+
+            try {
+                const jsonData = JSON.parse(jsonText);
+                const csvData = Papa.unparse(jsonData);
+                csvInput.value = csvData;
+            } catch (e) {
+                jsonError.textContent = "無効なJSONフォーマットです。構文を確認してください。";
+            }
+        }
+
+        // ==== ユーティリティ関数 ====
+
+        function resetErrors() {
+            csvError.textContent = "";
+            jsonError.textContent = "";
+        }
+
+        function clearArea(inputId, errorId) {
+            document.getElementById(inputId).value = "";
+            document.getElementById(errorId).textContent = "";
+        }
+
+        function copyToClipboard(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el.value) return;
+            el.select();
+            document.execCommand('copy');
+            alert('クリップボードにコピーしました！');
+            window.getSelection().removeAllRanges();
+        }
+
+        function downloadFile(elementId, defaultFileName, mimeType) {
+            const content = document.getElementById(elementId).value;
+            if (!content) return;
+            
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = defaultFileName;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ==== ファイル読み込み処理 ====
+        document.getElementById('csv-file').addEventListener('change', function(e) {
+            readFile(e.target.files[0], csvInput);
+            this.value = '';
+        });
+
+        document.getElementById('json-file').addEventListener('change', function(e) {
+            readFile(e.target.files[0], jsonInput);
+            this.value = '';
+        });
+
+        function readFile(file, targetInput) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                targetInput.value = e.target.result;
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像トリミング＆SNSサイズ切り抜きツール | 無料・ブラウザ完結 - WebTools Pro</title>
+    <meta name="description" content="画像の切り抜き（トリミング）やリサイズがブラウザ上で直感的にできる無料ツール。SNSのアイコンやヘッダー画像、YouTubeサムネイルなどの作成に最適です。サーバー送信なしで安全に処理されます。">
+    
+    <link rel="icon" href="logo.jpg">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+    <style>
+        /* ==== ツール固有のスタイル ==== */
+        h1 {
+            text-align: center;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #b3b3cc;
+            margin-bottom: 30px;
+        }
+
+        .tool-panel {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* アップロードエリア */
+        .upload-area {
+            border: 2px dashed rgba(0, 242, 254, 0.5);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #00f2fe;
+            background-color: rgba(0, 242, 254, 0.05);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15) inset;
+        }
+        .upload-area p { color: #ffffff; margin-bottom: 10px; font-size: 1rem; font-weight: bold; }
+        .upload-area span { color: #b3b3cc; font-size: 0.85rem; }
+
+        /* エディタ部分（初期状態は非表示） */
+        .editor-container {
+            display: none;
+        }
+
+        /* アスペクト比選択ボタン群 */
+        .ratio-header {
+            text-align: center;
+            font-weight: bold;
+            color: #00f2fe;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        .ratio-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .ratio-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #b3b3cc;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .ratio-btn:hover {
+            background: rgba(0, 242, 254, 0.1);
+            color: #ffffff;
+        }
+        .ratio-btn.active {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            color: #0f1123;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        /* 画像プレビュー枠 */
+        .canvas-container {
+            width: 100%;
+            max-height: 500px; /* 高くなりすぎないように制限 */
+            margin-bottom: 25px;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        img#image-to-crop {
+            display: block;
+            max-width: 100%;
+        }
+
+        /* ダウンロードボタン */
+        .btn-download {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.2);
+            text-align: center;
+            display: block;
+        }
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+        }
+
+        /* 再アップロードボタン */
+        .btn-reupload {
+            background: transparent;
+            color: #b3b3cc;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            width: 100%;
+            text-align: center;
+        }
+        .btn-reupload:hover { color: #ffffff; }
+
+        /* ==== SEO用テキストセクション（既存スタイル） ==== */
+        .seo-content { padding-top: 20px; }
+        .seo-content h2 { font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #00f2fe; padding-left: 12px; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #b3b3cc; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+        .seo-content li { margin-bottom: 8px; }
+        .seo-content strong { color: #00f2fe; }
+        .seo-content dt { font-weight: bold; color: #00f2fe; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        </a>
+        <nav>
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>画像トリミング＆切り抜きツール</h1>
+            <div class="subtitle">画像の必要な部分だけを直感的に切り抜き。SNS用テンプレートも搭載。</div>
+            
+            <div class="tool-panel">
+                <div class="upload-area" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                    <p>📤 ここに画像をドラッグ＆ドロップ、またはクリックして選択</p>
+                    <span>※JPG, PNG, WebPなどの画像ファイルに対応</span>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="editor-container" id="editor-container">
+                    
+                    <div class="ratio-header">✂️ 切り抜く比率（形）を選択してください</div>
+                    <div class="ratio-buttons">
+                        <button class="ratio-btn active" data-ratio="NaN">フリー（自由）</button>
+                        <button class="ratio-btn" data-ratio="1">1:1 (正方形/アイコン用)</button>
+                        <button class="ratio-btn" data-ratio="1.7777777777777777">16:9 (YouTubeサムネイル/X)</button>
+                        <button class="ratio-btn" data-ratio="1.3333333333333333">4:3 (標準的な写真)</button>
+                        <button class="ratio-btn" data-ratio="3">3:1 (X/Twitter ヘッダー用)</button>
+                    </div>
+
+                    <div class="canvas-container">
+                        <img id="image-to-crop" src="" alt="編集用画像">
+                    </div>
+
+                    <button class="btn-download" id="download-btn">📥 切り抜いた画像を保存する</button>
+                    <button class="btn-reupload" onclick="location.reload()">別の画像を選び直す</button>
+                </div>
+            </div>
+
+            <section class="seo-content">
+                <h2>SNS画像トリミングツールの特徴</h2>
+                <ul>
+                    <li><strong>直感的な操作感：</strong> マウスや指で四隅を引っ張るだけで、思い通りの場所を綺麗に切り抜くことができます。</li>
+                    <li><strong>安全なブラウザ完結：</strong> 読み込んだ画像データは、外部のサーバーには一切送信されません。あなたのスマホやPCの中だけで処理されるため、プライベートな写真でも安心です。</li>
+                    <li><strong>便利なテンプレート：</strong> 「Instagramのアイコン(1:1)」や「YouTubeのサムネイル(16:9)」など、用途に合わせた比率ボタンをワンクリックするだけで、最適な形に固定して切り抜けます。</li>
+                </ul>
+
+                <h2>使い方・手順</h2>
+                <ol>
+                    <li>「画像をドラッグ＆ドロップ」の枠内に、切り抜きたい画像ファイルを入れます。</li>
+                    <li>上のボタンから、切り抜きたい「比率（形）」を選びます（自由に切り抜きたい場合は「フリー」のままにします）。</li>
+                    <li>画像上の枠を動かして、切り抜く範囲を決定します。</li>
+                    <li>「切り抜いた画像を保存する」ボタンを押すと、トリミングされた新しい画像がダウンロードされます。</li>
+                </ol>
+
+                <h2>よくある質問 (FAQ)</h2>
+                <dl>
+                    <dt>Q. 元の画像は上書きされて消えてしまいますか？</dt>
+                    <dd>A. いいえ、消えません。切り抜いた画像は「元のファイル名_cropped.png」という新しいファイルとしてダウンロードされるため、元の画像はそのまま残ります。</dd>
+                    
+                    <dt>Q. スマホ（iPhoneやAndroid）でも使えますか？</dt>
+                    <dd>A. はい。ピンチイン・ピンチアウト（2本指での拡大縮小）や、スワイプ操作にも対応しているため、スマートフォンからも快適にトリミングが可能です。</dd>
+                </dl>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">ホーム</a>
+            <a href="terms.html">利用規約</a>
+            <a href="privacy.html">プライバシーポリシー</a>
+            <a href="contact.html">お問い合わせ</a>
+        </div>
+        <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+        <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
+    </footer>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const editorContainer = document.getElementById('editor-container');
+        const imageToCrop = document.getElementById('image-to-crop');
+        const downloadBtn = document.getElementById('download-btn');
+        const ratioBtns = document.querySelectorAll('.ratio-btn');
+
+        let cropper = null;
+        let originalFileName = "image";
+
+        // ドラッグ＆ドロップ処理
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+
+        // ファイル選択処理
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFile(e.target.files[0]);
+        });
+
+        // 画像の読み込みとCropperの初期化
+        function handleFile(file) {
+            if (!file.type.match('image.*')) {
+                alert('画像ファイルを選択してください。');
+                return;
+            }
+
+            // 元のファイル名を保持（拡張子を除外）
+            originalFileName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                // アップロードエリアを隠し、エディタエリアを表示
+                dropZone.style.display = 'none';
+                editorContainer.style.display = 'block';
+
+                imageToCrop.src = e.target.result;
+
+                // 既存のCropperがあれば破棄
+                if (cropper) {
+                    cropper.destroy();
+                }
+
+                // Cropper.jsの初期化
+                cropper = new Cropper(imageToCrop, {
+                    aspectRatio: NaN, // 初期状態はフリー
+                    viewMode: 1,      // 枠外にはみ出さないモード
+                    dragMode: 'move', // 画像自体をドラッグして動かせるようにする
+                    autoCropArea: 0.8,
+                    restore: false,
+                    guides: true,
+                    center: true,
+                    highlight: false,
+                    cropBoxMovable: true,
+                    cropBoxResizable: true,
+                    toggleDragModeOnDblclick: false,
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // アスペクト比の変更処理
+        ratioBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // ボタンの見た目（アクティブ状態）を更新
+                ratioBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Cropperのアスペクト比を変更
+                if (cropper) {
+                    const ratio = parseFloat(btn.dataset.ratio);
+                    cropper.setAspectRatio(ratio);
+                }
+            });
+        });
+
+        // ダウンロード処理
+        downloadBtn.addEventListener('click', () => {
+            if (!cropper) return;
+
+            // ボタンの一時無効化
+            downloadBtn.textContent = "処理中...";
+            downloadBtn.style.pointerEvents = "none";
+
+            setTimeout(() => {
+                // 切り抜いた部分をCanvasとして取得（高画質を維持するため元のサイズで取得）
+                const canvas = cropper.getCroppedCanvas({
+                    imageSmoothingEnabled: true,
+                    imageSmoothingQuality: 'high',
+                });
+
+                // CanvasをPNG画像（Data URL）に変換
+                const dataUrl = canvas.toDataURL('image/png');
+
+                // ダウンロードリンクを生成してクリック
+                const link = document.createElement('a');
+                link.download = `${originalFileName}_cropped.png`;
+                link.href = dataUrl;
+                link.click();
+
+                // ボタンの状態を戻す
+                downloadBtn.textContent = "📥 切り抜いた画像を保存する";
+                downloadBtn.style.pointerEvents = "auto";
+            }, 100); // UIの描画が止まらないように少し遅らせる
+        });
+    </script>
+</body>
+</html>
