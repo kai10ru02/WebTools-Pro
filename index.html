@@ -21,7 +21,33 @@
         /* ==== トップページ全体の表示サイズを90%に縮小（余白を広げる） ==== */
         body {
             zoom: 0.9; 
-            /* ※スマートフォンなどで文字が小さくなりすぎる場合は、メディアクエリで解除することも可能です */
+        }
+
+        /* ==== ヒーローセクション（パターンA）追加スタイル ==== */
+        .hero-lead {
+            font-size: 1.05rem;
+            color: #c9d1d9;
+            max-width: 700px;
+            margin: 0 auto 20px auto;
+            line-height: 1.7;
+        }
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #e6edf3;
+        }
+        .feature-item strong {
+            color: #00f2fe;
         }
 
         /* ==== 既存のSEOコンテンツ用スタイル ==== */
@@ -175,14 +201,20 @@
 
     <main>
         <section class="hero">
-            <h1>あなたの作業を、もっと<span>スマート</span>に。</h1>
-            <p>サーバーへのアップロード不要。すべてあなたのブラウザ上で完結するため、機密データやプライベートなファイルも安全・高速に処理できる高機能ツールボックスです。</p>
+            <h1>あなたの作業を、もっと<span>快適</span>に。</h1>
+            <p class="hero-lead">WebTools Pro は、画像・音声・PDF・テキストなどの作業をブラウザ上で手軽に行える便利ツールボックスです。</p>
+            
+            <div class="hero-features">
+                <div class="feature-item">✨ <strong>登録不要</strong>ですぐ使える</div>
+                <div class="feature-item">🔒 <strong>ブラウザ内処理</strong>で安全・高速</div>
+                <div class="feature-item">🚀 <strong>シンプル操作</strong>で作業をスムーズに</div>
+            </div>
         </section>
 
         <div class="filter-container">
             <div class="search-wrapper">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" class="search-input" placeholder="ツールの検索... (例: 画像, 圧縮, PDF)">
+                <input type="text" id="search-input" class="search-input" placeholder="検索窓にキーワードを入力するか、カテゴリから目的のツールを選べます">
             </div>
             <div class="category-filters">
                 <button class="filter-btn active" data-filter="all">すべて</button>
@@ -197,221 +229,228 @@
             <div class="tool-card" data-category="image">
                 <div class="tool-icon">🖼️</div>
                 <div class="tool-title">画像軽量化・画質調整</div>
-                <div class="tool-desc">解像度や圧縮率を直感的にスライダーで調整。SNSやブログ用に、画質を保ったまま画像サイズを劇的に軽くします。</div>
+                <div class="tool-desc">解像度や圧縮率をスライダーで調整し、用途に合わせて画像サイズを最適化できます。</div>
                 <a href="image_edit.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="audio">
                 <div class="tool-icon">🎵</div>
                 <div class="tool-title">オーディオコンバーター</div>
-                <div class="tool-desc">M4A, FLAC, WAVなどの様々な音楽ファイルを、世界中で最も使いやすいMP3やWAV形式へ安全に一括変換します。</div>
+                <div class="tool-desc">M4A、FLAC、WAVなどの音声ファイルを、MP3やWAVなどの形式に変換できます。</div>
                 <a href="audio.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="audio">
                 <div class="tool-icon">🎛️</div>
                 <div class="tool-title">キー・再生速度 変換</div>
-                <div class="tool-desc">高音質エンジン搭載。音楽のキー（音程）や再生速度（テンポ）をプレビューしながら調整し、そのまま保存できます。</div>
+                <div class="tool-desc">音程や再生速度を確認しながら調整できます。音楽の練習や編集に便利です。</div>
                 <a href="audio_edit.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="utility">
                 <div class="tool-icon">📄</div>
                 <div class="tool-title">安全・簡単 PDF結合</div>
-                <div class="tool-desc">複数のPDFファイルをドラッグ＆ドロップで順番を入れ替え、1つのPDFに素早く結合します。</div>
+                <div class="tool-desc">複数のPDFを順番に並べ替えて、ひとつのファイルにまとめられます。</div>
                 <a href="pdf.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="utility">
                 <div class="tool-icon">📲</div>
                 <div class="tool-title">QRコード生成</div>
-                <div class="tool-desc">添付されたリンクのQRコードを生成します。URLやテキストを入力するだけで即座に作成可能です。</div>
+                <div class="tool-desc">URLやテキストを入力すると、QRコードをすぐに作成できます。</div>
                 <a href="qrcode.html" class="btn-primary">ツールを開く</a>
             </div>
             
             <div class="tool-card" data-category="audio">
                 <div class="tool-icon">🎬</div>
                 <div class="tool-title">動画から音声抽出</div>
-                <div class="tool-desc">スマホ等で撮った動画（MP4等）から、音声部分だけを綺麗に抜き出してMP3やWAVとして保存します。</div>
+                <div class="tool-desc">動画ファイルから音声だけを取り出して、MP3やWAVとして保存できます。</div>
                 <a href="video_to_audio.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="image">
                 <div class="tool-icon">🎨</div>
                 <div class="tool-title">画像カラーパレット抽出</div>
-                <div class="tool-desc">画像内で使われている代表的な美しい色をAIが自動解析。クリックでカラーコードを瞬時にコピーできます。</div>
+                <div class="tool-desc">画像内の色を抽出し、カラーコードを確認できます。</div>
                 <a href="color_palette.html" class="btn-primary">ツールを開く</a>
             </div>
             
             <div class="tool-card" data-category="image">
                 <div class="tool-icon">©️</div>
-                <div class="tool-title">透かし(コピーガード)一括追加</div>
-                <div class="tool-desc">数十枚の画像に、あなたの名前やIDの透かしを一括で合成。無断転載防止のための必須ツールです。</div>
+                <div class="tool-title">透かし一括追加</div>
+                <div class="tool-desc">複数の画像に名前やIDなどの透かしをまとめて追加できます。</div>
                 <a href="watermark.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="audio">
                 <div class="tool-icon">🎙️</div>
-                <div class="tool-title">ボイスレコーダー＆チェンジャー</div>
-                <div class="tool-desc">マイクで録音、または音源をアップして「ヘリウム声」「ロボット」など様々な声に加工。ブラウザ完結で安全です。</div>
+                <div class="tool-title">ボイスレコーダー&チェンジャー</div>
+                <div class="tool-desc">マイク録音や音声ファイルの加工に対応した、ブラウザ完結型のツールです。</div>
                 <a href="voice_changer.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="utility">
                 <div class="tool-icon">🔐</div>
-                <div class="tool-title">超強固パスワード生成器</div>
-                <div class="tool-desc">暗号論的疑似乱数を用いた、銀行レベルの強固なパスワードを生成。完全オフライン処理のため情報漏洩の心配ゼロです。</div>
+                <div class="tool-title">パスワード生成器</div>
+                <div class="tool-desc">使いやすさと安全性のバランスを考えた、強力なパスワードを生成できます。</div>
                 <a href="password_generator.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="text">
                 <div class="tool-icon">📝</div>
-                <div class="tool-title">高機能 文字数カウンター</div>
-                <div class="tool-desc">文字数やバイト数、読了時間、文字種別内訳をリアルタイムで自動分析。テキストの整形・変換機能も搭載しています。</div>
+                <div class="tool-title">文字数カウンター</div>
+                <div class="tool-desc">文字数、バイト数、読了時間などを確認しながら、テキストを整理できます。</div>
                 <a href="wordcount.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="text">
                 <div class="tool-icon">🔍</div>
                 <div class="tool-title">テキスト差分チェッカー</div>
-                <div class="tool-desc">2つの文章やソースコードを比較し、追加・削除された変更箇所を色付きでハイライト表示。機密データも安全に確認できます。</div>
+                <div class="tool-desc">2つの文章やソースコードを比較し、変更点を見やすく確認できます。</div>
                 <a href="diff.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="text">
                 <div class="tool-icon">🔤</div>
                 <div class="tool-title">自動ふりがな(ルビ) 振り</div>
-                <div class="tool-desc">漢字を含む日本語の文章に、高精度な解析エンジンで自動でふりがなを振り、Web用のHTMLタグを生成します。</div>
+                <div class="tool-desc">日本語の文章にふりがなを付け、Web表示向けのHTMLに変換できます。</div>
                 <a href="ruby.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="image">
                 <div class="tool-icon">🌐</div>
                 <div class="tool-title">ファビコン一括生成</div>
-                <div class="tool-desc">1枚の画像から、Webサイトに必要なすべてのサイズのファビコンとスマホ用アイコン(Apple Touch Icon)を自動生成しZIPでダウンロード。</div>
+                <div class="tool-desc">1枚の画像から、サイト用の各種アイコンをまとめて作成できます。</div>
                 <a href="favicon.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="audio">
                 <div class="tool-icon">🎥</div>
                 <div class="tool-title">スクリーンレコーダー</div>
-                <div class="tool-desc">ブラウザ上で画面録画やマイク音声の録音が可能なツールです。ソフトのインストール不要で手軽に高画質な録画データを保存できます。</div>
+                <div class="tool-desc">ブラウザ上で画面録画や音声録音を行えます。インストールは不要です。</div>
                 <a href="screen_record.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="image">
                 <div class="tool-icon">✂️</div>
-                <div class="tool-title">画像トリミング＆切り抜きツール</div>
-                <div class="tool-desc">画像の不要な部分を自由にトリミングしたり、特定の比率で切り抜いたりできる直感的な画像編集ツールです。</div>
+                <div class="tool-title">画像トリミング&切り抜きツール</div>
+                <div class="tool-desc">画像の不要な部分を切り抜いたり、指定比率で整えたりできます。</div>
                 <a href="image_crop.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="utility">
                 <div class="tool-icon">📑</div>
                 <div class="tool-title">PDF分割・ページ抽出</div>
-                <div class="tool-desc">複数ページのPDFから必要なページだけを抽出したり、ファイルを個別に分割して保存できる安全なブラウザ完結ツールです。</div>
+                <div class="tool-desc">PDF から必要なページだけを取り出したり、複数ファイルに分けたりできます。</div>
                 <a href="pdf_split.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="text">
                 <div class="tool-icon">🔄</div>
-                <div class="tool-title">CSV ↔ JSON 変換ツール</div>
-                <div class="tool-desc">エクセルのデータ(CSV)をプログラミング用(JSON)に、またはその逆を瞬時に行います。データの整形や確認がブラウザ上で完結します。</div>
+                <div class="tool-title">CSV JSON 変換ツール</div>
+                <div class="tool-desc">CSV と JSON の変換を、ブラウザ上で手軽に行えます。</div>
                 <a href="csv_json.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="text">
                 <div class="tool-icon">✍️</div>
                 <div class="tool-title">リアルタイム Markdown エディタ</div>
-                <div class="tool-desc">入力したマークダウン記法をリアルタイムでHTMLプレビュー。ブログ執筆やメモ書きに最適。PDFやHTMLファイルとしての出力も可能です。</div>
+                <div class="tool-desc">Markdown を入力すると、HTML プレビューを見ながら編集できます。</div>
                 <a href="markdown_editor.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="utility">
                 <div class="tool-icon">🍅</div>
-                <div class="tool-title">ポモドーロ・タイマー＆環境音</div>
-                <div class="tool-desc">25分の集中と5分の休憩で生産性を最大化するタイマー。ホワイトノイズなどの環境音をブラウザで自動生成し、深い集中をサポートします。</div>
+                <div class="tool-title">ポモドーロ・タイマー&環境音</div>
+                <div class="tool-desc">作業時間と休憩時間を区切って、集中しやすい環境づくりをサポートします。</div>
                 <a href="pomodoro.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="utility">
                 <div class="tool-icon">🎲</div>
                 <div class="tool-title">ランダム抽選・ルーレット</div>
-                <div class="tool-desc">テキストや数字の範囲から完全にランダムで1つを抽選します。ドラムロールのような演出で、イベントや座席決めを盛り上げます。</div>
+                <div class="tool-desc">テキストや数字からランダムに選びたいときに使えます。</div>
                 <a href="roulette.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="utility">
                 <div class="tool-icon">⏱️</div>
                 <div class="tool-title">高精度ストップウォッチ</div>
-                <div class="tool-desc">ミリ秒単位で正確に計測できるストップウォッチ。無制限のラップタイム記録に対応し、作業やスポーツの時間管理に最適です。</div>
+                <div class="tool-desc">作業時間や計測を細かく記録できるストップウォッチです。</div>
                 <a href="stopwatch.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="audio">
                 <div class="tool-icon">🎸</div>
                 <div class="tool-title">ブラウザ楽器チューナー</div>
-                <div class="tool-desc">マイクを使ってブラウザ上で正確な音合わせが可能。インストール不要で、楽器のピッチのズレを視覚的に素早く確認できます。</div>
+                <div class="tool-desc">楽器の音合わせを、ブラウザ上で素早く確認できます。</div>
                 <a href="tuner.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="audio">
                 <div class="tool-icon">🥁</div>
                 <div class="tool-title">高精度メトロノーム</div>
-                <div class="tool-desc">テンポ(BPM)や拍子を自由に設定できるメトロノーム。Web Audio APIを活用したズレのない正確なリズムで練習をサポートします。</div>
+                <div class="tool-desc">テンポや拍子を設定して、練習に合わせて使えます。</div>
                 <a href="metronome.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="utility">
                 <div class="tool-icon">📏</div>
                 <div class="tool-title">リアルタイム単位変換</div>
-                <div class="tool-desc">長さ、重さ、面積、温度、データ容量など様々な単位を瞬時に相互変換。数値を入力するだけで自動的に計算・表示されます。</div>
+                <div class="tool-desc">長さ、重さ、面積、温度、データ容量などをまとめて変換できます。</div>
                 <a href="unit_converter.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="image">
                 <div class="tool-icon">🛡️</div>
-                <div class="tool-title">Exif(メタデータ)確認・削除</div>
-                <div class="tool-desc">写真に隠された位置情報(GPS)や撮影日時などのプライバシー情報を確認し完全に削除。SNSアップロード前の安全対策に必須です。</div>
+                <div class="tool-title">Exif (メタデータ)確認・削除</div>
+                <div class="tool-desc">写真に含まれる撮影情報を確認し、必要に応じて削除できます。</div>
                 <a href="exif_tool.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card" data-category="text">
                 <div class="tool-icon">🔄</div>
                 <div class="tool-title">Base64 エンコード/デコード</div>
-                <div class="tool-desc">文字列をBase64形式に変換、または元に復元する開発者向けツール。日本語(UTF-8)にも完全対応し、ローカルで安全に処理します。</div>
+                <div class="tool-desc">文字列を Base64 形式に変換したり、元に戻したりできます。</div>
                 <a href="base64_tool.html" class="btn-primary">ツールを開く</a>
             </div>
 
             <div class="tool-card request-card" data-category="all">
                 <div class="tool-icon">💡</div>
-                <div class="tool-title">欲しいツールがありませんか？</div>
-                <div class="tool-desc">「こんな機能があったら便利なのに…」「あの作業をもっと自動化したい！」というアイデアをぜひお聞かせください。お問い合わせフォームより、新機能のリクエストをいつでも気軽に受け付けています。</div>
-                <a href="contact.html" class="btn-primary" style="background: linear-gradient(135deg, #a55eea 0%, #7d5fff 100%); color: #ffffff; box-shadow: 0 4px 15px rgba(165, 94, 234, 0.3);">新機能のリクエストを送る</a>
+                <div class="tool-title">お問い合わせ</div>
+                <div class="tool-desc">ご意見、ご要望、不具合の報告などがありましたら、お問い合わせフォームからご連絡ください。</div>
+                <a href="contact.html" class="btn-primary" style="background: linear-gradient(135deg, #a55eea 0%, #7d5fff 100%); color: #ffffff; box-shadow: 0 4px 15px rgba(165, 94, 234, 0.3);">お問い合わせフォームへ</a>
             </div>
         </section>
 
         <section class="seo-content">
-            <h2>WebTools Proとは？</h2>
-            <p>WebTools Proは、日常的なパソコン作業やクリエイティブ制作をサポートする、<strong>完全無料・登録不要のオンラインツールボックス</strong>です。画像の圧縮、PDFの結合、音声ファイルのフォーマット変換など、複数のソフトを立ち上げる必要があった作業を、ブラウザ一つで完結させることができます。</p>
+            <h2>WebTools Proとは?</h2>
+            <p>WebTools Pro は、日常の作業を少しでも効率よく進めたい人のためのオンラインツールサイトです。画像編集、音声変換、PDF処理、テキスト整理など、よく使う機能をひとつにまとめています。</p>
 
-            <h2>当サイトが選ばれる3つの理由</h2>
+            <h2>このサイトの特徴</h2>
             <ul>
-                <li><strong>情報漏洩のリスクゼロ（完全ローカル処理）：</strong> 当サイトの最大の強みは安全性です。アップロードされたファイルは、外部のサーバーには一切送信されず、お使いの端末（ブラウザ内）だけで処理されます。機密文書やプライベートな写真も安心して加工できます。</li>
-                <li><strong>圧倒的な処理スピード：</strong> サーバーとの通信（アップロード・ダウンロード時間）が発生しないため、大容量の動画や音声ファイルでも待たされることなく、一瞬で処理が完了します。</li>
-                <li><strong>直感的でモダンなデザイン：</strong> 専門的な知識は必要ありません。ドラッグ＆ドロップとスライダーの直感的な操作だけで、プロレベルの調整が可能です。</li>
+                <li>ブラウザ上で使いやすいこと</li>
+                <li>目的のツールを見つけやすいこと</li>
+                <li>シンプルな操作で迷いにくいこと</li>
+                <li>日常作業から制作まで幅広く使えること</li>
             </ul>
 
-            <h2>よくある質問 (FAQ)</h2>
+            <h2>よくある質問</h2>
             <dl>
-                <dt>Q. 全てのツールが無料で使えますか？</dt>
-                <dd>A. はい、WebTools Proが提供するすべてのツールは完全無料でご利用いただけます。回数制限やファイルサイズの制限も（お使いの端末のメモリが許す限り）ありません。</dd>
+                <dt>Q. すべて無料で使えますか?</dt>
+                <dd>A. はい、すべて無料でご利用いただけます。今後も使いやすさを重視して改善していきます。</dd>
                 
-                <dt>Q. スマホからでも利用できますか？</dt>
-                <dd>A. もちろんです。PC（Windows, Mac）だけでなく、スマートフォンやタブレット（iOS, Android）の標準ブラウザからも快適に動作するように設計されています。</dd>
+                <dt>Q. スマートフォンでも使えますか?</dt>
+                <dd>A. はい。スマートフォンやタブレットからも利用できます。</dd>
 
-                <dt>Q. ソフトをインストールする必要はありますか？</dt>
-                <dd>A. 一切不要です。ブラウザ（Chrome, Safari, Edgeなど）を開くだけで、すぐにすべてのツールを利用可能です。</dd>
+                <dt>Q. ソフトのインストールは必要ですか?</dt>
+                <dd>A. いいえ、基本的にはブラウザからそのまま使えます。</dd>
+                
+                <dt>Q. データはどこに送られますか?</dt>
+                <dd>A. ツールによって処理方法は異なりますが、できるだけブラウザ内で完結する設計を心がけています。各ツールの説明をご確認ください。</dd>
+                
+                <dt>Q. 新しい機能は追加されますか?</dt>
+                <dd>A. はい。便利な機能は順次追加していく予定です。ご要望も受け付けています。</dd>
             </dl>
         </section>
     </main>
