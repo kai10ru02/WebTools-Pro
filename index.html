@@ -18,6 +18,12 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
+        /* ==== トップページ全体の表示サイズを90%に縮小（余白を広げる） ==== */
+        body {
+            zoom: 0.9; 
+            /* ※スマートフォンなどで文字が小さくなりすぎる場合は、メディアクエリで解除することも可能です */
+        }
+
         /* ==== 既存のSEOコンテンツ用スタイル ==== */
         .seo-content {
             max-width: 1200px;
@@ -327,6 +333,56 @@
                 <div class="tool-desc">25分の集中と5分の休憩で生産性を最大化するタイマー。ホワイトノイズなどの環境音をブラウザで自動生成し、深い集中をサポートします。</div>
                 <a href="pomodoro.html" class="btn-primary">ツールを開く</a>
             </div>
+
+            <div class="tool-card" data-category="utility">
+                <div class="tool-icon">🎲</div>
+                <div class="tool-title">ランダム抽選・ルーレット</div>
+                <div class="tool-desc">テキストや数字の範囲から完全にランダムで1つを抽選します。ドラムロールのような演出で、イベントや座席決めを盛り上げます。</div>
+                <a href="roulette.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="utility">
+                <div class="tool-icon">⏱️</div>
+                <div class="tool-title">高精度ストップウォッチ</div>
+                <div class="tool-desc">ミリ秒単位で正確に計測できるストップウォッチ。無制限のラップタイム記録に対応し、作業やスポーツの時間管理に最適です。</div>
+                <a href="stopwatch.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="audio">
+                <div class="tool-icon">🎸</div>
+                <div class="tool-title">ブラウザ楽器チューナー</div>
+                <div class="tool-desc">マイクを使ってブラウザ上で正確な音合わせが可能。インストール不要で、楽器のピッチのズレを視覚的に素早く確認できます。</div>
+                <a href="tuner.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="audio">
+                <div class="tool-icon">🥁</div>
+                <div class="tool-title">高精度メトロノーム</div>
+                <div class="tool-desc">テンポ(BPM)や拍子を自由に設定できるメトロノーム。Web Audio APIを活用したズレのない正確なリズムで練習をサポートします。</div>
+                <a href="metronome.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="utility">
+                <div class="tool-icon">📏</div>
+                <div class="tool-title">リアルタイム単位変換</div>
+                <div class="tool-desc">長さ、重さ、面積、温度、データ容量など様々な単位を瞬時に相互変換。数値を入力するだけで自動的に計算・表示されます。</div>
+                <a href="unit_converter.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="image">
+                <div class="tool-icon">🛡️</div>
+                <div class="tool-title">Exif(メタデータ)確認・削除</div>
+                <div class="tool-desc">写真に隠された位置情報(GPS)や撮影日時などのプライバシー情報を確認し完全に削除。SNSアップロード前の安全対策に必須です。</div>
+                <a href="exif_tool.html" class="btn-primary">ツールを開く</a>
+            </div>
+
+            <div class="tool-card" data-category="text">
+                <div class="tool-icon">🔄</div>
+                <div class="tool-title">Base64 エンコード/デコード</div>
+                <div class="tool-desc">文字列をBase64形式に変換、または元に復元する開発者向けツール。日本語(UTF-8)にも完全対応し、ローカルで安全に処理します。</div>
+                <a href="base64_tool.html" class="btn-primary">ツールを開く</a>
+            </div>
+
             <div class="tool-card request-card" data-category="all">
                 <div class="tool-icon">💡</div>
                 <div class="tool-title">欲しいツールがありませんか？</div>

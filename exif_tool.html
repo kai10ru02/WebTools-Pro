@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>画像メタデータ(Exif)確認・削除 - WebTools Pro</title>
+  <meta name="description" content="写真に隠された位置情報(GPS)や撮影日時などのExifデータを確認し、安全に削除できる無料ツールです。画像はブラウザ内で処理され、サーバーには送信されません。">
+  <link rel="icon" href="logo.jpg">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+  <style>
+    .tool-heading {
+      text-align: center;
+      background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.7rem;
+      letter-spacing: 1px;
+      font-weight: 800;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 35px;
+      line-height: 1.6;
+    }
+
+    /* ドラッグ＆ドロップエリア */
+    .drop-zone {
+      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      padding: 50px 20px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 30px;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      background: rgba(0, 242, 254, 0.1);
+      border-color: var(--primary-cyan);
+      box-shadow: inset 0 0 15px rgba(0, 242, 254, 0.1);
+    }
+    .drop-zone-text {
+      color: var(--text-main);
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .drop-zone-subtext {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* 解析結果エリア */
+    .result-container {
+      display: none;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .preview-box {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .preview-image {
+      max-width: 100%;
+      max-height: 250px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Exifデータのテーブル表示 */
+    .exif-table-wrapper {
+      max-height: 300px;
+      overflow-y: auto;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 20px;
+    }
+    .exif-table-wrapper::-webkit-scrollbar {
+      width: 8px;
+    }
+    .exif-table-wrapper::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+    }
+    th {
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--primary-cyan);
+      font-weight: bold;
+      width: 40%;
+    }
+    td {
+      color: var(--text-main);
+    }
+    tr:last-child th, tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* 警告メッセージ (GPSが含まれる場合など) */
+    .warning-msg {
+      background: rgba(255, 75, 43, 0.1);
+      border-left: 4px solid var(--primary-pink);
+      color: #ffb3ba;
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      display: none;
+    }
+    
+    .safe-msg {
+      background: rgba(0, 230, 118, 0.1);
+      border-left: 4px solid #00e676;
+      color: #a5ffd6;
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      display: none;
+    }
+
+    /* ボタン */
+    .btn-action-area {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      padding: 12px 25px;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%);
+      color: #0f1123;
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+    }
+    .btn-danger {
+      padding: 12px 25px;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+    }
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 75, 43, 0.4);
+    }
+
+    .footer-notice {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 15px 0;
+      padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+    </a>
+    <nav>
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </header>
+  
+  <main>
+    <div class="container">
+      <h1 class="tool-heading">画像メタデータ(Exif)確認・削除</h1>
+      <p class="subtitle">写真に隠されたGPS等のプライバシー情報を確認し、安全な状態にしてダウンロードします。</p>
+      
+      <div id="drop-zone" class="drop-zone">
+        <div class="drop-zone-text">📷 ここへ画像をドラッグ＆ドロップ</div>
+        <div class="drop-zone-subtext">または クリックしてファイルを選択 (JPEG / PNG対応)</div>
+        <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" style="display: none;">
+      </div>
+
+      <div id="result-container" class="result-container">
+        
+        <div class="preview-box">
+          <img id="preview-image" class="preview-image" src="" alt="プレビュー">
+        </div>
+
+        <div id="warning-msg" class="warning-msg">
+          ⚠️ 注意: この画像には位置情報(GPS)やカメラ情報が含まれています。SNS等にアップロードする前に削除することを推奨します。
+        </div>
+        
+        <div id="safe-msg" class="safe-msg">
+          ✅ 安全: この画像からはメタデータ(Exif)が検出されませんでした。プライバシー情報は含まれていません。
+        </div>
+
+        <div class="exif-table-wrapper" id="exif-table-wrapper">
+          <table>
+            <tbody id="exif-table-body">
+              </tbody>
+          </table>
+        </div>
+
+        <div class="btn-action-area">
+          <button id="btn-reset" class="btn-primary" style="background: rgba(255,255,255,0.1); color: var(--text-main); box-shadow: none;">別の画像を選ぶ</button>
+          <button id="btn-remove-exif" class="btn-danger">🗑️ Exifを削除してダウンロード</button>
+        </div>
+
+      </div>
+    </div>
+
+    <section class="seo-content">
+      <h2>画像メタデータ(Exif)確認・削除ツールとは？</h2>
+      <p>スマートフォンやデジタルカメラで撮影した写真には、「Exif（エグジフ）」と呼ばれるメタデータ（撮影日時、使用したカメラの機種、位置情報など）が自動的に記録されています。このツールは、アップロード前の写真にどのようなデータが隠されているかを確認し、ワンクリックでそれらを完全に削除するプライバシー保護ツールです。</p>
+      
+      <h2>当ツールの特徴</h2>
+      <ul>
+        <li><strong>完全ローカル処理で安心：</strong> 読み込んだ画像データは、お使いのブラウザ内でのみ処理されます。当サイトのサーバーに画像が送信・保存されることは絶対にないため、自宅の写真や機密画像も安全に処理できます。</li>
+        <li><strong>画質を落とさずデータのみ削除：</strong> CanvasAPIを利用した再描画処理により、見た目の画質を維持したまま、目に見えないメタデータだけを綺麗に削ぎ落とします。</li>
+        <li><strong>位置情報の警告機能：</strong> 最もリスクの高い「GPS（位置情報）」が含まれている場合、赤い警告メッセージでお知らせし、意図しないプライバシーの流出を未然に防ぎます。</li>
+      </ul>
+      
+      <h2>よくある質問 (FAQ)</h2>
+      <dl>
+        <dt>Q. 削除されたことをどうやって確認できますか？</dt>
+        <dd>A. ダウンロードした「cleaned_〜」という名前の画像を、再度このツールに読み込ませてみてください。「メタデータが検出されませんでした」と表示されれば、完全に削除されています。</dd>
+        <dt>Q. LINEやTwitter(X)にアップするときも削除したほうがいいですか？</dt>
+        <dd>A. 現在、TwitterやLINEなどの主要な大手SNSでは、アップロード時にシステム側で自動的にExifが削除される仕様になっています。しかし、ブログ（WordPress等）への直接アップロードや、メール/チャットでのファイル送信時はそのままデータが残るため、事前の削除を強く推奨します。</dd>
+        <dt>Q. PNG画像にもExifはありますか？</dt>
+        <dd>A. 基本的にExifはJPEG画像に付与されることが多いですが、最近のスマートフォン等ではPNG形式でもメタデータが記録される場合があります。当ツールはどちらの形式でも再描画を行い、安全な状態にリセットします。</dd>
+      </dl>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </div>
+    <p class="footer-notice">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
+    <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const dropZone = document.getElementById('drop-zone');
+      const fileInput = document.getElementById('file-input');
+      const resultContainer = document.getElementById('result-container');
+      const previewImage = document.getElementById('preview-image');
+      const exifTableBody = document.getElementById('exif-table-body');
+      const exifTableWrapper = document.getElementById('exif-table-wrapper');
+      const warningMsg = document.getElementById('warning-msg');
+      const safeMsg = document.getElementById('safe-msg');
+      const btnReset = document.getElementById('btn-reset');
+      const btnRemoveExif = document.getElementById('btn-remove-exif');
+
+      let currentFile = null;
+      let currentImageSrc = null;
+
+      // よくあるExifタグの日本語訳マッピング
+      const exifTagsDict = {
+        "Make": "カメラのメーカー",
+        "Model": "カメラのモデル",
+        "DateTimeOriginal": "撮影日時",
+        "GPSLatitude": "GPS 緯度",
+        "GPSLongitude": "GPS 経度",
+        "ISOSpeedRatings": "ISO感度",
+        "FNumber": "F値 (絞り)",
+        "ExposureTime": "露出時間 (シャッタースピード)",
+        "FocalLength": "焦点距離",
+        "Software": "編集ソフトウェア"
+      };
+
+      // ドラッグ＆ドロップのイベント処理
+      dropZone.addEventListener('click', () => fileInput.click());
+      
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+      
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+      });
+      
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+          handleFile(e.dataTransfer.files[0]);
+        }
+      });
+
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      // リセットボタン
+      btnReset.addEventListener('click', () => {
+        resultContainer.style.display = 'none';
+        dropZone.style.display = 'block';
+        fileInput.value = '';
+        currentFile = null;
+      });
+
+      // ファイルを読み込んでExifを解析する処理
+      function handleFile(file) {
+        if (!file.type.match('image.*')) {
+          alert('画像ファイル(JPEG, PNGなど)を選択してください。');
+          return;
+        }
+
+        currentFile = file;
+        
+        // 画像プレビュー用のURL作成
+        if (currentImageSrc) URL.revokeObjectURL(currentImageSrc);
+        currentImageSrc = URL.createObjectURL(file);
+        previewImage.src = currentImageSrc;
+
+        // UIの切り替え
+        dropZone.style.display = 'none';
+        resultContainer.style.display = 'block';
+        
+        // 初期化
+        exifTableBody.innerHTML = '';
+        warningMsg.style.display = 'none';
+        safeMsg.style.display = 'none';
+        exifTableWrapper.style.display = 'block';
+        btnRemoveExif.disabled = false;
+
+        // Exif.jsを使ってメタデータを読み取る
+        EXIF.getData(file, function() {
+          const allTags = EXIF.getAllTags(this);
+          
+          // thumbnail情報など、長すぎる/不要なバイナリデータは除外
+          delete allTags.thumbnail;
+          delete allTags.MakerNote;
+          delete allTags.UserComment;
+
+          const keys = Object.keys(allTags);
+
+          if (keys.length === 0) {
+            // メタデータがない場合
+            safeMsg.style.display = 'block';
+            exifTableWrapper.style.display = 'none';
+            btnRemoveExif.disabled = true; // 削除するものがないので無効化
+          } else {
+            // メタデータがある場合、テーブルに描画
+            let hasGPS = false;
+
+            keys.forEach(key => {
+              let val = allTags[key];
+              const displayName = exifTagsDict[key] || key;
+              
+              // GPS情報の有無をチェック
+              if (key.includes("GPS")) hasGPS = true;
+
+              // 分数表記（露出時間など）や配列の整形
+              if (val && typeof val === 'object' && val.numerator && val.denominator) {
+                val = val.numerator + "/" + val.denominator;
+              } else if (Array.isArray(val)) {
+                val = val.join(', ');
+              }
+
+              const tr = document.createElement('tr');
+              tr.innerHTML = `<th>${displayName}</th><td>${val}</td>`;
+              exifTableBody.appendChild(tr);
+            });
+
+            // GPS情報が含まれていた場合は警告を表示
+            if (hasGPS) {
+              warningMsg.style.display = 'block';
+            }
+          }
+        });
+      }
+
+      // Exifを削除してダウンロードする処理
+      btnRemoveExif.addEventListener('click', () => {
+        if (!currentImageSrc) return;
+
+        // Canvasを使って画像を再描画することでメタデータを完全に削ぎ落とす
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        
+        img.onload = function() {
+          canvas.width = img.width;
+          canvas.height = img.height;
+          ctx.drawImage(img, 0, 0);
+          
+          // 再描画した画像をJPEGのDataURLとして出力（画質0.95で劣化を抑える）
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+          
+          // ダウンロード用のリンクを生成してクリックさせる
+          const a = document.createElement('a');
+          a.href = dataUrl;
+          // 元のファイル名の先頭に「cleaned_」を付ける
+          a.download = 'cleaned_' + (currentFile.name || 'image.jpg');
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          
+          alert('メタデータを削除した画像のダウンロードを開始しました！');
+        };
+        img.src = currentImageSrc;
+      });
+    });
+  </script>
+</body>
+</html>

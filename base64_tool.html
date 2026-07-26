@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base64 エンコード/デコード - WebTools Pro</title>
+  <meta name="description" content="テキストや文字列をBase64形式にエンコード、またはデコードして元に戻す無料ツールです。日本語（UTF-8）に完全対応し、ブラウザ上で安全に変換できます。">
+  <link rel="icon" href="logo.jpg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-heading {
+      text-align: center;
+      background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.7rem;
+      letter-spacing: 1px;
+      font-weight: 800;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 35px;
+      line-height: 1.6;
+    }
+
+    .base64-container {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px 20px;
+      margin-bottom: 30px;
+    }
+
+    /* モード選択ラジオボタン */
+    .mode-selector {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
+    .mode-selector label {
+      cursor: pointer;
+      color: var(--text-main);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+    .mode-selector label:hover {
+      color: var(--primary-cyan);
+    }
+    .mode-selector input[type="radio"] {
+      accent-color: var(--primary-cyan);
+      transform: scale(1.3);
+    }
+
+    /* テキストエリア共通スタイル */
+    .textarea-wrapper {
+      margin-bottom: 20px;
+    }
+    .textarea-wrapper label {
+      display: block;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 15px;
+      color: var(--text-main);
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.05rem;
+      resize: vertical;
+      outline: none;
+      transition: all 0.3s ease;
+      line-height: 1.5;
+    }
+    textarea:focus {
+      border-color: var(--primary-cyan);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    }
+    textarea[readonly] {
+      background: rgba(0, 0, 0, 0.4);
+      border-color: rgba(0, 242, 254, 0.3);
+      color: var(--primary-cyan);
+    }
+
+    /* コントロールボタン群 */
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .btn-run {
+      padding: 15px 40px;
+      background: linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%);
+      color: #0f1123;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+    }
+    .btn-run:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+    }
+
+    /* コピーボタン */
+    .copy-area {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+    .btn-copy {
+      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* 成功時の通知表示 */
+    .copy-toast {
+      color: #00e676;
+      margin-right: 15px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s;
+      align-self: center;
+    }
+    .copy-toast.show {
+      opacity: 1;
+    }
+
+    .footer-notice {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 15px 0;
+      padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+    </a>
+    <nav>
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </header>
+  
+  <main>
+    <div class="container">
+      <h1 class="tool-heading">Base64 エンコード/デコード</h1>
+      <p class="subtitle">文字列をBase64形式に変換したり、元に戻したりすることができます。日本語(UTF-8)にも対応しています。</p>
+      
+      <div class="base64-container">
+        
+        <div class="mode-selector">
+          <label>
+            <input type="radio" name="mode" value="encode" checked> 
+            🔒 エンコード (文字列 → Base64)
+          </label>
+          <label>
+            <input type="radio" name="mode" value="decode"> 
+            🔓 デコード (Base64 → 文字列)
+          </label>
+        </div>
+
+        <div class="textarea-wrapper">
+          <label id="input-label" for="input-text">変換する元の文字列</label>
+          <textarea id="input-text" placeholder="ここにテキストを入力してください..."></textarea>
+        </div>
+
+        <div class="controls">
+          <button id="execute-btn" class="btn-run">変換する</button>
+        </div>
+
+        <div class="textarea-wrapper">
+          <label id="output-label" for="output-text">変換結果</label>
+          <textarea id="output-text" readonly placeholder="変換結果がここに表示されます..."></textarea>
+          
+          <div class="copy-area">
+            <span id="copy-toast" class="copy-toast">コピーしました！</span>
+            <button id="copy-btn" class="btn-copy">結果をコピー</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <section class="seo-content">
+      <h2>Base64 エンコード/デコード機能とは？</h2>
+      <p>テキストデータや文字列を「Base64」と呼ばれる64種類の英数字のみの安全な文字列に変換（エンコード）したり、逆にBase64形式の文字列を元のテキストに復元（デコード）したりする開発者向けツールです。プログラムの開発や、APIとの通信テスト、データの埋め込みなどの際に重宝します。</p>
+      
+      <h2>当ツールの特徴</h2>
+      <ul>
+        <li><strong>日本語（マルチバイト文字）完全対応：</strong> 古いツールでは日本語を入れると文字化けやエラーになることがありますが、当ツールはUTF-8文字の相互変換をサポートする最新のアルゴリズムを採用しているため、日本語や絵文字でも安全に変換可能です。</li>
+        <li><strong>情報漏洩リスクゼロ：</strong> パスワードやAPIキー、アクセスTokenなどをデバッグのために変換する場合でも、データは一切外部サーバーに送信されません。お使いのブラウザ内だけで処理されるため機密情報の扱いにも最適です。</li>
+        <li><strong>ワンクリックコピー：</strong> 変換された結果は、ボタン一つでクリップボードにコピー可能。すぐにコードエディタや他のツールに貼り付けることができます。</li>
+      </ul>
+      
+      <h2>よくある質問 (FAQ)</h2>
+      <dl>
+        <dt>Q. Base64は暗号化ですか？</dt>
+        <dd>A. いいえ、Base64はデータを特定の文字の組み合わせに「変換（エンコード）」しているだけで、「暗号化」ではありません。ルールを知っていれば誰でもデコード（復元）できるため、パスワードなどを隠す目的で使用しないでください。</dd>
+        <dt>Q. デコードしようとするとエラーが出ます。</dt>
+        <dd>A. 入力された文字列が正しいBase64形式ではない可能性があります。空白や改行が混ざっていないか、また他の形式のデータではないかご確認ください。</dd>
+        <dt>Q. 画像ファイルなどをBase64に変換できますか？</dt>
+        <dd>A. 当ツールは「テキスト（文字列）」のBase64変換に特化しています。画像などのバイナリファイルの変換には対応しておりません。</dd>
+      </dl>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </div>
+    <p class="footer-notice">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
+    <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const modeRadios = document.querySelectorAll('input[name="mode"]');
+      const inputLabel = document.getElementById('input-label');
+      const outputLabel = document.getElementById('output-label');
+      const inputText = document.getElementById('input-text');
+      const outputText = document.getElementById('output-text');
+      const executeBtn = document.getElementById('execute-btn');
+      const copyBtn = document.getElementById('copy-btn');
+      const copyToast = document.getElementById('copy-toast');
+
+      // モード切り替え時のUIラベル変更
+      modeRadios.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          inputText.value = '';
+          outputText.value = '';
+          if (e.target.value === 'encode') {
+            inputLabel.textContent = '変換する元の文字列';
+            inputText.placeholder = 'ここにテキストを入力してください...';
+            executeBtn.textContent = 'エンコードする';
+          } else {
+            inputLabel.textContent = 'デコードするBase64文字列';
+            inputText.placeholder = 'ここにBase64文字列を入力してください...';
+            executeBtn.textContent = 'デコードする';
+          }
+        });
+      });
+
+      // 日本語（Unicode）に対応したエンコード処理
+      function encodeBase64Unicode(text) {
+        // TextEncoderを使用してUTF-8のバイト配列に変換
+        const bytes = new TextEncoder().encode(text);
+        const binString = Array.from(bytes, (byte) =>
+          String.fromCodePoint(byte)
+        ).join("");
+        return btoa(binString);
+      }
+
+      // 日本語（Unicode）に対応したデコード処理
+      function decodeBase64Unicode(base64) {
+        // atobでバイナリ文字列に戻し、UTF-8バイト配列から文字へデコード
+        const binString = atob(base64);
+        const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0));
+        return new TextDecoder().decode(bytes);
+      }
+
+      // 変換実行処理
+      executeBtn.addEventListener('click', () => {
+        const text = inputText.value.trim();
+        const mode = document.querySelector('input[name="mode"]:checked').value;
+        
+        if (!text) {
+          alert('テキストを入力してください。');
+          return;
+        }
+
+        try {
+          if (mode === 'encode') {
+            const result = encodeBase64Unicode(text);
+            outputText.value = result;
+          } else {
+            const result = decodeBase64Unicode(text);
+            outputText.value = result;
+          }
+        } catch (error) {
+          alert('変換に失敗しました。入力データが正しい形式(Base64)か確認してください。');
+          console.error(error);
+          outputText.value = '';
+        }
+      });
+
+      // コピー機能
+      copyBtn.addEventListener('click', () => {
+        const result = outputText.value;
+        if (!result) return;
+
+        navigator.clipboard.writeText(result).then(() => {
+          copyToast.classList.add('show');
+          setTimeout(() => {
+            copyToast.classList.remove('show');
+          }, 2000);
+        }).catch(err => {
+          alert('コピーに失敗しました。');
+          console.error(err);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

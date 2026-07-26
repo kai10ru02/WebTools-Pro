@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>チューナー - WebTools Pro</title>
+  <meta name="description" content="マイクを使ってブラウザ上で楽器の音合わせができる無料のチューナーアプリです。インストール不要で正確なピッチ計測が可能です。">
+  <link rel="icon" href="logo.jpg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-heading {
+      text-align: center;
+      background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.7rem;
+      letter-spacing: 1px;
+      font-weight: 800;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 35px;
+      line-height: 1.6;
+    }
+    .tuner-display-container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 50px 20px;
+      margin-bottom: 30px;
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .note-display {
+      font-size: 6rem;
+      font-weight: bold;
+      color: var(--primary-cyan);
+      line-height: 1;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+    }
+    .freq-display {
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      font-family: 'Courier New', Courier, monospace;
+      margin-bottom: 30px;
+    }
+    .meter-container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      margin: 0 auto;
+    }
+    .meter-center {
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      width: 2px;
+      height: 30px;
+      background: #ffffff;
+      transform: translateX(-50%);
+    }
+    .meter-pointer {
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      width: 4px;
+      height: 30px;
+      background: var(--primary-pink);
+      border-radius: 2px;
+      transform: translateX(-50%);
+      transition: left 0.1s ease-out, background-color 0.2s;
+      box-shadow: 0 0 10px var(--primary-pink);
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+    .btn {
+      padding: 15px 40px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 200px;
+    }
+    .btn-start {
+      background: linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%);
+      color: #0f1123;
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+    }
+    .btn-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+    }
+    .footer-notice {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 15px 0;
+      padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+    </a>
+    <nav>
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </header>
+  
+  <main>
+    <div class="container">
+      <h1 class="tool-heading">楽器チューナー</h1>
+      <p class="subtitle">マイクへのアクセスを許可して、楽器の音を鳴らしてください。<br>※マイクの音声データはブラウザ内でのみ処理され、外部には送信されません。</p>
+      
+      <div class="tuner-display-container">
+        <div id="note-display" class="note-display">--</div>
+        <div id="freq-display" class="freq-display">0.0 Hz</div>
+        
+        <div class="meter-container">
+          <div class="meter-center"></div>
+          <div id="meter-pointer" class="meter-pointer"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button id="toggle-btn" class="btn btn-start">マイクをオンにする</button>
+      </div>
+    </div>
+
+    <section class="seo-content">
+      <h2>ブラウザ楽器チューナーとは？</h2>
+      <p>スマートフォンやPCに内蔵されているマイクを利用して、楽器の音程（ピッチ）を正確に合わせることができる無料のオンラインチューナーです。ギター、ベース、ウクレレ、バイオリンなど、専用のチューナー機器が手元にない時でもブラウザを開くだけですぐにチューニングが可能です。</p>
+      
+      <h2>当ツールの特徴</h2>
+      <ul>
+        <li><strong>高精度なピッチ検出アルゴリズム：</strong> 「自己相関関数」を用いた音声解析により、ノイズの多い環境でもマイクから入力された音の周波数（Hz）を正確に検知し、対応する音階を表示します。</li>
+        <li><strong>直感的な視覚フィードバック：</strong> 音程のズレをメーターで視覚的に表示します。音が基準ピッチ（±5セント以内）にぴったり合うとメーターが緑色に光るため、感覚的に音合わせができます。</li>
+        <li><strong>プライバシー完全保護：</strong> マイクから取得した音声データは、音程を計算するためだけにブラウザ内で一時的に処理されます。音声が録音されたり、外部サーバーに送信されることは絶対にありません。</li>
+      </ul>
+      
+      <h2>よくある質問 (FAQ)</h2>
+      <dl>
+        <dt>Q. 「マイクへのアクセスが拒否されました」と出ます。</dt>
+        <dd>A. チューナーを利用するにはマイクへのアクセス権限が必要です。ブラウザのURLバーの左側（鍵マーク等）をクリックし、マイクのアクセスを「許可」に変更してから再度ページを読み込んでください。</dd>
+        <dt>Q. メーターがうまく反応しません。</dt>
+        <dd>A. 周囲の雑音が大きい場合や、楽器の音が小さすぎる（マイクから遠い）場合は正確に検出できないことがあります。なるべく静かな環境で、マイクの近くで音を鳴らしてみてください。</dd>
+        <dt>Q. どの周波数を基準にしていますか？</dt>
+        <dd>A. 当チューナーは、国際標準ピッチである「A = 440Hz」を基準として計算しています。</dd>
+      </dl>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </div>
+    <p class="footer-notice">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
+    <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('toggle-btn');
+      const noteDisplay = document.getElementById('note-display');
+      const freqDisplay = document.getElementById('freq-display');
+      const meterPointer = document.getElementById('meter-pointer');
+
+      let audioContext = null;
+      let analyser = null;
+      let mediaStreamSource = null;
+      let isRecording = false;
+      let rafId = null;
+
+      const noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+      function noteFromPitch(frequency) {
+        const noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
+        return Math.round(noteNum) + 69;
+      }
+
+      function frequencyFromNoteNumber(note) {
+        return 440 * Math.pow(2, (note - 69) / 12);
+      }
+
+      function centsOffFromPitch(frequency, note) {
+        return Math.floor(1200 * Math.log(frequency / frequencyFromNoteNumber(note)) / Math.log(2));
+      }
+
+      function autoCorrelate(buf, sampleRate) {
+        let SIZE = buf.length;
+        let rms = 0;
+        for (let i = 0; i < SIZE; i++) {
+          let val = buf[i];
+          rms += val * val;
+        }
+        rms = Math.sqrt(rms / SIZE);
+        if (rms < 0.01) return -1; 
+
+        let r1 = 0, r2 = SIZE - 1, thres = 0.2;
+        for (let i = 0; i < SIZE / 2; i++) {
+          if (Math.abs(buf[i]) < thres) { r1 = i; break; }
+        }
+        for (let i = 1; i < SIZE / 2; i++) {
+          if (Math.abs(buf[SIZE - i]) < thres) { r2 = SIZE - i; break; }
+        }
+
+        buf = buf.slice(r1, r2);
+        SIZE = buf.length;
+        let c = new Array(SIZE).fill(0);
+        for (let i = 0; i < SIZE; i++) {
+          for (let j = 0; j < SIZE - i; j++) {
+            c[i] = c[i] + buf[j] * buf[j + i];
+          }
+        }
+
+        let d = 0; while (c[d] > c[d + 1]) d++;
+        let maxval = -1, maxpos = -1;
+        for (let i = d; i < SIZE; i++) {
+          if (c[i] > maxval) {
+            maxval = c[i];
+            maxpos = i;
+          }
+        }
+        let T0 = maxpos;
+        let x1 = c[T0 - 1], x2 = c[T0], x3 = c[T0 + 1];
+        let a = (x1 + x3 - 2 * x2) / 2;
+        let b = (x3 - x1) / 2;
+        if (a) T0 = T0 - b / (2 * a);
+
+        return sampleRate / T0;
+      }
+
+      function updatePitch() {
+        const buf = new Float32Array(analyser.fftSize);
+        analyser.getFloatTimeDomainData(buf);
+        const ac = autoCorrelate(buf, audioContext.sampleRate);
+
+        if (ac !== -1) {
+          const pitch = ac;
+          const note = noteFromPitch(pitch);
+          const noteString = noteStrings[note % 12];
+          const cents = centsOffFromPitch(pitch, note);
+          
+          noteDisplay.textContent = noteString;
+          freqDisplay.textContent = pitch.toFixed(1) + " Hz";
+
+          let pointerPosition = 50 + cents; 
+          
+          if(pointerPosition < 0) pointerPosition = 0;
+          if(pointerPosition > 100) pointerPosition = 100;
+          
+          meterPointer.style.left = pointerPosition + "%";
+
+          if (Math.abs(cents) < 5) {
+            meterPointer.style.backgroundColor = "#00e676";
+            meterPointer.style.boxShadow = "0 0 15px #00e676";
+            noteDisplay.style.color = "#00e676";
+            noteDisplay.style.textShadow = "0 0 20px rgba(0, 230, 118, 0.3)";
+          } else {
+            meterPointer.style.backgroundColor = "var(--primary-pink)";
+            meterPointer.style.boxShadow = "0 0 10px var(--primary-pink)";
+            noteDisplay.style.color = "var(--primary-cyan)";
+            noteDisplay.style.textShadow = "0 0 20px rgba(0, 242, 254, 0.3)";
+          }
+        }
+
+        if (isRecording) {
+          rafId = requestAnimationFrame(updatePitch);
+        }
+      }
+
+      toggleBtn.addEventListener('click', async () => {
+        if (!isRecording) {
+          try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 2048;
+            mediaStreamSource = audioContext.createMediaStreamSource(stream);
+            mediaStreamSource.connect(analyser);
+            
+            isRecording = true;
+            toggleBtn.textContent = "マイクをオフにする";
+            toggleBtn.style.background = "linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%)";
+            toggleBtn.style.color = "#ffffff";
+            
+            updatePitch();
+          } catch (err) {
+            alert('マイクへのアクセスが拒否されたか、エラーが発生しました。ブラウザの設定をご確認ください。');
+            console.error(err);
+          }
+        } else {
+          isRecording = false;
+          cancelAnimationFrame(rafId);
+          if (audioContext) {
+            audioContext.close();
+          }
+          
+          toggleBtn.textContent = "マイクをオンにする";
+          toggleBtn.style.background = "linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%)";
+          toggleBtn.style.color = "#0f1123";
+          
+          noteDisplay.textContent = "--";
+          freqDisplay.textContent = "0.0 Hz";
+          meterPointer.style.left = "50%";
+          noteDisplay.style.color = "var(--primary-cyan)";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>単位変換 - WebTools Pro</title>
+  <meta name="description" content="長さ、重さ、面積、データ容量、温度など様々な単位を瞬時に相互変換できる無料のオンラインツールです。ブラウザ上で動作し、リアルタイムで計算結果を表示します。">
+  <link rel="icon" href="logo.jpg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-heading {
+      text-align: center;
+      background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.7rem;
+      letter-spacing: 1px;
+      font-weight: 800;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 35px;
+      line-height: 1.6;
+    }
+
+    .converter-container {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px 20px;
+      margin-bottom: 30px;
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);
+    }
+
+    .category-selector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .category-selector label {
+      color: var(--text-muted);
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    .category-selector select {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      max-width: 300px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--primary-cyan);
+      border-radius: 8px;
+      padding: 12px 15px;
+      color: var(--text-main);
+      font-size: 1.1rem;
+      font-weight: bold;
+      outline: none;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+    }
+
+    .conversion-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .input-group input, 
+    .input-group select {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 15px;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      outline: none;
+      transition: all 0.3s;
+    }
+    
+    .input-group input {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+    }
+
+    .input-group input:focus, 
+    .input-group select:focus {
+      border-color: var(--primary-cyan);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    }
+
+    .input-group select {
+      cursor: pointer;
+    }
+
+    /* 修正箇所：プルダウンの選択肢（option）が白同化しないように背景色と文字色を強制指定 */
+    select option {
+      background-color: #0f1123;
+      color: #ffffff;
+    }
+    
+    /* 計算結果用（読み取り専用）のスタイル */
+    .input-group input[readonly] {
+      background: rgba(0, 0, 0, 0.4);
+      color: var(--primary-cyan);
+      border-color: rgba(0, 242, 254, 0.3);
+    }
+
+    .swap-btn {
+      background: linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      color: #0f1123;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      flex-shrink: 0;
+      margin-top: 5px; 
+    }
+    .swap-btn:hover {
+      transform: scale(1.1) rotate(180deg);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+
+    .footer-notice {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 15px 0;
+      padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+    </a>
+    <nav>
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </header>
+  
+  <main>
+    <div class="container">
+      <h1 class="tool-heading">単位変換</h1>
+      <p class="subtitle">長さや重さ、データ容量などの単位をリアルタイムで相互変換します。</p>
+      
+      <div class="converter-container">
+        
+        <div class="category-selector">
+          <label for="category-select">変換する種類</label>
+          <select id="category-select">
+            <option value="length" selected>📏 長さ</option>
+            <option value="weight">⚖️ 重さ</option>
+            <option value="area">🟩 面積</option>
+            <option value="temperature">🌡️ 温度</option>
+            <option value="data">💾 データ容量</option>
+          </select>
+        </div>
+
+        <div class="conversion-area">
+          <div class="input-group">
+            <input type="number" id="input-value" value="1" step="any">
+            <select id="input-unit"></select>
+          </div>
+          
+          <button id="swap-btn" class="swap-btn" title="単位を入れ替える">⇄</button>
+          
+          <div class="input-group">
+            <input type="text" id="output-value" readonly placeholder="計算結果">
+            <select id="output-unit"></select>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <section class="seo-content">
+      <h2>単位変換ツールとは？</h2>
+      <p>日常会話や仕事、海外の文献を読む際などに登場する「よくわからない単位」を、自分が普段使っている馴染みのある単位に瞬時に変換できる無料オンラインツールです。数値の入力や単位の選択を変更した瞬間に自動で計算されるため、ボタンを押す手間もありません。</p>
+      
+      <h2>当ツールの特徴</h2>
+      <ul>
+        <li><strong>豊富なカテゴリと単位：</strong> 長さ（メートル、インチなど）、重さ（グラム、ポンドなど）、面積（平方メートル、坪など）、温度（摂氏、華氏など）、データ容量（MB、GBなど）の幅広いカテゴリに対応しています。</li>
+        <li><strong>直感的な単位入れ替え機能：</strong> 中央の「⇄」ボタンを1クリックするだけで、変換元と変換先の単位をサッと入れ替えることができます。</li>
+        <li><strong>完全オフライン処理：</strong> 複雑な計算もすべてお使いのブラウザ内部（ローカル）で行われます。通信によるタイムラグが一切なく、機密性の高いデータを入力しても外部に漏れる心配はありません。</li>
+      </ul>
+      
+      <h2>よくある質問 (FAQ)</h2>
+      <dl>
+        <dt>Q. 小数点はどこまで表示されますか？</dt>
+        <dd>A. 計算結果は最大で有効数字7桁程度まで表示され、不要な末尾の「0」は自動的に省略されるため、スッキリと見やすい数値になります。</dd>
+        <dt>Q. エクセルなどの表計算ソフトに結果をコピーできますか？</dt>
+        <dd>A. はい、結果が表示されている入力欄（右側）をクリックまたは長押しして、テキストとしてコピー＆ペーストすることが可能です。</dd>
+        <dt>Q. 変換したい単位が見つからないのですが？</dt>
+        <dd>A. 当ツールでは、日本国内および国際基準で最もよく使われる主要な単位を厳選して搭載しています。もし追加を希望される単位がございましたら、「お問い合わせ」よりリクエストをお送りください。</dd>
+      </dl>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </div>
+    <p class="footer-notice">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
+    <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const categorySelect = document.getElementById('category-select');
+      const inputUnit = document.getElementById('input-unit');
+      const outputUnit = document.getElementById('output-unit');
+      const inputValue = document.getElementById('input-value');
+      const outputValue = document.getElementById('output-value');
+      const swapBtn = document.getElementById('swap-btn');
+
+      const unitData = {
+        length: {
+          options: [
+            { val: 'mm', label: 'ミリメートル (mm)' },
+            { val: 'cm', label: 'センチメートル (cm)' },
+            { val: 'm', label: 'メートル (m)' },
+            { val: 'km', label: 'キロメートル (km)' },
+            { val: 'in', label: 'インチ (in)' },
+            { val: 'ft', label: 'フィート (ft)' },
+            { val: 'yd', label: 'ヤード (yd)' },
+            { val: 'mile', label: 'マイル (mile)' }
+          ],
+          rates: { mm: 0.001, cm: 0.01, m: 1, km: 1000, in: 0.0254, ft: 0.3048, yd: 0.9144, mile: 1609.344 }
+        },
+        weight: {
+          options: [
+            { val: 'mg', label: 'ミリグラム (mg)' },
+            { val: 'g', label: 'グラム (g)' },
+            { val: 'kg', label: 'キログラム (kg)' },
+            { val: 't', label: 'トン (t)' },
+            { val: 'oz', label: 'オンス (oz)' },
+            { val: 'lb', label: 'ポンド (lb)' }
+          ],
+          rates: { mg: 0.000001, g: 0.001, kg: 1, t: 1000, oz: 0.0283495, lb: 0.453592 }
+        },
+        area: {
+          options: [
+            { val: 'cm2', label: '平方センチメートル (cm²)' },
+            { val: 'm2', label: '平方メートル (m²)' },
+            { val: 'a', label: 'アール (a)' },
+            { val: 'ha', label: 'ヘクタール (ha)' },
+            { val: 'km2', label: '平方キロメートル (km²)' },
+            { val: 'tsubo', label: '坪' },
+            { val: 'jo', label: '畳 (中京間)' },
+            { val: 'sq_ft', label: '平方フィート (sq ft)' }
+          ],
+          rates: { cm2: 0.0001, m2: 1, a: 100, ha: 10000, km2: 1000000, tsubo: 3.305785, jo: 1.6562, sq_ft: 0.092903 }
+        },
+        temperature: {
+          options: [
+            { val: 'C', label: '摂氏 (℃)' },
+            { val: 'F', label: '華氏 (℉)' },
+            { val: 'K', label: 'ケルビン (K)' }
+          ]
+        },
+        data: {
+          options: [
+            { val: 'B', label: 'バイト (B)' },
+            { val: 'KB', label: 'キロバイト (KB)' },
+            { val: 'MB', label: 'メガバイト (MB)' },
+            { val: 'GB', label: 'ギガバイト (GB)' },
+            { val: 'TB', label: 'テラバイト (TB)' }
+          ],
+          rates: { B: 1, KB: 1024, MB: 1048576, GB: 1073741824, TB: 1099511627776 }
+        }
+      };
+
+      function populateUnits(category) {
+        const options = unitData[category].options;
+        inputUnit.innerHTML = '';
+        outputUnit.innerHTML = '';
+        
+        options.forEach(opt => {
+          inputUnit.add(new Option(opt.label, opt.val));
+          outputUnit.add(new Option(opt.label, opt.val));
+        });
+
+        if(options.length > 1) {
+          outputUnit.selectedIndex = 1;
+        }
+      }
+
+      function calculate() {
+        const cat = categorySelect.value;
+        const val = parseFloat(inputValue.value);
+        const from = inputUnit.value;
+        const to = outputUnit.value;
+
+        if (isNaN(val)) {
+          outputValue.value = "";
+          return;
+        }
+
+        if (from === to) {
+          outputValue.value = val;
+          return;
+        }
+
+        let result = 0;
+
+        if (cat === "temperature") {
+          let celsius = 0;
+          if (from === "C") celsius = val;
+          else if (from === "F") celsius = (val - 32) * 5 / 9;
+          else if (from === "K") celsius = val - 273.15;
+
+          if (to === "C") result = celsius;
+          else if (to === "F") result = celsius * 9 / 5 + 32;
+          else if (to === "K") result = celsius + 273.15;
+        } else {
+          const baseValue = val * unitData[cat].rates[from];
+          result = baseValue / unitData[cat].rates[to];
+        }
+
+        if (result % 1 !== 0) {
+          result = parseFloat(result.toPrecision(7));
+        }
+        
+        outputValue.value = result;
+      }
+
+      categorySelect.addEventListener('change', (e) => {
+        populateUnits(e.target.value);
+        calculate();
+      });
+
+      inputValue.addEventListener('input', calculate);
+      inputUnit.addEventListener('change', calculate);
+      outputUnit.addEventListener('change', calculate);
+
+      swapBtn.addEventListener('click', () => {
+        const tempUnit = inputUnit.value;
+        inputUnit.value = outputUnit.value;
+        outputUnit.value = tempUnit;
+        calculate();
+      });
+
+      populateUnits(categorySelect.value);
+      calculate();
+    });
+  </script>
+</body>
+</html>

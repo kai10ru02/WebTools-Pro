@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ストップウォッチ＆ラップ - WebTools Pro</title>
+  <meta name="description" content="ブラウザで使える無料のストップウォッチです。ミリ秒単位の正確な計測とラップタイムの記録に対応しています。">
+  <link rel="icon" href="logo.jpg">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .tool-heading {
+      text-align: center;
+      background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 1.7rem;
+      letter-spacing: 1px;
+      font-weight: 800;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 35px;
+      line-height: 1.6;
+    }
+    .time-display-container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px 20px;
+      margin-bottom: 25px;
+      box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .time-display {
+      font-size: 3.5rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      color: var(--text-main);
+      letter-spacing: 2px;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 15px 30px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 120px;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    .btn-start {
+      background: linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%);
+      color: #0f1123;
+      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+    }
+    .btn-start:hover {
+      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+    }
+    .btn-stop {
+      background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+    }
+    .btn-stop:hover {
+      box-shadow: 0 6px 20px rgba(255, 75, 43, 0.4);
+    }
+    .btn-sub {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .btn-sub:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .btn-sub:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .lap-list-container {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 10px;
+    }
+    .lap-list-container::-webkit-scrollbar {
+      width: 8px;
+    }
+    .lap-list-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+    .lap-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-family: 'Courier New', Courier, monospace;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+    .lap-item:last-child {
+      border-bottom: none;
+    }
+    .lap-item .lap-number {
+      color: var(--text-main);
+      font-weight: bold;
+    }
+    .lap-item .lap-time {
+      color: var(--primary-cyan);
+    }
+    .footer-notice {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin: 15px 0;
+      padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+    </a>
+    <nav>
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </nav>
+  </header>
+  
+  <main>
+    <div class="container">
+      <h1 class="tool-heading">ストップウォッチ＆ラップ</h1>
+      <p class="subtitle">ミリ秒単位で正確に計測できるストップウォッチです。計測中にラップボタンを押すとタイムを記録できます。</p>
+      
+      <div class="time-display-container">
+        <div id="time-display" class="time-display">00:00:00.000</div>
+      </div>
+
+      <div class="controls">
+        <button id="start-stop-btn" class="btn btn-start">スタート</button>
+        <button id="lap-btn" class="btn btn-sub" disabled>ラップ</button>
+        <button id="reset-btn" class="btn btn-sub" disabled>リセット</button>
+      </div>
+
+      <div class="lap-list-container" id="lap-list-container" style="display: none;">
+      </div>
+    </div>
+
+    <section class="seo-content">
+      <h2>ストップウォッチ＆ラップ機能とは？</h2>
+      <p>ブラウザ上で動作する、高精度な無料のオンラインストップウォッチです。スポーツのタイム計測、勉強や仕事の作業時間管理、プレゼンテーションの練習など、正確な時間計測が必要なあらゆる場面で活躍します。</p>
+      
+      <h2>当ツールの特徴</h2>
+      <ul>
+        <li><strong>ミリ秒単位の正確な計測：</strong> 内部で端末の正確な時計データ（Date.now）と同期して計算しているため、長時間の計測でもズレが生じにくい設計です。</li>
+        <li><strong>無制限のラップタイム記録：</strong> 計測中に「ラップ」ボタンを押すことで、その瞬間のタイムをリストに記録できます。記録したラップタイムは画面上に一覧で表示されます。</li>
+        <li><strong>視認性を追求したデザイン：</strong> 数字が切り替わる際の画面のブレを防ぐため、専用の等幅フォント（Courier New等）を採用。スポーツ中など少し離れた場所からでもハッキリと時間を確認できます。</li>
+      </ul>
+      
+      <h2>よくある質問 (FAQ)</h2>
+      <dl>
+        <dt>Q. 別のタブを開いていても計測は続きますか？</dt>
+        <dd>A. はい。ブラウザの仕様上、バックグラウンドに回ると画面の描画は一時停止しますが、計測自体は内部の時計と連動しているため、タブに戻ってきた際に正確な経過時間が即座に再計算・表示されます。</dd>
+        <dt>Q. ラップタイムのデータは保存して後で見返せますか？</dt>
+        <dd>A. いいえ。当サイトのツールは全て一時的なローカル処理で完結するため、ページを閉じたりリロードしたりすると計測データとラップタイムはリセットされます。必要な場合はスクリーンショット等で記録を残してください。</dd>
+        <dt>Q. スマートフォンでも使えますか？</dt>
+        <dd>A. もちろんです。スマートフォンやタブレットの標準ブラウザでも、アプリをインストールすることなくそのままご利用いただけます。</dd>
+      </dl>
+    </section>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">ホーム</a>
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="contact.html">お問い合わせ</a>
+    </div>
+    <p class="footer-notice">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
+    <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const display = document.getElementById('time-display');
+      const startStopBtn = document.getElementById('start-stop-btn');
+      const lapBtn = document.getElementById('lap-btn');
+      const resetBtn = document.getElementById('reset-btn');
+      const lapContainer = document.getElementById('lap-list-container');
+
+      let startTime = 0;
+      let elapsedTime = 0;
+      let timerInterval = null;
+      let isRunning = false;
+      let lapCount = 0;
+
+      function formatTime(time) {
+        const h = String(Math.floor(time / 3600000)).padStart(2, '0');
+        const m = String(Math.floor((time % 3600000) / 60000)).padStart(2, '0');
+        const s = String(Math.floor((time % 60000) / 1000)).padStart(2, '0');
+        const ms = String(time % 1000).padStart(3, '0');
+        
+        if (h !== "00") {
+          return `${h}:${m}:${s}.${ms}`;
+        }
+        return `${m}:${s}.${ms}`;
+      }
+
+      function updateDisplay() {
+        const currentTime = Date.now();
+        elapsedTime = currentTime - startTime;
+        display.textContent = formatTime(elapsedTime);
+      }
+
+      startStopBtn.addEventListener('click', () => {
+        if (!isRunning) {
+          startTime = Date.now() - elapsedTime;
+          timerInterval = setInterval(updateDisplay, 10);
+          
+          startStopBtn.textContent = 'ストップ';
+          startStopBtn.classList.remove('btn-start');
+          startStopBtn.classList.add('btn-stop');
+          
+          lapBtn.disabled = false;
+          resetBtn.disabled = true; 
+          isRunning = true;
+        } else {
+          clearInterval(timerInterval);
+          
+          startStopBtn.textContent = 'スタート';
+          startStopBtn.classList.remove('btn-stop');
+          startStopBtn.classList.add('btn-start');
+          
+          lapBtn.disabled = true;
+          resetBtn.disabled = false; 
+          isRunning = false;
+        }
+      });
+
+      lapBtn.addEventListener('click', () => {
+        lapCount++;
+        lapContainer.style.display = 'block';
+        
+        const lapItem = document.createElement('div');
+        lapItem.className = 'lap-item';
+        lapItem.innerHTML = `
+          <span class="lap-number">Lap ${String(lapCount).padStart(2, '0')}</span>
+          <span class="lap-time">${formatTime(elapsedTime)}</span>
+        `;
+        
+        lapContainer.prepend(lapItem);
+      });
+
+      resetBtn.addEventListener('click', () => {
+        clearInterval(timerInterval);
+        elapsedTime = 0;
+        isRunning = false;
+        lapCount = 0;
+        
+        display.textContent = '00:00:00.000';
+        lapContainer.innerHTML = '';
+        lapContainer.style.display = 'none';
+        
+        lapBtn.disabled = true;
+        resetBtn.disabled = true;
+      });
+    });
+  </script>
+</body>
+</html>

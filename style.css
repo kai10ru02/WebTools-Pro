@@ -324,3 +324,56 @@ footer {
         margin: 20px auto;
     }
 }
+
+/* --------------------------------------------------------------------------
+   8. SEOコンテンツ・文章エリア用スタイル
+   -------------------------------------------------------------------------- */
+.seo-content {
+    max-width: 1200px;
+    margin: 60px auto 40px auto;
+    padding: 40px 20px 0 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.seo-content h2 {
+    font-size: 1.4rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    text-align: left;
+    border-left: 4px solid var(--primary-cyan);
+    padding-left: 12px;
+}
+
+.seo-content p, 
+.seo-content li, 
+.seo-content dd {
+    color: #8b949e;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+.seo-content ul {
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+
+.seo-content li {
+    margin-bottom: 8px;
+}
+
+.seo-content strong {
+    color: var(--primary-cyan);
+}
+
+.seo-content dt {
+    font-weight: bold;
+    color: var(--primary-cyan);
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.seo-content dd {
+    margin-bottom: 20px;
+    margin-left: 0;
+}
