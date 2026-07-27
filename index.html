@@ -1,520 +1,524 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>WebTools Pro | 無料・安全なブラウザ完結の便利ツールボックス</title>
-    <meta name="description" content="画像圧縮、PDF結合、音声変換、QRコード生成など、日常の作業をスマートにする高機能ツール群。すべてブラウザ上で完結しサーバー送信しないため、機密データも安全に処理できます。完全無料・登録不要。">
-    
-    <meta property="og:title" content="WebTools Pro | 無料・安全な便利ツールボックス">
-    <meta property="og:description" content="サーバーへのアップロード不要。すべてブラウザ上で完結するため、機密データやプライベートファイルも安全・高速に処理できる高機能ツール群です。">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://あなたのサイトURL.com">
-    <meta property="og:image" content="logo.jpg">
-    <meta name="twitter:card" content="summary_large_image">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebTools Pro | 無料・安全なブラウザ完結の便利ツールボックス</title>
+<meta name="description" content="画像圧縮、PDF結合、音声変換、QRコード生成など、日常の作業をスマートにする高機能ツール群。すべてブラウザ上で完結しサーバー送信しないため、機密データも安全に処理できます。完全無料・登録不要。">
+<meta property="og:title" content="WebTools Pro | 無料・安全な便利ツールボックス">
+<meta property="og:description" content="サーバーへのアップロード不要。すべてブラウザ上で完結するため、機密データやプライベートファイルも安全・高速に処理できる高機能ツール群です。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://webtoolspro.kai10ru02.workers.dev/">
+<meta property="og:image" content="logo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="logo.jpg">
+<link rel="stylesheet" href="style.css">
+<style>
+/* トップページ全体の表示サイズを90%に縮小 (余白を広げる) */
+body { zoom: 0.9; }
 
-    <link rel="icon" href="logo.jpg">
-    <link rel="stylesheet" href="style.css">
+/* ヒーローセクション 追加スタイル */
+.hero-lead {
+    font-size: 1.05rem;
+    color: #64748b;
+    max-width: 700px;
+    margin: 0 auto 20px auto;
+    line-height: 1.7;
+}
+.hero-features {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.feature-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    color: #334155;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+.feature-item strong {
+    color: #2563eb;
+}
 
-    <style>
-        /* ==== トップページ全体の表示サイズを90%に縮小（余白を広げる） ==== */
-        body {
-            zoom: 0.9; 
-        }
+/* ==== 既存のSEOコンテンツ用スタイル ====*/
+.seo-content {
+    max-width: 1200px;
+    margin: 60px auto 40px auto;
+    padding: 40px 20px 0 20px;
+    border-top: 1px solid #e2e8f0;
+}
+.seo-content h2 {
+    font-size: 1.4rem;
+    color: #0f172a;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    text-align: left;
+    border-left: 4px solid #2563eb;
+    padding-left: 12px;
+    background: none;
+    -webkit-text-fill-color: #0f172a;
+    text-shadow: none;
+}
+.seo-content p, .seo-content li, .seo-content dd {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+.seo-content ul {
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+.seo-content li { margin-bottom: 8px; }
+.seo-content strong { color: #2563eb; }
+.seo-content dt {
+    font-weight: bold;
+    color: #2563eb;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+.seo-content dd { margin-bottom: 20px; margin-left: 0; }
 
-        /* ==== ヒーローセクション（パターンA）追加スタイル ==== */
-        .hero-lead {
-            font-size: 1.05rem;
-            color: #c9d1d9;
-            max-width: 700px;
-            margin: 0 auto 20px auto;
-            line-height: 1.7;
-        }
-        .hero-features {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-        .feature-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 0.9rem;
-            color: #e6edf3;
-        }
-        .feature-item strong {
-            color: #00f2fe;
-        }
+/* ==== 検索&カテゴリフィルタリングのスタイル ==== */
+.filter-container {
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+@media (min-width: 768px) {
+    .filter-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+.search-wrapper {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+.search-input {
+    width: 100%;
+    padding: 12px 20px 12px 40px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+.search-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+.search-input::placeholder {
+    color: #94a3b8;
+}
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #94a3b8;
+    pointer-events: none;
+}
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.filter-btn {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+.filter-btn:hover {
+    background: #f1f5f9;
+    color: #334155;
+}
+.filter-btn.active {
+    background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+}
 
-        /* ==== 既存のSEOコンテンツ用スタイル ==== */
-        .seo-content {
-            max-width: 1200px;
-            margin: 60px auto 40px auto;
-            padding: 40px 20px 0 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .seo-content h2 {
-            font-size: 1.4rem;
-            color: #ffffff;
-            margin-bottom: 20px;
-            margin-top: 30px;
-            text-align: left;
-            border-left: 4px solid #00f2fe;
-            padding-left: 12px;
-            background: none;
-            -webkit-text-fill-color: #ffffff;
-            text-shadow: none;
-        }
-        .seo-content p, .seo-content li, .seo-content dd {
-            color: #8b949e;
-            font-size: 0.95rem;
-            line-height: 1.8;
-        }
-        .seo-content ul {
-            padding-left: 20px;
-            margin-bottom: 30px;
-        }
-        .seo-content li { margin-bottom: 8px; }
-        .seo-content strong { color: #00f2fe; }
-        .seo-content dt {
-            font-weight: bold;
-            color: #00f2fe;
-            margin-top: 20px;
-            margin-bottom: 5px;
-        }
-        .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+/* 非表示用クラス */
+.tool-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+}
+.tool-card.hidden {
+    display: none !important;
+}
 
-        /* ==== 検索＆カテゴリフィルタリングのスタイル ==== */
-        .filter-container {
-            max-width: 1200px;
-            margin: 0 auto 30px auto;
-            padding: 0 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        @media (min-width: 768px) {
-            .filter-container {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-        .search-wrapper {
-            position: relative;
-            flex: 1;
-            max-width: 400px;
-        }
-        .search-input {
-            width: 100%;
-            padding: 12px 20px 12px 40px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-        }
-        .search-input:focus {
-            outline: none;
-            border-color: #00f2fe;
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
-            background: rgba(0, 0, 0, 0.4);
-        }
-        .search-input::placeholder {
-            color: #6e7681;
-        }
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1rem;
-            color: #8b949e;
-            pointer-events: none;
-        }
-        .category-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #b3b3cc;
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: bold;
-            transition: all 0.2s ease;
-        }
-        .filter-btn:hover {
-            background: rgba(0, 242, 254, 0.1);
-            color: #ffffff;
-        }
-        .filter-btn.active {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-            color: #0f1123;
-            border-color: transparent;
-            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
-        }
-        
-        /* 非表示用クラス（アニメーション付き） */
-        .tool-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
-        }
-        .tool-card.hidden {
-            display: none !important;
-        }
-
-        /* 新機能リクエストカード用の特別装飾 */
-        .request-card {
-            border: 1px dashed rgba(165, 94, 234, 0.5) !important;
-            background: rgba(165, 94, 234, 0.03) !important;
-        }
-        .request-card:hover {
-            border-color: rgba(165, 94, 234, 0.8) !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(165, 94, 234, 0.2) !important;
-        }
-    </style>
+/* 新機能リクエストカード用の特別装飾 */
+.request-card {
+    border: 1px dashed rgba(139, 92, 246, 0.5) !important;
+    background: rgba(139, 92, 246, 0.02) !important;
+}
+.request-card:hover {
+    border-color: rgba(139, 92, 246, 0.8) !important;
+    box-shadow: 0 10px 20px rgba(139, 92, 246, 0.1) !important;
+}
+</style>
 </head>
 <body>
 
-    <header>
-        <a href="index.html" class="logo">
-            <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
-        </a>
-        <nav>
-            <a href="index.html" class="active">ホーム</a>
-            <a href="terms.html">利用規約</a>
-            <a href="privacy.html">プライバシーポリシー</a>
-            <a href="contact.html">お問い合わせ</a>
-        </nav>
-    </header>
+<header>
+  <a href="index.html" class="logo">
+    <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
+    <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
+  </a>
+  <nav>
+    <a href="index.html" class="active">ホーム</a>
+    <a href="terms.html">利用規約</a>
+    <a href="privacy.html">プライバシーポリシー</a>
+    <a href="contact.html">お問い合わせ</a>
+  </nav>
+</header>
 
-    <main>
-        <section class="hero">
-            <h1>あなたの作業を、もっと<span>快適</span>に。</h1>
-            <p class="hero-lead">WebTools Pro は、画像・音声・PDF・テキストなどの作業をブラウザ上で手軽に行える便利ツールボックスです。</p>
-            
-            <div class="hero-features">
-                <div class="feature-item">✨ <strong>登録不要</strong>ですぐ使える</div>
-                <div class="feature-item">🔒 <strong>ブラウザ内処理</strong>で安全・高速</div>
-                <div class="feature-item">🚀 <strong>シンプル操作</strong>で作業をスムーズに</div>
-            </div>
-        </section>
+<main>
+  <section class="hero">
+    <h1>あなたの作業を、もっと<span>快適</span>に。</h1>
+    <p class="hero-lead">
+      WebTools Pro は、画像・音声・PDF・テキストなどの作業をブラウザ上で手軽に行える便利ツールボックスです。
+    </p>
+    <div class="hero-features">
+      <div class="feature-item">✨ <strong>登録不要</strong>ですぐ使える</div>
+      <div class="feature-item">🔒 <strong>ブラウザ内処理</strong>で安全・高速</div>
+      <div class="feature-item">🚀 <strong>シンプル操作</strong>で作業をスムーズに</div>
+    </div>
+  </section>
 
-        <div class="filter-container">
-            <div class="search-wrapper">
-                <span class="search-icon">🔍</span>
-                <input type="text" id="search-input" class="search-input" placeholder="検索窓にキーワードを入力するか、カテゴリから目的のツールを選べます">
-            </div>
-            <div class="category-filters">
-                <button class="filter-btn active" data-filter="all">すべて</button>
-                <button class="filter-btn" data-filter="image">画像・デザイン</button>
-                <button class="filter-btn" data-filter="audio">音声・動画</button>
-                <button class="filter-btn" data-filter="text">テキスト</button>
-                <button class="filter-btn" data-filter="utility">便利ツール</button>
-            </div>
-        </div>
+  <div class="ad-slot">
+    <span class="ad-label">スポンサーリンク</span>
+    <div class="ad-wrapper">
+      </div>
+  </div>
 
-        <section class="tools-container" id="tools-container">
-            <div class="tool-card" data-category="image">
-                <div class="tool-icon">🖼️</div>
-                <div class="tool-title">画像軽量化・画質調整</div>
-                <div class="tool-desc">解像度や圧縮率をスライダーで調整し、用途に合わせて画像サイズを最適化できます。</div>
-                <a href="image_edit.html" class="btn-primary">ツールを開く</a>
-            </div>
+  <section class="filter-container">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="toolSearch" class="search-input" placeholder="ツールを検索 (例: PDF, 画像, 音声)..." onkeyup="filterTools()">
+    </div>
+    <div class="category-filters">
+      <button class="filter-btn active" onclick="filterCategory('all', this)">すべて</button>
+      <button class="filter-btn" onclick="filterCategory('image', this)">画像・デザイン</button>
+      <button class="filter-btn" onclick="filterCategory('audio', this)">音声・動画</button>
+      <button class="filter-btn" onclick="filterCategory('text', this)">テキスト</button>
+      <button class="filter-btn" onclick="filterCategory('utility', this)">便利ツール</button>
+    </div>
+  </section>
 
-            <div class="tool-card" data-category="audio">
-                <div class="tool-icon">🎵</div>
-                <div class="tool-title">オーディオコンバーター</div>
-                <div class="tool-desc">M4A、FLAC、WAVなどの音声ファイルを、MP3やWAVなどの形式に変換できます。</div>
-                <a href="audio.html" class="btn-primary">ツールを開く</a>
-            </div>
+  <div class="tools-container" id="toolsGrid">
+    <div class="tool-card" data-category="image" data-keywords="画像 軽量化 画質 圧縮 リサイズ resize image photo">
+      <div class="tool-icon">🖼️</div>
+      <div class="tool-title">画像軽量化・画質調整</div>
+      <div class="tool-desc">解像度や圧縮率をスライダーで調整し、用途に合わせて画像サイズを最適化できます。</div>
+      <a href="image_edit.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="audio">
-                <div class="tool-icon">🎛️</div>
-                <div class="tool-title">キー・再生速度 変換</div>
-                <div class="tool-desc">音程や再生速度を確認しながら調整できます。音楽の練習や編集に便利です。</div>
-                <a href="audio_edit.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="audio" data-keywords="音声 コンバーター mp3 wav m4a flac 変換 audio convert">
+      <div class="tool-icon">🎵</div>
+      <div class="tool-title">オーディオコンバーター</div>
+      <div class="tool-desc">M4A、FLAC、WAVなどの音声ファイルを、MP3やWAVなどの形式に変換できます。</div>
+      <a href="audio.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="utility">
-                <div class="tool-icon">📄</div>
-                <div class="tool-title">安全・簡単 PDF結合</div>
-                <div class="tool-desc">複数のPDFを順番に並べ替えて、ひとつのファイルにまとめられます。</div>
-                <a href="pdf.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="audio" data-keywords="音声 キー 再生速度 ピッチ 速度 調整 音楽 練習 pitch speed audio">
+      <div class="tool-icon">🎛️</div>
+      <div class="tool-title">キー・再生速度 変換</div>
+      <div class="tool-desc">音程や再生速度を確認しながら調整できます。音楽の練習や編集に便利です。</div>
+      <a href="audio_edit.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="utility">
-                <div class="tool-icon">📲</div>
-                <div class="tool-title">QRコード生成</div>
-                <div class="tool-desc">URLやテキストを入力すると、QRコードをすぐに作成できます。</div>
-                <a href="qrcode.html" class="btn-primary">ツールを開く</a>
-            </div>
-            
-            <div class="tool-card" data-category="audio">
-                <div class="tool-icon">🎬</div>
-                <div class="tool-title">動画から音声抽出</div>
-                <div class="tool-desc">動画ファイルから音声だけを取り出して、MP3やWAVとして保存できます。</div>
-                <a href="video_to_audio.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="utility" data-keywords="pdf 結合 まとめる 整理 pdf merge join">
+      <div class="tool-icon">📄</div>
+      <div class="tool-title">安全・簡単 PDF結合</div>
+      <div class="tool-desc">複数のPDFを順番に並べ替えて、ひとつのファイルにまとめられます。</div>
+      <a href="pdf.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="image">
-                <div class="tool-icon">🎨</div>
-                <div class="tool-title">画像カラーパレット抽出</div>
-                <div class="tool-desc">画像内の色を抽出し、カラーコードを確認できます。</div>
-                <a href="color_palette.html" class="btn-primary">ツールを開く</a>
-            </div>
-            
-            <div class="tool-card" data-category="image">
-                <div class="tool-icon">©️</div>
-                <div class="tool-title">透かし一括追加</div>
-                <div class="tool-desc">複数の画像に名前やIDなどの透かしをまとめて追加できます。</div>
-                <a href="watermark.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="utility" data-keywords="qrコード 生成 作成 url テキスト qr code generator">
+      <div class="tool-icon">📲</div>
+      <div class="tool-title">QRコード生成</div>
+      <div class="tool-desc">URLやテキストを入力すると、QRコードをすぐに作成できます。</div>
+      <a href="qrcode.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="audio">
-                <div class="tool-icon">🎙️</div>
-                <div class="tool-title">ボイスレコーダー&チェンジャー</div>
-                <div class="tool-desc">マイク録音や音声ファイルの加工に対応した、ブラウザ完結型のツールです。</div>
-                <a href="voice_changer.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="audio" data-keywords="動画 音声 抽出 mp3 wav 動画から音声 extract audio video">
+      <div class="tool-icon">🎬</div>
+      <div class="tool-title">動画から音声抽出</div>
+      <div class="tool-desc">動画ファイルから音声だけを取り出して、MP3やWAVとして保存できます。</div>
+      <a href="video_to_audio.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="utility">
-                <div class="tool-icon">🔐</div>
-                <div class="tool-title">パスワード生成器</div>
-                <div class="tool-desc">使いやすさと安全性のバランスを考えた、強力なパスワードを生成できます。</div>
-                <a href="password_generator.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="image" data-keywords="画像 カラーパレット 色 抽出 カラーコード rgb hex color palette">
+      <div class="tool-icon">🎨</div>
+      <div class="tool-title">画像カラーパレット抽出</div>
+      <div class="tool-desc">画像内の色を抽出し、カラーコードを確認できます。</div>
+      <a href="color_palette.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="text">
-                <div class="tool-icon">📝</div>
-                <div class="tool-title">文字数カウンター</div>
-                <div class="tool-desc">文字数、バイト数、読了時間などを確認しながら、テキストを整理できます。</div>
-                <a href="wordcount.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="image" data-keywords="透かし ウォーターマーク 一括 画像 著作権 watermark">
+      <div class="tool-icon">©️</div>
+      <div class="tool-title">透かし一括追加</div>
+      <div class="tool-desc">複数の画像に名前やIDなどの透かしをまとめて追加できます。</div>
+      <a href="watermark.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="text">
-                <div class="tool-icon">🔍</div>
-                <div class="tool-title">テキスト差分チェッカー</div>
-                <div class="tool-desc">2つの文章やソースコードを比較し、変更点を見やすく確認できます。</div>
-                <a href="diff.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="audio" data-keywords="ボイスレコーダー マイク 録音 ボイスチェンジャー 声 変化 voice recorder changer">
+      <div class="tool-icon">🎙️</div>
+      <div class="tool-title">ボイスレコーダー&チェンジャー</div>
+      <div class="tool-desc">マイク録音や音声ファイルの加工に対応した、ブラウザ完結型のツールです。</div>
+      <a href="voice_changer.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="text">
-                <div class="tool-icon">🔤</div>
-                <div class="tool-title">自動ふりがな(ルビ) 振り</div>
-                <div class="tool-desc">日本語の文章にふりがなを付け、Web表示向けのHTMLに変換できます。</div>
-                <a href="ruby.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="utility" data-keywords="パスワード 生成 パスワード作成 安全 ランダム password generator">
+      <div class="tool-icon">🔐</div>
+      <div class="tool-title">パスワード生成器</div>
+      <div class="tool-desc">使いやすさと安全性のバランスを考えた、強力なパスワードを生成できます。</div>
+      <a href="password_generator.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="image">
-                <div class="tool-icon">🌐</div>
-                <div class="tool-title">ファビコン一括生成</div>
-                <div class="tool-desc">1枚の画像から、サイト用の各種アイコンをまとめて作成できます。</div>
-                <a href="favicon.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="text" data-keywords="文字数 カウント カウンター バイト数 読了時間 テキスト word count">
+      <div class="tool-icon">📝</div>
+      <div class="tool-title">文字数カウンター</div>
+      <div class="tool-desc">文字数、バイト数、読了時間などを確認しながら、テキストを整理できます。</div>
+      <a href="wordcount.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="audio">
-                <div class="tool-icon">🎥</div>
-                <div class="tool-title">スクリーンレコーダー</div>
-                <div class="tool-desc">ブラウザ上で画面録画や音声録音を行えます。インストールは不要です。</div>
-                <a href="screen_record.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="text" data-keywords="テキスト 差分 比較 変更点 コード 比較 diff text compare">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-title">テキスト差分チェッカー</div>
+      <div class="tool-desc">2つの文章やソースコードを比較し、変更点を見やすく確認できます。</div>
+      <a href="diff.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="image">
-                <div class="tool-icon">✂️</div>
-                <div class="tool-title">画像トリミング&切り抜きツール</div>
-                <div class="tool-desc">画像の不要な部分を切り抜いたり、指定比率で整えたりできます。</div>
-                <a href="image_crop.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="text" data-keywords="ふりがな ルビ 漢字 html 日本語 ruby">
+      <div class="tool-icon">🔤</div>
+      <div class="tool-title">自動ふりがな(ルビ) 振り</div>
+      <div class="tool-desc">日本語の文章にふりがなを付け、Web表示向けのHTMLに変換できます。</div>
+      <a href="ruby.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="utility">
-                <div class="tool-icon">📑</div>
-                <div class="tool-title">PDF分割・ページ抽出</div>
-                <div class="tool-desc">PDF から必要なページだけを取り出したり、複数ファイルに分けたりできます。</div>
-                <a href="pdf_split.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="image" data-keywords="ファビコン favicon アイコン 一括生成 まとめ favicon generator">
+      <div class="tool-icon">🌐</div>
+      <div class="tool-title">ファビコン一括生成</div>
+      <div class="tool-desc">1枚の画像から、サイト用の各種アイコンをまとめて作成できます。</div>
+      <a href="favicon.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="text">
-                <div class="tool-icon">🔄</div>
-                <div class="tool-title">CSV JSON 変換ツール</div>
-                <div class="tool-desc">CSV と JSON の変換を、ブラウザ上で手軽に行えます。</div>
-                <a href="csv_json.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="utility" data-keywords="スクリーンレコーダー 画面録画 キャプチャ 画面 録画 screen record">
+      <div class="tool-icon">🎥</div>
+      <div class="tool-title">スクリーンレコーダー</div>
+      <div class="tool-desc">ブラウザ上で画面録画や音声録音を行えます。インストールは不要です。</div>
+      <a href="screen_record.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="text">
-                <div class="tool-icon">✍️</div>
-                <div class="tool-title">リアルタイム Markdown エディタ</div>
-                <div class="tool-desc">Markdown を入力すると、HTML プレビューを見ながら編集できます。</div>
-                <a href="markdown_editor.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="image" data-keywords="画像 トリミング 切り抜き リサイズ crop image">
+      <div class="tool-icon">✂️</div>
+      <div class="tool-title">画像トリミング&切り抜きツール</div>
+      <div class="tool-desc">画像の不要な部分を切り抜いたり、指定比率で整えたりできます。</div>
+      <a href="image_crop.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="utility">
-                <div class="tool-icon">🍅</div>
-                <div class="tool-title">ポモドーロ・タイマー&環境音</div>
-                <div class="tool-desc">作業時間と休憩時間を区切って、集中しやすい環境づくりをサポートします。</div>
-                <a href="pomodoro.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="utility" data-keywords="pdf 分割 抽出 ページ 分ける pdf split extract">
+      <div class="tool-icon">📑</div>
+      <div class="tool-title">PDF分割・ページ抽出</div>
+      <div class="tool-desc">PDF から必要なページだけを取り出したり、複数ファイルに分けたりできます。</div>
+      <a href="pdf_split.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="utility">
-                <div class="tool-icon">🎲</div>
-                <div class="tool-title">ランダム抽選・ルーレット</div>
-                <div class="tool-desc">テキストや数字からランダムに選びたいときに使えます。</div>
-                <a href="roulette.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="text" data-keywords="csv json 変換 相互変換 整理 csv json convert">
+      <div class="tool-icon">🔄</div>
+      <div class="tool-title">CSV JSON 変換ツール</div>
+      <div class="tool-desc">CSV と JSON の変換を、ブラウザ上で手軽に行えます。</div>
+      <a href="csv_json.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="utility">
-                <div class="tool-icon">⏱️</div>
-                <div class="tool-title">高精度ストップウォッチ</div>
-                <div class="tool-desc">作業時間や計測を細かく記録できるストップウォッチです。</div>
-                <a href="stopwatch.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="text" data-keywords="markdown マークダウン プレビュー エディタ html markdown editor">
+      <div class="tool-icon">✍️</div>
+      <div class="tool-title">リアルタイム Markdown エディタ</div>
+      <div class="tool-desc">Markdown を入力すると、HTML プレビューを見ながら編集できます。</div>
+      <a href="markdown_editor.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="audio">
-                <div class="tool-icon">🎸</div>
-                <div class="tool-title">ブラウザ楽器チューナー</div>
-                <div class="tool-desc">楽器の音合わせを、ブラウザ上で素早く確認できます。</div>
-                <a href="tuner.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="utility" data-keywords="ポモドーロ タイマー 環境音 集中 作業 pomodoro timer bgm">
+      <div class="tool-icon">🍅</div>
+      <div class="tool-title">ポモドーロ・タイマー&環境音</div>
+      <div class="tool-desc">作業時間と休憩時間を区切って、集中しやすい環境づくりをサポートします。</div>
+      <a href="pomodoro.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="audio">
-                <div class="tool-icon">🥁</div>
-                <div class="tool-title">高精度メトロノーム</div>
-                <div class="tool-desc">テンポや拍子を設定して、練習に合わせて使えます。</div>
-                <a href="metronome.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="utility" data-keywords="ルーレット 抽選 ランダム 選択 選べる roulette random">
+      <div class="tool-icon">🎲</div>
+      <div class="tool-title">ランダム抽選・ルーレット</div>
+      <div class="tool-desc">テキストや数字からランダムに選びたいときに使えます。</div>
+      <a href="roulette.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="utility">
-                <div class="tool-icon">📏</div>
-                <div class="tool-title">リアルタイム単位変換</div>
-                <div class="tool-desc">長さ、重さ、面積、温度、データ容量などをまとめて変換できます。</div>
-                <a href="unit_converter.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="utility" data-keywords="ストップウォッチ 計測 時間 stopwatch timer">
+      <div class="tool-icon">⏱️</div>
+      <div class="tool-title">高精度ストップウォッチ</div>
+      <div class="tool-desc">作業時間や計測を細かく記録できるストップウォッチです。</div>
+      <a href="stopwatch.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="image">
-                <div class="tool-icon">🛡️</div>
-                <div class="tool-title">Exif (メタデータ)確認・削除</div>
-                <div class="tool-desc">写真に含まれる撮影情報を確認し、必要に応じて削除できます。</div>
-                <a href="exif_tool.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="audio" data-keywords="チューナー 楽器 音合わせ ギター ベース tuner music">
+      <div class="tool-icon">🎸</div>
+      <div class="tool-title">ブラウザ楽器チューナー</div>
+      <div class="tool-desc">楽器の音合わせを、ブラウザ上で素早く確認できます。</div>
+      <a href="tuner.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card" data-category="text">
-                <div class="tool-icon">🔄</div>
-                <div class="tool-title">Base64 エンコード/デコード</div>
-                <div class="tool-desc">文字列を Base64 形式に変換したり、元に戻したりできます。</div>
-                <a href="base64_tool.html" class="btn-primary">ツールを開く</a>
-            </div>
+    <div class="tool-card" data-category="audio" data-keywords="メトロノーム テンポ 拍子 練習 音楽 metronome tempo">
+      <div class="tool-icon">🥁</div>
+      <div class="tool-title">高精度メトロノーム</div>
+      <div class="tool-desc">テンポや拍子を設定して、練習に合わせて使えます。</div>
+      <a href="metronome.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <div class="tool-card request-card" data-category="all">
-                <div class="tool-icon">💡</div>
-                <div class="tool-title">お問い合わせ</div>
-                <div class="tool-desc">ご意見、ご要望、不具合の報告などがありましたら、お問い合わせフォームからご連絡ください。</div>
-                <a href="contact.html" class="btn-primary" style="background: linear-gradient(135deg, #a55eea 0%, #7d5fff 100%); color: #ffffff; box-shadow: 0 4px 15px rgba(165, 94, 234, 0.3);">お問い合わせフォームへ</a>
-            </div>
-        </section>
+    <div class="tool-card" data-category="utility" data-keywords="単位変換 長さ 重さ 面積 温度 データ unit convert">
+      <div class="tool-icon">📏</div>
+      <div class="tool-title">リアルタイム単位変換</div>
+      <div class="tool-desc">長さ、重さ、面積、温度、データ容量などをまとめて変換できます。</div>
+      <a href="unit_converter.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-        <section class="seo-content">
-            <h2>WebTools Proとは?</h2>
-            <p>WebTools Pro は、日常の作業を少しでも効率よく進めたい人のためのオンラインツールサイトです。画像編集、音声変換、PDF処理、テキスト整理など、よく使う機能をひとつにまとめています。</p>
+    <div class="tool-card" data-category="image" data-keywords="exif メタデータ 撮影情報 削除 確認 写真 位置情報 exif metadata">
+      <div class="tool-icon">🛡️</div>
+      <div class="tool-title">Exif (メタデータ)確認・削除</div>
+      <div class="tool-desc">写真に含まれる撮影情報を確認し、必要に応じて削除できます。</div>
+      <a href="exif_tool.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <h2>このサイトの特徴</h2>
-            <ul>
-                <li>ブラウザ上で使いやすいこと</li>
-                <li>目的のツールを見つけやすいこと</li>
-                <li>シンプルな操作で迷いにくいこと</li>
-                <li>日常作業から制作まで幅広く使えること</li>
-            </ul>
+    <div class="tool-card" data-category="text" data-keywords="base64 エンコード デコード 変換 base64 encode decode">
+      <div class="tool-icon">🔄</div>
+      <div class="tool-title">Base64 エンコード/デコード</div>
+      <div class="tool-desc">文字列を Base64 形式に変換したり、元に戻したりできます。</div>
+      <a href="base64_tool.html" class="btn-primary">ツールを開く</a>
+    </div>
 
-            <h2>よくある質問</h2>
-            <dl>
-                <dt>Q. すべて無料で使えますか?</dt>
-                <dd>A. はい、すべて無料でご利用いただけます。今後も使いやすさを重視して改善していきます。</dd>
-                
-                <dt>Q. スマートフォンでも使えますか?</dt>
-                <dd>A. はい。スマートフォンやタブレットからも利用できます。</dd>
+    <div class="tool-card request-card" data-category="all" data-keywords="お問い合わせ リクエスト 要望 報告 不具合 contact support">
+      <div class="tool-icon">💡</div>
+      <div class="tool-title">お問い合わせ</div>
+      <div class="tool-desc">ご意見、ご要望、不具合の報告などがありましたら、お問い合わせフォームからご連絡ください。</div>
+      <a href="contact.html" class="btn-primary" style="background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%); color: #ffffff; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); border-color: transparent;">お問い合わせフォームへ</a>
+    </div>
 
-                <dt>Q. ソフトのインストールは必要ですか?</dt>
-                <dd>A. いいえ、基本的にはブラウザからそのまま使えます。</dd>
-                
-                <dt>Q. データはどこに送られますか?</dt>
-                <dd>A. ツールによって処理方法は異なりますが、できるだけブラウザ内で完結する設計を心がけています。各ツールの説明をご確認ください。</dd>
-                
-                <dt>Q. 新しい機能は追加されますか?</dt>
-                <dd>A. はい。便利な機能は順次追加していく予定です。ご要望も受け付けています。</dd>
-            </dl>
-        </section>
-    </main>
+  </div>
 
-    <footer>
-        <div class="footer-links">
-            <a href="index.html" class="active">ホーム</a>
-            <a href="terms.html">利用規約</a>
-            <a href="privacy.html">プライバシーポリシー</a>
-            <a href="contact.html">お問い合わせ</a>
-        </div>
-        <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
-        <div class="footer-note" style="margin-top: 5px;">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</div>
-    </footer>
+  <div class="ad-slot">
+    <span class="ad-label">スポンサーリンク</span>
+    <div class="ad-wrapper">
+    </div>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('search-input');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const toolCards = document.querySelectorAll('.tool-card');
+  <section class="seo-content">
+    <h2>WebTools Proとは?</h2>
+    <p>
+      WebTools Pro は、日常の作業を少しでも効率よく進めたい人のためのオンラインツールサイトです。画像編集、音声変換、PDF処理、テキスト整理など、よく使う機能をひとつにまとめています。
+    </p>
 
-            // ツールをフィルタリングする関数
-            function filterTools() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const activeCategory = document.querySelector('.filter-btn.active').dataset.filter;
+    <h2>このサイトの特徴</h2>
+    <ul>
+      <li>ブラウザ上で使いやすいこと</li>
+      <li>目的のツールを見つけやすいこと</li>
+      <li>シンプルな操作で迷いにくいこと</li>
+      <li>日常作業から制作まで幅広く使えること</li>
+    </ul>
 
-                toolCards.forEach(card => {
-                    // ★リクエストカードは常に表示させる特別処理★
-                    if (card.classList.contains('request-card')) {
-                        card.classList.remove('hidden');
-                        return;
-                    }
+    <h2>よくある質問</h2>
+    <dl>
+      <dt>Q. すべて無料で使えますか?</dt>
+      <dd>A. はい、すべて無料でご利用いただけます。今後も使いやすさを重視して改善していきます。</dd>
 
-                    const title = card.querySelector('.tool-title').textContent.toLowerCase();
-                    const desc = card.querySelector('.tool-desc').textContent.toLowerCase();
-                    const category = card.dataset.category;
+      <dt>Q. スマートフォンでも使えますか?</dt>
+      <dd>A. はい。スマートフォンやタブレットからも利用できます。</dd>
 
-                    // 検索キーワードが含まれているか判定
-                    const matchesSearch = title.includes(searchTerm) || desc.includes(searchTerm);
-                    // 選択されたカテゴリに一致しているか判定
-                    const matchesCategory = activeCategory === 'all' || category === activeCategory;
+      <dt>Q. ソフトのインストールは必要ですか?</dt>
+      <dd>A. いいえ、基本的にはブラウザからそのまま使えます。</dd>
 
-                    if (matchesSearch && matchesCategory) {
-                        card.classList.remove('hidden');
-                    } else {
-                        card.classList.add('hidden');
-                    }
-                });
-            }
+      <dt>Q. データはどこに送られますか?</dt>
+      <dd>A. ツールによって処理方法は異なりますが、できるだけブラウザ内で完結する設計を心がけています。各ツールの説明をご確認ください。</dd>
 
-            // 検索ボックスの入力時にフィルタリングを実行
-            searchInput.addEventListener('input', filterTools);
+      <dt>Q. 新しい機能は追加されますか?</dt>
+      <dd>A. はい。便利な機能は順次追加していく予定です。ご要望も受け付けています。</dd>
+    </dl>
+  </section>
+</main>
 
-            // カテゴリボタンのクリック時にフィルタリングを実行
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // 全てのボタンからactiveクラスを外し、クリックされたボタンに付与
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    filterTools();
-                });
-            });
-        });
-    </script>
+<footer>
+  <div class="footer-links">
+    <a href="index.html" class="active">ホーム</a>
+    <a href="terms.html">利用規約</a>
+    <a href="privacy.html">プライバシーポリシー</a>
+    <a href="contact.html">お問い合わせ</a>
+  </div>
+  <p>© 2026 WebTools Pro. All rights reserved.</p>
+  <p style="font-size: 0.75rem; margin-top: 5px; color: #94a3b8;">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
+</footer>
+
+<script>
+let currentCategory = 'all';
+
+function filterTools() {
+    const searchInput = document.getElementById('toolSearch').value.toLowerCase().trim();
+    const cards = document.querySelectorAll('.tool-card');
+
+    cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const keywords = card.getAttribute('data-keywords').toLowerCase();
+        const title = card.querySelector('.tool-title').innerText.toLowerCase();
+        const desc = card.querySelector('.tool-desc').innerText.toLowerCase();
+
+        // カテゴリ条件の判定
+        const matchesCategory = (currentCategory === 'all') || (category === currentCategory) || (card.classList.contains('request-card'));
+
+        // 検索キーワード条件の判定
+        const matchesSearch = (searchInput === '') || 
+                              keywords.includes(searchInput) || 
+                              title.includes(searchInput) || 
+                              desc.includes(searchInput);
+
+        if (matchesCategory && matchesSearch) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+}
+
+function filterCategory(category, btnElement) {
+    currentCategory = category;
+
+    // ボタンのアクティブ状態の切り替え
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    btnElement.classList.add('active');
+
+    // フィルタリング実行
+    filterTools();
+}
+</script>
 
 </body>
 </html>
