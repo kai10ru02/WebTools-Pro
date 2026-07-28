@@ -8,34 +8,42 @@
   <link rel="icon" href="logo.jpg">
   <link rel="stylesheet" href="style.css">
   <style>
+    /* ==== 全体レイアウト調整用 ==== */
+    .main-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
     /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
     .tool-heading {
       text-align: center;
-      background: linear-gradient(45deg, #0ea5e9, #4facfe);
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-top: 0;
+      margin-top: 20px;
       margin-bottom: 10px;
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       letter-spacing: 1px;
       font-weight: 800;
     }
     .subtitle {
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #64748b;
       margin-bottom: 35px;
       line-height: 1.6;
     }
 
+    /* ツール本体エリア */
     .base64-container {
       background: #ffffff;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
-      padding: 40px 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      padding: 40px 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
     }
 
     /* モード選択ラジオボタン */
@@ -43,7 +51,7 @@
       display: flex;
       justify-content: center;
       gap: 30px;
-      margin-bottom: 25px;
+      margin-bottom: 30px;
       flex-wrap: wrap;
     }
     .mode-selector label {
@@ -66,13 +74,14 @@
 
     /* テキストエリア共通スタイル */
     .textarea-wrapper {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
     .textarea-wrapper label {
       display: block;
-      color: #64748b;
-      margin-bottom: 8px;
+      color: #475569;
+      margin-bottom: 10px;
       font-weight: bold;
+      font-size: 0.95rem;
     }
     textarea {
       width: 100%;
@@ -88,25 +97,31 @@
       outline: none;
       transition: all 0.3s ease;
       line-height: 1.5;
+      box-sizing: border-box;
     }
     textarea:focus {
       border-color: #0ea5e9;
-      box-shadow: 0 0 15px rgba(14, 165, 233, 0.15);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+      background: #ffffff;
     }
     textarea[readonly] {
       background: #f1f5f9;
       border-color: #e2e8f0;
       color: #475569;
     }
+    textarea[readonly]:focus {
+      box-shadow: none;
+      border-color: #e2e8f0;
+    }
 
     /* コントロールボタン群 */
     .controls {
       display: flex;
       justify-content: center;
-      margin: 20px 0;
+      margin: 25px 0;
     }
     .btn-run {
-      padding: 15px 40px;
+      padding: 15px 50px;
       background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
       color: #ffffff;
       font-weight: bold;
@@ -126,76 +141,158 @@
     .copy-area {
       display: flex;
       justify-content: flex-end;
-      margin-top: 10px;
+      align-items: center;
+      margin-top: 15px;
     }
     .btn-copy {
-      padding: 8px 20px;
-      background: #f1f5f9;
-      color: #0f172a;
-      border: 1px solid #cbd5e1;
+      padding: 10px 20px;
+      background: #ffffff;
+      color: #0ea5e9;
+      border: 1px solid #0ea5e9;
       border-radius: 8px;
       font-size: 0.95rem;
+      font-weight: bold;
       cursor: pointer;
       transition: all 0.2s;
     }
     .btn-copy:hover {
-      background: #e2e8f0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      background: #f0f9ff;
+      box-shadow: 0 2px 8px rgba(14, 165, 233, 0.15);
     }
     
     /* 成功時の通知表示 */
     .copy-toast {
       color: #15803d;
       margin-right: 15px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: bold;
       opacity: 0;
       transition: opacity 0.3s;
-      align-self: center;
+      background: #f0fdf4;
+      padding: 8px 15px;
+      border-radius: 8px;
     }
     .copy-toast.show {
       opacity: 1;
     }
 
-    .footer-notice {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin: 15px 0;
-      padding: 0 20px;
+    /* ==== SEO用テキストセクション（共通スタイル） ==== */
+    .seo-content {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+    
+    .seo-content h2 { 
+      font-size: 1.3rem; 
+      color: #0f172a; 
+      margin-top: 0;
+      margin-bottom: 25px; 
+      text-align: left; 
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .seo-content h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.2em;
+      background: #0ea5e9;
+      border-radius: 2px;
     }
 
-    /* ==== SEO用テキストセクション ==== */
-    .seo-content { padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
-    .seo-content h2 { font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #0ea5e9; padding-left: 12px; }
-    .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
-    .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
-    .seo-content li { margin-bottom: 8px; }
-    .seo-content strong { color: #0ea5e9; }
-    .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
-    .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    .seo-content p, .seo-content li { 
+      color: #475569; 
+      font-size: 0.95rem; 
+      line-height: 1.8; 
+    }
+    
+    .seo-content ul { 
+      padding-left: 20px; 
+      margin-bottom: 40px; 
+    }
+    
+    .seo-content li { 
+      margin-bottom: 12px; 
+    }
+    
+    .seo-content strong { 
+      color: #0f172a;
+      background: linear-gradient(transparent 70%, #bae6fd 70%);
+    }
+
+    /* FAQ（よくある質問）の専用スタイル */
+    .faq-list {
+      margin: 0;
+      padding: 0;
+    }
+    
+    .faq-list dt { 
+      font-weight: bold; 
+      color: #0284c7; 
+      background: #f0f9ff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-top: 20px; 
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .faq-list dd { 
+      margin: 0;
+      padding: 15px 20px 25px 20px;
+      border-bottom: 1px dashed #cbd5e1;
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    
+    .faq-list dd:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
 
     /* スポンサーリンク用簡易スタイル */
     .ad-slot {
-        margin: 20px auto;
-        text-align: center;
+      margin: 30px auto;
+      text-align: center;
+      max-width: 800px;
     }
     .ad-label {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        display: block;
-        margin-bottom: 5px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 5px;
     }
     .ad-wrapper {
-        background: #f8fafc;
-        border: 1px dashed #cbd5e1;
-        padding: 20px;
-        color: #94a3b8;
-        border-radius: 8px;
-        min-height: 90px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 20px;
+      color: #94a3b8;
+      border-radius: 8px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+      .base64-container {
+        padding: 25px 20px;
+      }
+      .seo-content {
+        padding: 25px 20px;
+      }
     }
   </style>
 </head>
@@ -222,7 +319,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="main-wrapper">
       <h1 class="tool-heading">Base64 エンコード/デコード</h1>
       <p class="subtitle">文字列をBase64形式に変換したり、元に戻したりすることができます。日本語(UTF-8)にも対応しています。</p>
       
@@ -253,42 +350,45 @@
           <textarea id="output-text" readonly placeholder="変換結果がここに表示されます..."></textarea>
           
           <div class="copy-area">
-            <span id="copy-toast" class="copy-toast">コピーしました！</span>
-            <button id="copy-btn" class="btn-copy">結果をコピー</button>
+            <span id="copy-toast" class="copy-toast">✓ コピーしました</span>
+            <button id="copy-btn" class="btn-copy">📋 結果をコピー</button>
           </div>
         </div>
 
       </div>
-    </div>
 
-    <div class="ad-slot">
-        <span class="ad-label">スポンサーリンク</span>
-        <div class="ad-wrapper">
-            (広告スペース)
-        </div>
-    </div>
+      <div class="ad-slot">
+          <span class="ad-label">スポンサーリンク</span>
+          <div class="ad-wrapper">
+              (広告スペース)
+          </div>
+      </div>
 
-    <section class="seo-content">
-      <h2>Base64 エンコード/デコード機能とは？</h2>
-      <p>テキストデータや文字列を「Base64」と呼ばれる64種類の英数字のみの安全な文字列に変換（エンコード）したり、逆にBase64形式の文字列を元のテキストに復元（デコード）したりする開発者向けツールです。プログラムの開発や、APIとの通信テスト、データの埋め込みなどの際に重宝します。</p>
-      
-      <h2>当ツールの特徴</h2>
-      <ul>
-        <li><strong>日本語（マルチバイト文字）完全対応：</strong> 古いツールでは日本語を入れると文字化けやエラーになることがありますが、当ツールはUTF-8文字の相互変換をサポートする最新のアルゴリズムを採用しているため、日本語や絵文字でも安全に変換可能です。</li>
-        <li><strong>情報漏洩リスクゼロ：</strong> パスワードやAPIキー、アクセスTokenなどをデバッグのために変換する場合でも、データは一切外部サーバーに送信されません。お使いのブラウザ内だけで処理されるため機密情報の扱いにも最適です。</li>
-        <li><strong>ワンクリックコピー：</strong> 変換された結果は、ボタン一つでクリップボードにコピー可能。すぐにコードエディタや他のツールに貼り付けることができます。</li>
-      </ul>
-      
-      <h2>よくある質問 (FAQ)</h2>
-      <dl>
-        <dt>Q. Base64は暗号化ですか？</dt>
-        <dd>A. いいえ、Base64はデータを特定の文字の組み合わせに「変換（エンコード）」しているだけで、「暗号化」ではありません。ルールを知っていれば誰でもデコード（復元）できるため、パスワードなどを隠す目的で使用しないでください。</dd>
-        <dt>Q. デコードしようとするとエラーが出ます。</dt>
-        <dd>A. 入力された文字列が正しいBase64形式ではない可能性があります。空白や改行が混ざっていないか、また他の形式のデータではないかご確認ください。</dd>
-        <dt>Q. 画像ファイルなどをBase64に変換できますか？</dt>
-        <dd>A. 当ツールは「テキスト（文字列）」のBase64変換に特化しています。画像などのバイナリファイルの変換には対応しておりません。</dd>
-      </dl>
-    </section>
+      <section class="seo-content">
+        <h2>Base64 エンコード/デコード機能とは？</h2>
+        <p>テキストデータや文字列を「Base64」と呼ばれる64種類の英数字のみの安全な文字列に変換（エンコード）したり、逆にBase64形式の文字列を元のテキストに復元（デコード）したりする開発者向けツールです。プログラムの開発や、APIとの通信テスト、データの埋め込みなどの際に重宝します。</p>
+        <br>
+        
+        <h2>当ツールの特徴</h2>
+        <ul>
+          <li><strong>日本語（マルチバイト文字）完全対応：</strong> 古いツールでは日本語を入れると文字化けやエラーになることがありますが、当ツールはUTF-8文字の相互変換をサポートする最新のアルゴリズムを採用しているため、日本語や絵文字でも安全に変換可能です。</li>
+          <li><strong>情報漏洩リスクゼロ：</strong> パスワードやAPIキー、アクセスTokenなどをデバッグのために変換する場合でも、データは一切外部サーバーに送信されません。お使いのブラウザ内だけで処理されるため機密情報の扱いにも最適です。</li>
+          <li><strong>ワンクリックコピー：</strong> 変換された結果は、ボタン一つでクリップボードにコピー可能。すぐにコードエディタや他のツールに貼り付けることができます。</li>
+        </ul>
+        
+        <h2>よくある質問 (FAQ)</h2>
+        <dl class="faq-list">
+          <dt>Q. Base64は暗号化ですか？</dt>
+          <dd>A. いいえ、Base64はデータを特定の文字の組み合わせに「変換（エンコード）」しているだけで、「暗号化」ではありません。ルールを知っていれば誰でもデコード（復元）できるため、パスワードなどを隠す目的で使用しないでください。</dd>
+          
+          <dt>Q. デコードしようとするとエラーが出ます。</dt>
+          <dd>A. 入力された文字列が正しいBase64形式ではない可能性があります。空白や改行が混ざっていないか、また他の形式のデータではないかご確認ください。</dd>
+          
+          <dt>Q. 画像ファイルなどをBase64に変換できますか？</dt>
+          <dd>A. 当ツールは「テキスト（文字列）」のBase64変換に特化しています。画像などのバイナリファイルの変換には対応しておりません。</dd>
+        </dl>
+      </section>
+    </div>
   </main>
   
   <footer>
@@ -299,8 +399,8 @@
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>
     </div>
-    <p class="footer-notice">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
     <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+    <div class="footer-note" style="text-align: center; font-size: 0.8rem; color: #94a3b8; margin-top: 10px;">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</div>
   </footer>
 
   <script>

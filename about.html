@@ -3,19 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>運営者情報 - WebTools Pro</title>
-    <meta name="description" content="WebTools Proの運営者情報・サイト開設の経緯についてご紹介します。">
+    <title>管理者情報 | WebTools Pro</title>
+    
+    <link rel="icon" href="logo.jpg">
+    
+    <meta property="og:title" content="管理者情報 | WebTools Pro">
+    <meta property="og:description" content="WebTools Proの運営者情報・サイト開設の経緯についてご紹介します。">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="logo.jpg">
+    <meta name="twitter:card" content="summary">
+
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* ベースレイアウト */
+        .about-wrapper {
+            max-width: 900px;
+            margin: 40px auto 60px auto;
+            padding: 0 20px;
+        }
+
+        .about-content {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e2e8f0;
+        }
+
+        .about-content h1 {
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 35px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .about-section {
+            margin-bottom: 40px;
+        }
+
+        .about-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .about-section h2 {
+            font-size: 1.4rem;
+            color: #0f172a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .about-section h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 1.2em;
+            background: #0ea5e9;
+            border-radius: 2px;
+        }
+
+        /* プロフィールテーブル */
+        .profile-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        .profile-table th, .profile-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            text-align: left;
+        }
+
+        .profile-table th {
+            width: 25%;
+            color: #475569;
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+
+        .profile-table td {
+            color: #0f172a;
+        }
+
+        .profile-table a {
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .profile-table a:hover {
+            text-decoration: underline;
+        }
+
+        /* サイト開設の思い（ストーリー文章） */
+        .story-box {
+            line-height: 1.85;
+            color: #334155;
+            font-size: 1.02rem;
+        }
+
+        .story-box h3 {
+            font-size: 1.2rem;
+            color: #0284c7;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: #f0f9ff;
+            border-left: 4px solid #0ea5e9;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .story-box p {
+            margin-bottom: 18px;
+        }
+
+        .story-quote {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #0f172a;
+        }
+
+        /* コンセプトカード */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .concept-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .concept-card h3 {
+            font-size: 1.05rem;
+            color: #0284c7;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .concept-card p {
+            font-size: 0.9rem;
+            color: #475569;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* スポンサーリンク用スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* レスポンシブ対応 */
+        @media (max-width: 768px) {
+            .about-wrapper {
+                padding: 0 15px;
+            }
+            .about-content {
+                padding: 30px 20px;
+            }
+            .concept-grid {
+                grid-template-columns: 1fr;
+            }
+            .profile-table th, .profile-table td {
+                display: block;
+                width: 100%;
+            }
+            .profile-table th {
+                border-bottom: none;
+                padding-bottom: 4px;
+            }
+            .profile-table td {
+                padding-top: 4px;
+            }
+        }
+    </style>
 </head>
 <body>
+
     <header>
         <a href="index.html" class="logo">
             <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
         </a>
         <nav>
             <a href="index.html">ホーム</a>
-            <a href="about.html">管理者情報</a>
+            <a href="about.html" class="active">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
@@ -23,28 +242,96 @@
     </header>
 
     <main>
-        <div class="container">
-            <h1>管理者情報</h1>
-            <p class="subtitle">About Us</p>
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
+        </div>
 
-            <section class="seo-content" style="margin-top: 0; padding-top: 10px; border-top: none;">
-                <h2>管理者プロフィール</h2>
-                <p><strong>管理者:</strong> [あなたのお名前・ペンネーム]</p>
-                <p><strong>連絡先:</strong> <a href="contact.html" style="color: #00f2fe; text-decoration: none;">お問い合わせフォーム</a>よりご連絡ください。</p>
+        <div class="about-wrapper">
+            <div class="about-content">
+                <h1>管理者情報</h1>
+                <div class="subtitle">About Us</div>
 
-                <h2>サイト開設の思い</h2>
-                <p>[ここに、なぜこのサイトを作ろうと思ったのかを記載します。AdSense審査では、ここが「独自性」として高く評価されます。]</p>
+                <section class="about-section">
+                    <h2>管理者プロフィール</h2>
+                    <table class="profile-table">
+                        <tr>
+                            <th>管理者</th>
+                            <td>ささみ</td>
+                        </tr>
+                        <tr>
+                            <th>運営サイト</th>
+                            <td>WebTools Pro（https://〜）</td>
+                        </tr>
+                        <tr>
+                            <th>連絡先</th>
+                            <td><a href="contact.html">お問い合わせフォーム</a>よりご連絡ください。</td>
+                        </tr>
+                    </table>
+                </section>
 
-                <h2>サイトのコンセプト</h2>
-                <p>WebTools Proは、「登録不要ですぐ使える」「ブラウザ内処理で安全・高速」「シンプルな操作」をコンセプトに開発しています。外部サーバーにデータを送信しないため、機密性の高いファイルでも安心してご利用いただけます。</p>
-            </section>
+                <section class="about-section">
+                    <h2>サイト開設の思い</h2>
+                    <div class="story-box">
+                        <h3>日常のちょっとした作業を、最も「安全」で「手軽」に。</h3>
+                        
+                        <p>これが、私がWebTools Proを立ち上げた最大の理由です。</p>
+                        
+                        <p>インターネット上には、画像のサイズ変更、PDFの結合、パスワード生成など、日常の業務や生活を便利にしてくれるツールが数多く存在します。しかし、それらの多くを利用する際、私は常にひとつの不安を抱えていました。</p>
+                        
+                        <div class="story-quote">
+                            「自分の機密データやプライベートな写真を、見知らぬサーバーにアップロードしても本当に大丈夫だろうか？」<br>
+                            「処理が終わった後、データは確実に削除されているのだろうか？」
+                        </div>
+
+                        <p>仕事の機密ファイルや家族の写真を扱うたびに、データ漏洩やプライバシーのリスクにハラハラしながらオンラインツールを使っていた経験が、私にはあります。</p>
+
+                        <p><strong>「データを外部のサーバーに送信せず、自分のブラウザの中だけで処理が完結するツールがあれば、誰もが安心して使えるはずだ。」</strong></p>
+
+                        <p>その強い思いから、WebTools Proの開発はスタートしました。</p>
+
+                        <p>当サイトが提供するすべてのツールは、最新のウェブ技術を活用し、ユーザーの端末内（ローカル環境）で処理を完結させます。サーバーへのデータ送信を一切行わないため、アップロード・ダウンロードの待ち時間はゼロ。そして何より、オフライン作業と同等の「完全なプライバシー保護」を実現しました。</p>
+
+                        <p>特別なソフトウェアをインストールすることなく、ブラウザを開くだけで、プロフェッショナルなツールを安全に利用できる。WebTools Proは、皆様のデジタルライフを陰から支える「最も信頼できるツールボックス」でありたいと願っています。</p>
+                    </div>
+                </section>
+
+                <section class="about-section">
+                    <h2>サイトのコンセプト</h2>
+                    <p>WebTools Proは、安全でストレスのない作業環境を提供するために、以下の3点を徹底して開発・運営を行っています。</p>
+
+                    <div class="concept-grid">
+                        <div class="concept-card">
+                            <h3>⚡ 登録不要ですぐ使える</h3>
+                            <p>会員登録やログインは一切不要。サイトを開いてすぐに目的の作業を開始できます。</p>
+                        </div>
+                        <div class="concept-card">
+                            <h3>🔒 ブラウザ内処理で安全</h3>
+                            <p>データは一切外部サーバーへ送信されません。機密ファイルも安心して処理できます。</p>
+                        </div>
+                        <div class="concept-card">
+                            <h3>🎯 シンプルで高速</h3>
+                            <p>無駄な読み込みや複雑な操作を排除し、初心者からプロまで直感的に使えます。</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="ad-slot" style="margin-bottom: 20px;">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
         </div>
     </main>
 
     <footer>
         <div class="footer-links">
             <a href="index.html">ホーム</a>
-            <a href="about.html">管理者情報</a>
+            <a href="about.html" class="active">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
@@ -52,5 +339,6 @@
         <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
         <div class="footer-note">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</div>
     </footer>
+
 </body>
 </html>

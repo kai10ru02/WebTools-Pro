@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="style.css">
 <style>
 /* トップページ全体の表示サイズを90%に縮小 (余白を広げる) */
-body { zoom: 0.9; }
+body { zoom: 0.9; background-color: #f1f5f9; }
 
 /* ヒーローセクション 追加スタイル */
 .hero-lead {
@@ -42,46 +42,8 @@ body { zoom: 0.9; }
     box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
 .feature-item strong {
-    color: #2563eb;
+    color: #0ea5e9;
 }
-
-/* ==== 既存のSEOコンテンツ用スタイル ====*/
-.seo-content {
-    max-width: 1200px;
-    margin: 60px auto 40px auto;
-    padding: 40px 20px 0 20px;
-    border-top: 1px solid #e2e8f0;
-}
-.seo-content h2 {
-    font-size: 1.4rem;
-    color: #0f172a;
-    margin-bottom: 20px;
-    margin-top: 30px;
-    text-align: left;
-    border-left: 4px solid #2563eb;
-    padding-left: 12px;
-    background: none;
-    -webkit-text-fill-color: #0f172a;
-    text-shadow: none;
-}
-.seo-content p, .seo-content li, .seo-content dd {
-    color: #475569;
-    font-size: 0.95rem;
-    line-height: 1.8;
-}
-.seo-content ul {
-    padding-left: 20px;
-    margin-bottom: 30px;
-}
-.seo-content li { margin-bottom: 8px; }
-.seo-content strong { color: #2563eb; }
-.seo-content dt {
-    font-weight: bold;
-    color: #2563eb;
-    margin-top: 20px;
-    margin-bottom: 5px;
-}
-.seo-content dd { margin-bottom: 20px; margin-left: 0; }
 
 /* ==== 検索&カテゴリフィルタリングのスタイル ==== */
 .filter-container {
@@ -114,12 +76,12 @@ body { zoom: 0.9; }
     font-size: 0.95rem;
     transition: all 0.3s ease;
     box-sizing: border-box;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
 }
 .search-input:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
 }
 .search-input::placeholder {
     color: #94a3b8;
@@ -154,10 +116,10 @@ body { zoom: 0.9; }
     color: #334155;
 }
 .filter-btn.active {
-    background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%);
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
     color: #ffffff;
     border-color: transparent;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 10px rgba(14, 165, 233, 0.2);
 }
 
 /* 非表示用クラス */
@@ -176,6 +138,120 @@ body { zoom: 0.9; }
 .request-card:hover {
     border-color: rgba(139, 92, 246, 0.8) !important;
     box-shadow: 0 10px 20px rgba(139, 92, 246, 0.1) !important;
+}
+
+/* ==== SEO用テキストセクション（改善版） ==== */
+.seo-content {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 40px;
+    margin: 60px auto 40px auto;
+    max-width: 1160px; /* 全体幅に合わせる */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+
+.seo-content h2 { 
+    font-size: 1.3rem; 
+    color: #0f172a; 
+    margin-top: 0;
+    margin-bottom: 25px; 
+    text-align: left; 
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.seo-content h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 1.2em;
+    background: #0ea5e9;
+    border-radius: 2px;
+}
+
+.seo-content p, .seo-content li { 
+    color: #475569; 
+    font-size: 0.95rem; 
+    line-height: 1.8; 
+}
+
+.seo-content ul { 
+    padding-left: 20px; 
+    margin-bottom: 40px; 
+}
+
+.seo-content li { 
+    margin-bottom: 12px; 
+}
+
+/* FAQ（よくある質問）の専用スタイル */
+.faq-list {
+    margin: 0;
+    padding: 0;
+}
+
+.faq-list dt { 
+    font-weight: bold; 
+    color: #0284c7; 
+    background: #f0f9ff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-top: 20px; 
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.faq-list dd { 
+    margin: 0;
+    padding: 15px 20px 25px 20px;
+    border-bottom: 1px dashed #cbd5e1;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.faq-list dd:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* スポンサーリンク用簡易スタイル */
+.ad-slot {
+    margin: 30px auto;
+    text-align: center;
+    max-width: 1200px;
+    padding: 0 20px;
+}
+.ad-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    display: block;
+    margin-bottom: 5px;
+}
+.ad-wrapper {
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    padding: 20px;
+    color: #94a3b8;
+    border-radius: 8px;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .seo-content {
+        padding: 25px 20px;
+        margin: 40px 15px;
+    }
 }
 </style>
 </head>
@@ -211,6 +287,7 @@ body { zoom: 0.9; }
   <div class="ad-slot">
     <span class="ad-label">スポンサーリンク</span>
     <div class="ad-wrapper">
+        (広告スペース)
       </div>
   </div>
 
@@ -420,7 +497,7 @@ body { zoom: 0.9; }
 
     <div class="tool-card request-card" data-category="all" data-keywords="お問い合わせ リクエスト 要望 報告 不具合 contact support">
       <div class="tool-icon">💡</div>
-      <div class="tool-title">お問い合わせ</div>
+      <div class="tool-title">希望の機能が見つかりませんか？</div>
       <div class="tool-desc">ご意見、ご要望、不具合の報告などがありましたら、お問い合わせフォームからご連絡ください。</div>
       <a href="contact.html" class="btn-primary" style="background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%); color: #ffffff; box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3); border-color: transparent;">お問い合わせフォームへ</a>
     </div>
@@ -430,6 +507,7 @@ body { zoom: 0.9; }
   <div class="ad-slot">
     <span class="ad-label">スポンサーリンク</span>
     <div class="ad-wrapper">
+        (広告スペース)
       </div>
   </div>
 
@@ -447,22 +525,22 @@ body { zoom: 0.9; }
       <li>日常作業から制作まで幅広く使えること</li>
     </ul>
 
-    <h2>よくある質問</h2>
-    <dl>
+    <h2>よくある質問 (FAQ)</h2>
+    <dl class="faq-list">
       <dt>Q. すべて無料で使えますか?</dt>
       <dd>A. はい、すべて無料でご利用いただけます。今後も使いやすさを重視して改善していきます。</dd>
 
       <dt>Q. スマートフォンでも使えますか?</dt>
-      <dd>A. はい。スマートフォンやタブレットからも利用できます。</dd>
+      <dd>A. はい。スマートフォンやタブレットの標準ブラウザからも快適にご利用いただけます。</dd>
 
       <dt>Q. ソフトのインストールは必要ですか?</dt>
-      <dd>A. いいえ、基本的にはブラウザからそのまま使えます。</dd>
+      <dd>A. いいえ、不要です。アプリやソフトをインストールすることなく、ブラウザからそのまま使えます。</dd>
 
-      <dt>Q. データはどこに送られますか?</dt>
-      <dd>A. ツールによって処理方法は異なりますが、できるだけブラウザ内で完結する設計を心がけています。各ツールの説明をご確認ください。</dd>
+      <dt>Q. 入力したデータやファイルはどこかに保存されますか?</dt>
+      <dd>A. いいえ。当サイトのツールはすべてお使いの端末（ブラウザ内）で処理が行われます。外部のサーバーへデータが送信・保存されることは一切ないため、機密性の高いファイルでも安心してご利用いただけます。</dd>
 
       <dt>Q. 新しい機能は追加されますか?</dt>
-      <dd>A. はい。便利な機能は順次追加していく予定です。ご要望も受け付けています。</dd>
+      <dd>A. はい。便利な機能は順次追加していく予定です。ご要望やリクエストは、お問い合わせフォームからいつでも受け付けています。</dd>
     </dl>
   </section>
 </main>

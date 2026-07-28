@@ -9,22 +9,29 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
   <style>
+    /* ==== 全体レイアウト調整用 ==== */
+    .main-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
     /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
     .tool-heading {
       text-align: center;
-      background: linear-gradient(45deg, #0ea5e9, #4facfe);
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-top: 0;
+      margin-top: 20px;
       margin-bottom: 10px;
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       letter-spacing: 1px;
       font-weight: 800;
     }
     .subtitle {
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #64748b;
       margin-bottom: 35px;
       line-height: 1.6;
@@ -32,51 +39,53 @@
 
     /* ドラッグ＆ドロップエリア */
     .drop-zone {
-      border: 2px dashed #94a3b8;
+      background: #ffffff;
+      border: 2px dashed #cbd5e1;
       border-radius: 16px;
-      padding: 50px 20px;
+      padding: 60px 20px;
       text-align: center;
-      background: #f8fafc;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
     }
     .drop-zone:hover, .drop-zone.dragover {
       background: #f0f9ff;
       border-color: #0ea5e9;
-      box-shadow: inset 0 0 15px rgba(14, 165, 233, 0.1);
+      box-shadow: inset 0 0 15px rgba(14, 165, 233, 0.05), 0 4px 15px rgba(0,0,0,0.02);
     }
     .drop-zone-text {
       color: #0f172a;
       font-weight: bold;
-      font-size: 1.2rem;
-      margin-bottom: 10px;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
     }
     .drop-zone-subtext {
       color: #64748b;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
     }
 
     /* 解析結果エリア */
     .result-container {
       display: none;
       background: #ffffff;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 30px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      padding: 40px 20px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
     }
     
     .preview-box {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
     .preview-image {
       max-width: 100%;
       max-height: 250px;
       border-radius: 8px;
       border: 1px solid #cbd5e1;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     /* Exifデータのテーブル表示 */
@@ -85,8 +94,8 @@
       overflow-y: auto;
       border-radius: 8px;
       border: 1px solid #cbd5e1;
-      margin-bottom: 20px;
-      background: #f8fafc;
+      margin-bottom: 25px;
+      background: #ffffff;
     }
     .exif-table-wrapper::-webkit-scrollbar {
       width: 8px;
@@ -106,7 +115,7 @@
       font-size: 0.95rem;
     }
     th {
-      background: #f1f5f9;
+      background: #f8fafc;
       color: #0284c7;
       font-weight: bold;
       width: 40%;
@@ -123,10 +132,11 @@
       background: #fef2f2;
       border-left: 4px solid #ef4444;
       color: #b91c1c;
-      padding: 12px 15px;
-      border-radius: 4px;
-      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
       font-size: 0.95rem;
+      font-weight: bold;
       display: none;
     }
     
@@ -134,10 +144,11 @@
       background: #f0fdf4;
       border-left: 4px solid #22c55e;
       color: #15803d;
-      padding: 12px 15px;
-      border-radius: 4px;
-      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 25px;
       font-size: 0.95rem;
+      font-weight: bold;
       display: none;
     }
 
@@ -153,7 +164,7 @@
       font-weight: bold;
       font-size: 1rem;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
       background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
@@ -169,7 +180,7 @@
       font-weight: bold;
       font-size: 1rem;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
       background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
@@ -192,45 +203,120 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
-    .footer-notice {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin: 15px 0;
-      padding: 0 20px;
+    /* ==== SEO用テキストセクション（改善版） ==== */
+    .seo-content {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+    
+    .seo-content h2 { 
+      font-size: 1.3rem; 
+      color: #0f172a; 
+      margin-top: 0;
+      margin-bottom: 25px; 
+      text-align: left; 
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .seo-content h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.2em;
+      background: #0ea5e9;
+      border-radius: 2px;
     }
 
-    /* ==== SEO用テキストセクション ==== */
-    .seo-content { padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
-    .seo-content h2 { font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #0ea5e9; padding-left: 12px; }
-    .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
-    .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
-    .seo-content li { margin-bottom: 8px; }
-    .seo-content strong { color: #0ea5e9; }
-    .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
-    .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    .seo-content p, .seo-content li { 
+      color: #475569; 
+      font-size: 0.95rem; 
+      line-height: 1.8; 
+    }
+    
+    .seo-content ul { 
+      padding-left: 20px; 
+      margin-bottom: 40px; 
+    }
+    
+    .seo-content li { 
+      margin-bottom: 12px; 
+    }
+    
+    .seo-content strong { 
+      color: #0f172a;
+      background: linear-gradient(transparent 70%, #bae6fd 70%);
+    }
+
+    /* FAQ（よくある質問）の専用スタイル */
+    .faq-list {
+      margin: 0;
+      padding: 0;
+    }
+    
+    .faq-list dt { 
+      font-weight: bold; 
+      color: #0284c7; 
+      background: #f0f9ff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-top: 20px; 
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .faq-list dd { 
+      margin: 0;
+      padding: 15px 20px 25px 20px;
+      border-bottom: 1px dashed #cbd5e1;
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    
+    .faq-list dd:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
 
     /* スポンサーリンク用簡易スタイル */
     .ad-slot {
-        margin: 20px auto;
-        text-align: center;
+      margin: 30px auto;
+      text-align: center;
+      max-width: 800px;
     }
     .ad-label {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        display: block;
-        margin-bottom: 5px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 5px;
     }
     .ad-wrapper {
-        background: #f8fafc;
-        border: 1px dashed #cbd5e1;
-        padding: 20px;
-        color: #94a3b8;
-        border-radius: 8px;
-        min-height: 90px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 20px;
+      color: #94a3b8;
+      border-radius: 8px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+      .seo-content {
+        padding: 25px 20px;
+      }
     }
   </style>
 </head>
@@ -257,7 +343,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="main-wrapper">
       <h1 class="tool-heading">画像メタデータ(Exif)確認・削除</h1>
       <p class="subtitle">写真に隠されたGPS等のプライバシー情報を確認し、安全な状態にしてダウンロードします。</p>
       
@@ -294,36 +380,39 @@
         </div>
 
       </div>
-    </div>
 
-    <div class="ad-slot">
-        <span class="ad-label">スポンサーリンク</span>
-        <div class="ad-wrapper">
-            (広告スペース)
-        </div>
-    </div>
+      <div class="ad-slot">
+          <span class="ad-label">スポンサーリンク</span>
+          <div class="ad-wrapper">
+              (広告スペース)
+          </div>
+      </div>
 
-    <section class="seo-content">
-      <h2>画像メタデータ(Exif)確認・削除ツールとは？</h2>
-      <p>スマートフォンやデジタルカメラで撮影した写真には、「Exif（エグジフ）」と呼ばれるメタデータ（撮影日時、使用したカメラの機種、位置情報など）が自動的に記録されています。このツールは、アップロード前の写真にどのようなデータが隠されているかを確認し、ワンクリックでそれらを完全に削除するプライバシー保護ツールです。</p>
-      
-      <h2>当ツールの特徴</h2>
-      <ul>
-        <li><strong>完全ローカル処理で安心：</strong> 読み込んだ画像データは、お使いのブラウザ内でのみ処理されます。当サイトのサーバーに画像が送信・保存されることは絶対にないため、自宅の写真や機密画像も安全に処理できます。</li>
-        <li><strong>画質を落とさずデータのみ削除：</strong> CanvasAPIを利用した再描画処理により、見た目の画質を維持したまま、目に見えないメタデータだけを綺麗に削ぎ落とします。</li>
-        <li><strong>位置情報の警告機能：</strong> 最もリスクの高い「GPS（位置情報）」が含まれている場合、赤い警告メッセージでお知らせし、意図しないプライバシーの流出を未然に防ぎます。</li>
-      </ul>
-      
-      <h2>よくある質問 (FAQ)</h2>
-      <dl>
-        <dt>Q. 削除されたことをどうやって確認できますか？</dt>
-        <dd>A. ダウンロードした「cleaned_〜」という名前の画像を、再度このツールに読み込ませてみてください。「メタデータが検出されませんでした」と表示されれば、完全に削除されています。</dd>
-        <dt>Q. LINEやTwitter(X)にアップするときも削除したほうがいいですか？</dt>
-        <dd>A. 現在、TwitterやLINEなどの主要な大手SNSでは、アップロード時にシステム側で自動的にExifが削除される仕様になっています。しかし、ブログ（WordPress等）への直接アップロードや、メール/チャットでのファイル送信時はそのままデータが残るため、事前の削除を強く推奨します。</dd>
-        <dt>Q. PNG画像にもExifはありますか？</dt>
-        <dd>A. 基本的にExifはJPEG画像に付与されることが多いですが、最近のスマートフォン等ではPNG形式でもメタデータが記録される場合があります。当ツールはどちらの形式でも再描画を行い、安全な状態にリセットします。</dd>
-      </dl>
-    </section>
+      <section class="seo-content">
+        <h2>画像メタデータ(Exif)確認・削除ツールとは？</h2>
+        <p>スマートフォンやデジタルカメラで撮影した写真には、「Exif（エグジフ）」と呼ばれるメタデータ（撮影日時、使用したカメラの機種、位置情報など）が自動的に記録されています。このツールは、アップロード前の写真にどのようなデータが隠されているかを確認し、ワンクリックでそれらを完全に削除するプライバシー保護ツールです。</p>
+        <br>
+        
+        <h2>当ツールの特徴</h2>
+        <ul>
+          <li><strong>完全ローカル処理で安心：</strong> 読み込んだ画像データは、お使いのブラウザ内でのみ処理されます。当サイトのサーバーに画像が送信・保存されることは絶対にないため、自宅の写真や機密画像も安全に処理できます。</li>
+          <li><strong>画質を落とさずデータのみ削除：</strong> CanvasAPIを利用した再描画処理により、見た目の画質を維持したまま、目に見えないメタデータだけを綺麗に削ぎ落とします。</li>
+          <li><strong>位置情報の警告機能：</strong> 最もリスクの高い「GPS（位置情報）」が含まれている場合、赤い警告メッセージでお知らせし、意図しないプライバシーの流出を未然に防ぎます。</li>
+        </ul>
+        
+        <h2>よくある質問 (FAQ)</h2>
+        <dl class="faq-list">
+          <dt>Q. 削除されたことをどうやって確認できますか？</dt>
+          <dd>A. ダウンロードした「cleaned_〜」という名前の画像を、再度このツールに読み込ませてみてください。「メタデータが検出されませんでした」と表示されれば、完全に削除されています。</dd>
+          
+          <dt>Q. LINEやTwitter(X)にアップするときも削除したほうがいいですか？</dt>
+          <dd>A. 現在、TwitterやLINEなどの主要な大手SNSでは、アップロード時にシステム側で自動的にExifが削除される仕様になっています。しかし、ブログ（WordPress等）への直接アップロードや、メール/チャットでのファイル送信時はそのままデータが残るため、事前の削除を強く推奨します。</dd>
+          
+          <dt>Q. PNG画像にもExifはありますか？</dt>
+          <dd>A. 基本的にExifはJPEG画像に付与されることが多いですが、最近のスマートフォン等ではPNG形式でもメタデータが記録される場合があります。当ツールはどちらの形式でも再描画を行い、安全な状態にリセットします。</dd>
+        </dl>
+      </section>
+    </div>
   </main>
   
   <footer>
@@ -334,8 +423,8 @@
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>
     </div>
-    <p class="footer-notice">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
     <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+    <div class="footer-note" style="text-align: center; font-size: 0.8rem; color: #94a3b8; margin-top: 10px;">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</div>
   </footer>
 
   <script>

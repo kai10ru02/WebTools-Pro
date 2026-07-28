@@ -21,6 +21,9 @@
   <link rel="stylesheet" href="style.css">
   
   <style>
+    /* サイト全体の背景色を統一 */
+    body { background-color: #f1f5f9; }
+
     .container {
       width: 100%;
       max-width: 680px;
@@ -144,41 +147,86 @@
     }
     .btn-download:hover { background: #2563eb; color: #ffffff; }
 
-    /* ▼ SEO用コンテンツの追加スタイル ▼ */
+    /* ▼ SEO用コンテンツの共通カードスタイル ▼ */
     .seo-content {
-      max-width: 680px;
-      margin: 50px auto 30px auto;
-      padding-top: 30px;
-      border-top: 1px solid #e2e8f0;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 40px;
+      margin: 40px auto 40px auto;
+      max-width: 680px; /* ツール本体と幅を揃える */
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+      box-sizing: border-box;
     }
     .seo-content h2 {
       font-size: 1.25rem;
       color: #0f172a;
-      margin-bottom: 15px;
-      margin-top: 30px;
+      margin-top: 0;
+      margin-bottom: 25px;
       text-align: left;
-      border-left: 4px solid #2563eb;
-      padding-left: 10px;
-      background: none;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .seo-content p, .seo-content li, .seo-content dd {
+    .seo-content h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.2em;
+      background: #0ea5e9;
+      border-radius: 2px;
+    }
+    .seo-content p, .seo-content li {
       color: #475569;
-      font-size: 0.9rem;
-      line-height: 1.7;
+      font-size: 0.95rem;
+      line-height: 1.8;
     }
     .seo-content ul, .seo-content ol {
       padding-left: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 40px;
     }
-    .seo-content li { margin-bottom: 6px; }
-    .seo-content strong { color: #2563eb; }
-    .seo-content dt {
+    .seo-content li { margin-bottom: 12px; }
+    .seo-content strong { color: #0ea5e9; }
+
+    /* FAQ（よくある質問）の専用スタイル */
+    .faq-list {
+      margin: 0;
+      padding: 0;
+    }
+    .faq-list dt {
       font-weight: bold;
-      color: #2563eb;
-      margin-top: 15px;
-      margin-bottom: 4px;
+      color: #0284c7;
+      background: #f0f9ff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .seo-content dd { margin-bottom: 15px; margin-left: 0; }
+    .faq-list dd {
+      margin: 0;
+      padding: 15px 20px 25px 20px;
+      border-bottom: 1px dashed #cbd5e1;
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    .faq-list dd:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+      .seo-content {
+        padding: 25px 20px;
+        margin: 30px 15px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -262,7 +310,7 @@
       </ol>
 
       <h2>よくある質問 (FAQ)</h2>
-      <dl>
+      <dl class="faq-list">
         <dt>Q. 変換処理に通信量は消費されますか？</dt>
         <dd>A. ページの読み込み時以外、ファイルの変換処理中にデータ通信は発生しません。オフライン環境でも動作するため、通信量を気にせず大容量のファイルも変換できます。</dd>
 

@@ -3,40 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>メトロノーム - WebTools Pro</title>
+  <title>メトロノーム | WebTools Pro</title>
   <meta name="description" content="ブラウザで使える高精度な無料メトロノームです。テンポ（BPM）や拍子の変更に対応し、楽器の練習やリズムトレーニングに最適です。">
   <link rel="icon" href="logo.jpg">
   <link rel="stylesheet" href="style.css">
   <style>
+    /* ==== 全体レイアウト調整用 ==== */
+    .main-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
     /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
     .tool-heading {
       text-align: center;
-      background: linear-gradient(45deg, #0ea5e9, #4facfe);
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-top: 0;
+      margin-top: 20px;
       margin-bottom: 10px;
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       letter-spacing: 1px;
       font-weight: 800;
     }
     .subtitle {
       text-align: center;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #64748b;
       margin-bottom: 35px;
       line-height: 1.6;
     }
 
     .metronome-container {
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 40px 20px;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       text-align: center;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
     }
 
     .beat-indicators {
@@ -50,7 +57,7 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: #e2e8f0;
+      background: #f1f5f9;
       transition: background 0.1s, box-shadow 0.1s;
     }
     .beat-dot.active {
@@ -66,13 +73,13 @@
       margin-bottom: 25px;
     }
     .bpm-value {
-      font-size: 4.5rem;
+      font-size: 5rem;
       font-weight: bold;
       color: #0f172a;
       font-family: 'Courier New', Courier, monospace;
       line-height: 1;
       display: inline-block;
-      min-width: 140px;
+      min-width: 150px;
     }
     .bpm-label {
       font-size: 1.2rem;
@@ -88,8 +95,8 @@
       margin-bottom: 30px;
     }
     .bpm-btn {
-      background: #e2e8f0;
-      border: none;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
       color: #0f172a;
       font-size: 1.5rem;
       width: 45px;
@@ -102,8 +109,8 @@
       justify-content: center;
     }
     .bpm-btn:hover {
-      background: #cbd5e1;
-      transform: scale(1.1);
+      background: #e2e8f0;
+      transform: scale(1.05);
     }
     
     .bpm-slider {
@@ -125,6 +132,10 @@
       background: #0ea5e9;
       cursor: pointer;
       box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
+      transition: transform 0.1s;
+    }
+    .bpm-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.1);
     }
     
     .beats-selector {
@@ -133,7 +144,7 @@
     .beats-selector label {
       color: #64748b;
       margin-right: 10px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: bold;
     }
     .beats-select {
@@ -145,10 +156,14 @@
       font-size: 1rem;
       outline: none;
       cursor: pointer;
+      font-family: inherit;
+    }
+    .beats-select:focus {
+      border-color: #0ea5e9;
     }
 
     .play-btn {
-      padding: 15px 50px;
+      padding: 16px 60px;
       font-weight: bold;
       font-size: 1.2rem;
       border: none;
@@ -165,52 +180,129 @@
     }
     .play-btn.playing {
       background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      color: #ffffff;
       box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
     }
     .play-btn.playing:hover {
       box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
     }
 
-    .footer-notice {
-      text-align: center;
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin: 15px 0;
-      padding: 0 20px;
+    /* ==== SEO用テキストセクション（改善版） ==== */
+    .seo-content {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+    
+    .seo-content h2 { 
+      font-size: 1.3rem; 
+      color: #0f172a; 
+      margin-top: 0;
+      margin-bottom: 25px; 
+      text-align: left; 
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .seo-content h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.2em;
+      background: #0ea5e9;
+      border-radius: 2px;
     }
 
-    /* ==== SEO用テキストセクション ==== */
-    .seo-content { padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
-    .seo-content h2 { font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #0ea5e9; padding-left: 12px; }
-    .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
-    .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
-    .seo-content li { margin-bottom: 8px; }
-    .seo-content strong { color: #0ea5e9; }
-    .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
-    .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+    .seo-content p, .seo-content li { 
+      color: #475569; 
+      font-size: 0.95rem; 
+      line-height: 1.8; 
+    }
+    
+    .seo-content ul { 
+      padding-left: 20px; 
+      margin-bottom: 40px; 
+    }
+    
+    .seo-content li { 
+      margin-bottom: 12px; 
+    }
+    
+    .seo-content strong { 
+      color: #0f172a;
+      background: linear-gradient(transparent 70%, #bae6fd 70%);
+    }
+
+    /* FAQ（よくある質問）の専用スタイル */
+    .faq-list {
+      margin: 0;
+      padding: 0;
+    }
+    
+    .faq-list dt { 
+      font-weight: bold; 
+      color: #0284c7; 
+      background: #f0f9ff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-top: 20px; 
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .faq-list dd { 
+      margin: 0;
+      padding: 15px 20px 25px 20px;
+      border-bottom: 1px dashed #cbd5e1;
+      color: #475569;
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+    
+    .faq-list dd:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
 
     /* スポンサーリンク用簡易スタイル */
     .ad-slot {
-        margin: 20px auto;
-        text-align: center;
+      margin: 30px auto;
+      text-align: center;
+      max-width: 800px;
     }
     .ad-label {
-        font-size: 0.75rem;
-        color: #94a3b8;
-        display: block;
-        margin-bottom: 5px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      display: block;
+      margin-bottom: 5px;
     }
     .ad-wrapper {
-        background: #f8fafc;
-        border: 1px dashed #cbd5e1;
-        padding: 20px;
-        color: #94a3b8;
-        border-radius: 8px;
-        min-height: 90px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      padding: 20px;
+      color: #94a3b8;
+      border-radius: 8px;
+      min-height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 768px) {
+      .seo-content {
+        padding: 25px 20px;
+      }
+      .bpm-value {
+        font-size: 4rem;
+      }
     }
   </style>
 </head>
@@ -237,12 +329,11 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="main-wrapper">
       <h1 class="tool-heading">メトロノーム</h1>
       <p class="subtitle">楽器の練習やリズムトレーニングに使える高精度なメトロノームです。</p>
       
       <div class="metronome-container">
-        
         <div id="beat-indicators" class="beat-indicators"></div>
 
         <div class="bpm-display-area">
@@ -271,38 +362,40 @@
         </div>
 
         <button id="play-btn" class="play-btn">スタート</button>
-
       </div>
-    </div>
 
-    <div class="ad-slot">
-        <span class="ad-label">スポンサーリンク</span>
-        <div class="ad-wrapper">
-            (広告スペース)
-        </div>
-    </div>
+      <div class="ad-slot">
+          <span class="ad-label">スポンサーリンク</span>
+          <div class="ad-wrapper">
+              (広告スペース)
+          </div>
+      </div>
 
-    <section class="seo-content">
-      <h2>高精度オンラインメトロノームとは？</h2>
-      <p>ブラウザ上で正確なリズムを刻むことができる、完全無料のメトロノームツールです。ギターやピアノなどの楽器練習はもちろん、ダンスのテンポ確認、スポーツの反復練習、プレゼンのタイムマネジメントまで、一定のペースを保ちたいあらゆる場面でご活用いただけます。</p>
-      
-      <h2>当ツールの特徴</h2>
-      <ul>
-        <li><strong>ズレのない高精度なリズム：</strong> 一般的なWebタイマーではなく、「Web Audio API」の高度な時間管理システム（スケジューリング）を利用して音を鳴らしているため、長時間再生してもリズムがよれたり遅れたりしません。</li>
-        <li><strong>視覚的なビート表示：</strong> 拍に合わせて画面上のインジケーターが点滅します。1拍目は色が変わってアクセントを強調するため、音量を小さくしても目でリズムを把握できます。</li>
-        <li><strong>柔軟なテンポ・拍子設定：</strong> BPM（1分間あたりの拍数）は30から250まで調整可能。スライダーによる素早い設定だけでなく、ボタンで1ずつ微調整もできます。拍子も1〜8拍子まで自由に変更可能です。</li>
-      </ul>
-      
-      <h2>よくある質問 (FAQ)</h2>
-      <dl>
-        <dt>Q. 音が出ない・鳴らないのですが？</dt>
-        <dd>A. お使いの端末（スマートフォンやPC）のマナーモードが解除されているか、またはブラウザのタブがミュート（消音）になっていないかご確認ください。</dd>
-        <dt>Q. スマートフォンがスリープ（画面オフ）になっても鳴り続けますか？</dt>
-        <dd>A. ブラウザの仕様やOSの省電力設定により、画面がオフになったり別のタブを開いたりすると、数秒後に音が停止したりテンポが不安定になる場合があります。安定してご利用いただくには、メトロノームの画面を開いたままにしてください。</dd>
-        <dt>Q. アプリをインストールする必要はありますか？</dt>
-        <dd>A. いいえ、不要です。Webブラウザだけで動作するため、容量を圧迫することなく、使いたい時にサッと開いてすぐにご利用いただけます。</dd>
-      </dl>
-    </section>
+      <section class="seo-content">
+        <h2>高精度オンラインメトロノームとは？</h2>
+        <p>ブラウザ上で正確なリズムを刻むことができる、完全無料のメトロノームツールです。ギターやピアノなどの楽器練習はもちろん、ダンスのテンポ確認、スポーツの反復練習、プレゼンのタイムマネジメントまで、一定のペースを保ちたいあらゆる場面でご活用いただけます。</p>
+        <br>
+        
+        <h2>当ツールの特徴</h2>
+        <ul>
+          <li><strong>ズレのない高精度なリズム：</strong> 一般的なWebタイマーではなく、「Web Audio API」の高度な時間管理システム（スケジューリング）を利用して音を鳴らしているため、長時間再生してもリズムがよれたり遅れたりしません。</li>
+          <li><strong>視覚的なビート表示：</strong> 拍に合わせて画面上のインジケーターが点滅します。1拍目は色が変わってアクセントを強調するため、音量を小さくしても目でリズムを把握できます。</li>
+          <li><strong>柔軟なテンポ・拍子設定：</strong> BPM（1分間あたりの拍数）は30から250まで調整可能。スライダーによる素早い設定だけでなく、ボタンで1ずつ微調整もできます。拍子も1〜8拍子まで自由に変更可能です。</li>
+        </ul>
+        
+        <h2>よくある質問 (FAQ)</h2>
+        <dl class="faq-list">
+          <dt>Q. 音が出ない・鳴らないのですが？</dt>
+          <dd>A. お使いの端末（スマートフォンやPC）のマナーモードが解除されているか、またはブラウザのタブがミュート（消音）になっていないかご確認ください。</dd>
+          
+          <dt>Q. スマートフォンがスリープ（画面オフ）になっても鳴り続けますか？</dt>
+          <dd>A. ブラウザの仕様やOSの省電力設定により、画面がオフになったり別のタブを開いたりすると、数秒後に音が停止したりテンポが不安定になる場合があります。安定してご利用いただくには、メトロノームの画面を開いたままにしてください。</dd>
+          
+          <dt>Q. アプリをインストールする必要はありますか？</dt>
+          <dd>A. いいえ、不要です。Webブラウザだけで動作するため、容量を圧迫することなく、使いたい時にサッと開いてすぐにご利用いただけます。</dd>
+        </dl>
+      </section>
+    </div>
   </main>
   
   <footer>
@@ -313,8 +406,8 @@
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>
     </div>
-    <p class="footer-notice">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</p>
     <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
+    <div class="footer-note" style="text-align: center; font-size: 0.8rem; color: #94a3b8; margin-top: 10px;">※当サイトのツールは全て端末内（ローカル）で処理されるため、データが外部に送信されることはありません。</div>
   </footer>
 
   <script>
