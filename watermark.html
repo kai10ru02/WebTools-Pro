@@ -15,9 +15,10 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
+        /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
         .tool-heading {
             text-align: center;
-            background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+            background: linear-gradient(45deg, var(--primary-cyan, #0ea5e9), #4facfe);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -31,36 +32,38 @@
         .subtitle {
             text-align: center;
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: #64748b; /* ダークグレーへ変更 */
             margin-bottom: 35px;
         }
 
+        /* ドラッグ＆ドロップエリア */
         .drop-zone {
-            border: 2px dashed rgba(0, 242, 254, 0.4);
+            border: 2px dashed #cbd5e1;
             padding: 40px 20px;
             border-radius: 16px;
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.02);
+            background-color: #f8fafc;
             cursor: pointer;
             transition: all 0.25s ease;
             margin-bottom: 25px;
         }
         .drop-zone:hover, .drop-zone.dragover {
-            border-color: var(--primary-cyan);
-            background-color: rgba(0, 242, 254, 0.05);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1) inset;
+            border-color: #0ea5e9;
+            background-color: #f0f9ff;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1) inset;
         }
-        .drop-zone p { margin: 0; font-size: 0.95rem; color: #d1d1e9; font-weight: bold; line-height: 1.6; }
-        .file-select-link { color: var(--primary-cyan); text-decoration: underline; }
+        .drop-zone p { margin: 0; font-size: 0.95rem; color: #334155; font-weight: bold; line-height: 1.6; }
+        .file-select-link { color: #0284c7; text-decoration: underline; }
 
         /* エディターパネル */
         .editor-panel {
             display: none;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 16px;
             padding: 25px;
             margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
         /* 設定項目のグリッドレイアウト */
@@ -77,36 +80,37 @@
         }
         .input-group label {
             font-size: 0.85rem;
-            color: var(--primary-cyan);
+            color: #0284c7;
             font-weight: bold;
             margin-bottom: 8px;
         }
         .input-group input[type="text"], .input-group select {
             padding: 12px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            color: #0f172a;
             font-size: 1rem;
             outline: none;
             transition: 0.2s;
         }
         .input-group input[type="text"]:focus, .input-group select:focus {
-            border-color: var(--primary-cyan);
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+            border-color: #0ea5e9;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.15);
         }
-        .input-group select option {
-            background-color: #0f1123;
-            color: #ffffff;
-        }
+        
         .input-group input[type="color"] {
-            padding: 0;
+            padding: 2px;
             width: 100%;
             height: 44px;
-            border: none;
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
-            background: transparent;
+            background: #ffffff;
             cursor: pointer;
+            transition: 0.2s;
+        }
+        .input-group input[type="color"]:hover {
+            border-color: #0ea5e9;
         }
 
         /* スライダー共通デザイン */
@@ -117,14 +121,14 @@
             margin-bottom: 10px;
             font-weight: bold;
             font-size: 0.85rem;
-            color: var(--primary-cyan);
+            color: #0284c7;
         }
         .val-badge {
-            background: rgba(0, 242, 254, 0.15);
-            color: var(--primary-cyan);
+            background: #f0f9ff;
+            color: #0284c7;
             padding: 2px 8px;
             border-radius: 6px;
-            border: 1px solid rgba(0, 242, 254, 0.3);
+            border: 1px solid #bae6fd;
             font-variant-numeric: tabular-nums;
         }
         input[type=range] {
@@ -138,16 +142,16 @@
             appearance: none;
             height: 20px; width: 20px;
             border-radius: 50%;
-            background: var(--primary-cyan);
+            background: #0ea5e9;
             cursor: pointer;
             margin-top: -8px;
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.8);
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
             transition: 0.1s;
         }
         input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%; height: 4px; cursor: pointer;
-            background: rgba(255, 255, 255, 0.15);
+            background: #e2e8f0;
             border-radius: 2px;
         }
 
@@ -155,10 +159,10 @@
         .preview-wrapper {
             text-align: center;
             margin-bottom: 25px;
-            background: #000;
+            background: #f1f5f9;
             border-radius: 12px;
             padding: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid #cbd5e1;
             position: relative;
         }
         .preview-wrapper canvas {
@@ -166,12 +170,13 @@
             max-height: 400px;
             object-fit: contain;
             border-radius: 4px;
+            background-color: #ffffff;
         }
         .preview-label {
             position: absolute;
             top: -12px;
             left: 20px;
-            background: #a55eea;
+            background: #0ea5e9;
             color: #fff;
             padding: 2px 10px;
             border-radius: 10px;
@@ -181,17 +186,17 @@
 
         .download-btn {
             width: 100%; padding: 16px;
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: #ffffff; border: none; border-radius: 10px;
             font-size: 1.1rem; font-weight: bold; cursor: pointer;
-            transition: 0.2s; box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3);
+            transition: 0.2s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
             text-align: center;
         }
         .download-btn:hover {
-            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5);
+            transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
         }
 
-        .status-msg { text-align: center; font-size: 0.9rem; margin-top: 15px; font-weight: bold; color: #a55eea; }
+        .status-msg { text-align: center; font-size: 0.9rem; margin-top: 15px; font-weight: bold; color: #0ea5e9; }
 
         /* レスポンシブ */
         @media (max-width: 600px) {
@@ -202,16 +207,16 @@
         .seo-content {
             margin-top: 50px;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #d1d1e9;
+            border-top: 1px solid #e2e8f0;
+            color: #475569;
             line-height: 1.7;
         }
         .seo-content h2 {
             font-size: 1.25rem;
-            color: #fff;
+            color: #0f172a;
             margin-top: 30px;
             margin-bottom: 15px;
-            border-left: 4px solid var(--primary-cyan);
+            border-left: 4px solid #0ea5e9;
             padding-left: 10px;
         }
         .seo-content ul, .seo-content ol {
@@ -223,14 +228,37 @@
         }
         .seo-content dt {
             font-weight: bold;
-            color: var(--primary-cyan);
+            color: #0284c7;
             margin-top: 15px;
             margin-bottom: 4px;
         }
         .seo-content dd {
             margin-left: 0;
             margin-bottom: 15px;
-            color: #a0a0b8;
+            color: #475569;
+        }
+        
+        /* スポンサーリンク用簡易スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -239,17 +267,24 @@
     <header>
         <a href="index.html" class="logo">
             <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
         </a>
         <nav>
             <a href="index.html">ホーム</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
-        </nav>
+            <a href="about.html">管理者情報</a> </nav>
     </header>
 
     <main>
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
+        </div>
+
         <div class="container">
             <h1 class="tool-heading">透かし（ウォーターマーク）一括追加</h1>
             <div class="subtitle">複数の画像に、あなたの名前やロゴテキストを一瞬で合成して保存します。</div>
@@ -307,6 +342,13 @@
                 <div class="status-msg" id="status-msg"></div>
             </div>
 
+            <div class="ad-slot">
+                <span class="ad-label">スポンサーリンク</span>
+                <div class="ad-wrapper">
+                    (広告スペース)
+                </div>
+            </div>
+
             <section class="seo-content">
                 <h2>画像に透かし（ウォーターマーク）を一括追加するツールの特徴</h2>
                 <ul>
@@ -344,7 +386,7 @@
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
-        </div>
+            <a href="about.html">管理者情報</a> </div>
         <div class="copyright">&copy; 2026 WebTools Pro. All rights reserved.</div>
         <div class="footer-note">※当サイトのツールは全て端末内(ローカル)で処理されるため、データが外部に送信されることはありません。</div>
     </footer>
@@ -390,6 +432,7 @@
         function loadFiles(files) {
             selectedFiles = files;
             statusMsg.innerText = `${files.length}枚の画像が選択されました。`;
+            statusMsg.style.color = "#0ea5e9";
             
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -472,6 +515,7 @@
             
             for (let i = 0; i < selectedFiles.length; i++) {
                 const file = selectedFiles[i];
+                statusMsg.style.color = "#0ea5e9";
                 statusMsg.innerText = `${selectedFiles.length}枚中 ${i + 1}枚目を処理中...`;
                 
                 await processAndDownloadSingleImage(file);
@@ -479,7 +523,7 @@
                 await new Promise(resolve => setTimeout(resolve, 400));
             }
 
-            statusMsg.style.color = "#2ecc71";
+            statusMsg.style.color = "#10b981";
             statusMsg.innerText = "すべての画像に透かしを追加して保存しました！\n※ブラウザ上部に「複数ファイルのダウンロードを許可しますか？」と出た場合は「許可」を押してください。";
             downloadBtn.disabled = false;
             downloadBtn.innerText = "📥 全ての画像に透かしを入れて保存";

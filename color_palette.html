@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>画像からカラーパレット抽出・カラーコード取得ツール | 無料・ブラウザ完結 - WebTools Pro</title>
-    <meta name="description" content="画像（PNG/JPEGなど）をドラッグ＆ドロップするだけで、主要なカラーパレット（HEX・RGB）を自動抽出。さらに画像上の好きな場所をタップ（クリック）して手動でカラーコードを取得できるスポイト機能も搭載。完全無料で安全です。">
+    <meta name="description" content="画像（PNG/JPEGなど）をドラッグ＆ドロップするだけで、主要なカラーパレット（HEX・RGB）を自動抽出。さらに画像上の好きな場所をタップ（クリック）して手 বিষ্ণ動でカラーコードを取得できるスポイト機能も搭載。完全無料で安全です。">
     
     <meta property="og:title" content="画像からカラーパレット抽出・カラーコード取得ツール - WebTools Pro">
     <meta property="og:description" content="画像から主要な色をAI解析で自動抽出＆スポイト機能で好きな色を取得。サーバー送信なしで安全な無料Webツール。">
@@ -15,9 +15,10 @@
     <link rel="stylesheet" href="style.css">
     
     <style>
+        /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
         .tool-heading {
             text-align: center;
-            background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+            background: linear-gradient(45deg, var(--primary-cyan, #0ea5e9), #4facfe);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -31,45 +32,46 @@
         .subtitle {
             text-align: center;
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: #64748b; /* ダークグレーに変更 */
             margin-bottom: 35px;
             line-height: 1.6;
         }
 
+        /* ドラッグ＆ドロップエリア */
         .drop-zone {
-            border: 2px dashed rgba(0, 242, 254, 0.4);
+            border: 2px dashed #cbd5e1;
             padding: 40px 20px;
             border-radius: 16px;
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.02);
+            background-color: #f8fafc;
             cursor: pointer;
             transition: all 0.25s ease;
         }
         .drop-zone:hover, .drop-zone.dragover {
-            border-color: var(--primary-cyan);
-            background-color: rgba(0, 242, 254, 0.05);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.1) inset;
+            border-color: #0ea5e9;
+            background-color: #f0f9ff;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1) inset;
         }
         .drop-zone svg {
             width: 55px;
             height: 55px;
-            color: #7f8c8d;
+            color: #94a3b8;
             margin-bottom: 12px;
             transition: 0.2s;
         }
         .drop-zone:hover svg, .drop-zone.dragover svg {
-            color: var(--primary-cyan);
+            color: #0ea5e9;
             transform: scale(1.05);
         }
-        .drop-zone p { margin: 0; font-size: 0.95rem; color: #d1d1e9; font-weight: bold; line-height: 1.6; }
-        .file-select-link { color: var(--primary-cyan); text-decoration: underline; }
+        .drop-zone p { margin: 0; font-size: 0.95rem; color: #334155; font-weight: bold; line-height: 1.6; }
+        .file-select-link { color: #0284c7; text-decoration: underline; }
 
         /* 結果エリアのレイアウト */
         .result-area {
             display: none;
             margin-top: 30px;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 16px;
             padding: 25px;
         }
@@ -78,38 +80,39 @@
         .preview-wrapper {
             text-align: center;
             margin-bottom: 25px;
-            background: rgba(0, 0, 0, 0.5);
+            background: #e2e8f0; /* 画像との境界をわかりやすく */
             border-radius: 12px;
             padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #cbd5e1;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             max-height: 400px;
-            position: relative; /* ツールチップ配置用 */
-            cursor: crosshair;  /* カーソルを十字(スポイト風)に */
+            position: relative;
+            cursor: crosshair;
         }
         .preview-wrapper img {
             max-width: 100%;
             max-height: 380px;
             object-fit: contain;
             border-radius: 4px;
+            background: #fff; /* 透明画像用 */
         }
 
         /* スポイトのツールチップデザイン */
         .hover-tooltip {
             position: absolute;
-            pointer-events: none; /* マウスイベントを画像に貫通させる */
+            pointer-events: none;
             display: none;
             align-items: center;
             gap: 8px;
-            background: rgba(15, 17, 35, 0.9);
-            border: 1px solid var(--primary-cyan);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #0ea5e9;
             padding: 6px 12px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            color: #334155;
             font-weight: bold;
             font-family: monospace;
             font-size: 0.9rem;
@@ -121,7 +124,7 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         /* 画像クリック時のコピー完了メッセージ */
@@ -140,7 +143,7 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
             z-index: 9999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
         .copy-toast-center.show {
             opacity: 1;
@@ -159,36 +162,37 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(255, 255, 255, 0.05);
+            background: #ffffff;
             padding: 10px;
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #e2e8f0;
             cursor: pointer;
             transition: 0.2s;
             position: relative;
         }
         .color-box:hover {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary-cyan);
+            background: #f0f9ff;
+            border-color: #0ea5e9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
         .color-circle {
             width: 60px;
             height: 60px;
             border-radius: 50%;
             margin-bottom: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
         }
         .color-hex {
             font-size: 0.85rem;
             font-weight: bold;
             font-family: monospace;
-            color: #d1d1e9;
+            color: #334155;
         }
         .color-rgb {
             font-size: 0.7rem;
-            color: #7f8c8d;
+            color: #64748b;
             margin-top: 2px;
         }
 
@@ -211,22 +215,22 @@
             transform: translateY(-5px);
         }
 
-        .status-msg { text-align: center; font-size: 0.9rem; margin-top: 15px; font-weight: bold; color: var(--primary-cyan); }
+        .status-msg { text-align: center; font-size: 0.9rem; margin-top: 15px; font-weight: bold; color: #0284c7; }
 
-        /* 追加：SEO用テキストエリアのスタイル設定 */
+        /* SEO用テキストエリアのスタイル設定 */
         .tool-description-section {
             margin-top: 50px;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #d1d1e9;
+            border-top: 1px solid #e2e8f0;
+            color: #475569;
             line-height: 1.7;
         }
         .tool-description-section h2 {
             font-size: 1.3rem;
-            color: #fff;
+            color: #0f172a;
             margin-top: 30px;
             margin-bottom: 15px;
-            border-left: 4px solid var(--primary-cyan, #00f2fe);
+            border-left: 4px solid #0ea5e9;
             padding-left: 10px;
         }
         .tool-description-section ul, .tool-description-section ol {
@@ -235,9 +239,32 @@
         }
         .tool-description-section li { margin-bottom: 8px; }
         .tool-description-section dl { margin-bottom: 20px; }
-        .tool-description-section dt { font-weight: bold; color: #fff; margin-top: 12px; }
-        .tool-description-section dd { margin-left: 0; margin-bottom: 12px; color: #a0a0b8; }
-        .highlight-text { color: var(--primary-cyan); font-weight: bold; }
+        .tool-description-section dt { font-weight: bold; color: #0284c7; margin-top: 12px; }
+        .tool-description-section dd { margin-left: 0; margin-bottom: 12px; color: #475569; }
+        .highlight-text { color: #0ea5e9; font-weight: bold; }
+        
+        /* スポンサーリンク用簡易スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -245,10 +272,11 @@
     <header>
         <a href="index.html" class="logo">
             <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
         </a>
         <nav>
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a> 
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
@@ -256,6 +284,13 @@
     </header>
 
     <main>
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
+        </div>
+
         <div class="container">
             <h1 class="tool-heading">カラーパレット＆スポイト抽出ツール</h1>
             <div class="subtitle">AIによる主要カラーの自動抽出と、<span class="highlight-text">画像にカーソルを合わせる（タップする）と好きな場所の色を取得できるスポイト機能</span>を搭載しています。</div>
@@ -280,11 +315,18 @@
                     <div id="hover-tooltip" class="hover-tooltip"></div>
                 </div>
                 
-                <div style="text-align: center; color: #a0a0b8; font-size: 0.85rem; margin-bottom: 10px;">▼ AIが自動抽出した代表的な5色 ▼</div>
+                <div style="text-align: center; color: #64748b; font-size: 0.85rem; margin-bottom: 10px;">▼ AIが自動抽出した代表的な5色 ▼</div>
                 <div class="palette-container" id="palette-container"></div>
             </div>
 
             <div id="copy-toast-center" class="copy-toast-center">Copied!</div>
+
+            <div class="ad-slot">
+                <span class="ad-label">スポンサーリンク</span>
+                <div class="ad-wrapper">
+                    (広告スペース)
+                </div>
+            </div>
 
             <section class="tool-description-section">
                 <h2>このカラー抽出ツールの特徴</h2>
@@ -316,6 +358,7 @@
     <footer>
         <div class="footer-links">
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>

@@ -12,10 +12,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
-        /* ==== ツール固有のスタイル ==== */
+        /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
         h1 {
             text-align: center;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            background: linear-gradient(45deg, var(--primary-cyan, #0ea5e9), #4facfe);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -28,16 +28,17 @@
         .subtitle {
             text-align: center;
             font-size: 0.85rem;
-            color: #b3b3cc;
+            color: #64748b;
             margin-bottom: 30px;
         }
 
         .tool-panel {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 16px;
             padding: 25px;
             margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
         /* エディタレイアウト（PCは横並び、スマホは縦並び） */
@@ -58,8 +59,8 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 12px;
             padding: 15px;
             min-width: 0; /* フレックスアイテムの崩れ防止 */
@@ -71,7 +72,7 @@
             margin-bottom: 10px;
         }
         .box-title {
-            color: #00f2fe;
+            color: #0ea5e9;
             font-weight: bold;
             font-size: 1rem;
         }
@@ -80,28 +81,31 @@
         textarea {
             width: 100%;
             height: 350px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
             padding: 12px;
-            color: #e6edf3;
+            color: #0f172a;
             font-family: 'Courier New', Consolas, monospace;
             font-size: 0.85rem;
             resize: vertical;
             box-sizing: border-box;
             margin-bottom: 12px;
             line-height: 1.5;
+            transition: all 0.2s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
         textarea:focus {
             outline: none;
-            border-color: #00f2fe;
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+            border-color: #0ea5e9;
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
         }
         
         /* スクロールバー装飾 */
         textarea::-webkit-scrollbar { width: 8px; height: 8px; }
-        textarea::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-        textarea::-webkit-scrollbar-thumb { background: rgba(0, 242, 254, 0.3); border-radius: 4px; }
+        textarea::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        textarea::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
         /* 中央の変換ボタンエリア（アイコンのみに最適化） */
         .convert-actions {
@@ -115,7 +119,7 @@
         }
 
         .btn-convert {
-            background: linear-gradient(135deg, #a55eea 0%, #7d5fff 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
             color: #fff;
             border: none;
             border-radius: 12px; /* 綺麗な角丸 */
@@ -127,12 +131,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(165, 94, 234, 0.25);
+            box-shadow: 0 4px 10px rgba(14, 165, 233, 0.25);
         }
         .btn-convert:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(165, 94, 234, 0.4);
-            filter: brightness(1.1);
+            box-shadow: 0 6px 15px rgba(14, 165, 233, 0.35);
         }
 
         /* サブアクションボタン（コピー、DLなど） */
@@ -143,27 +146,30 @@
         }
         .btn-sub {
             flex: 1;
-            background: rgba(255, 255, 255, 0.08);
-            color: #b3b3cc;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            color: #475569;
+            border: 1px solid #cbd5e1;
             padding: 7px 10px;
             border-radius: 6px;
             font-size: 0.8rem;
+            font-weight: bold;
             cursor: pointer;
             transition: 0.2s;
             text-align: center;
         }
         .btn-sub:hover {
-            background: rgba(255, 255, 255, 0.18);
-            color: #ffffff;
+            background: #f0f9ff;
+            color: #0ea5e9;
+            border-color: #0ea5e9;
         }
 
         .error-msg {
-            color: #ff4b2b;
+            color: #ef4444;
             font-size: 0.8rem;
             margin-top: 2px;
             margin-bottom: 8px;
             min-height: 16px;
+            font-weight: bold;
         }
 
         /* ファイルアップロード用（非表示） */
@@ -187,14 +193,37 @@
         }
 
         /* ==== SEO用テキストセクション ==== */
-        .seo-content { padding-top: 20px; }
-        .seo-content h2 { font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #00f2fe; padding-left: 12px; }
-        .seo-content p, .seo-content li, .seo-content dd { color: #b3b3cc; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content { padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
+        .seo-content h2 { font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; margin-top: 30px; text-align: left; border-left: 4px solid #0ea5e9; padding-left: 12px; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
         .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
         .seo-content li { margin-bottom: 8px; }
-        .seo-content strong { color: #00f2fe; }
-        .seo-content dt { font-weight: bold; color: #00f2fe; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content strong { color: #0ea5e9; }
+        .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
         .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+
+        /* スポンサーリンク用簡易スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -202,10 +231,11 @@
     <header>
         <a href="index.html" class="logo">
             <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
         </a>
         <nav>
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
@@ -213,6 +243,13 @@
     </header>
 
     <main>
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
+        </div>
+
         <div class="container">
             <h1>CSV ↔ JSON 変換ツール</h1>
             <div class="subtitle">データをブラウザ上で安全に相互変換。ExcelデータのWeb用フォーマット化に最適です。</div>
@@ -262,6 +299,13 @@
                 </div>
             </div>
 
+            <div class="ad-slot">
+                <span class="ad-label">スポンサーリンク</span>
+                <div class="ad-wrapper">
+                    (広告スペース)
+                </div>
+            </div>
+
             <section class="seo-content">
                 <h2>CSV ↔ JSON 変換ツールの特徴</h2>
                 <ul>
@@ -295,6 +339,7 @@
     <footer>
         <div class="footer-links">
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>

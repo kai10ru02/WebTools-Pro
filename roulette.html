@@ -8,9 +8,10 @@
   <link rel="icon" href="logo.jpg">
   <link rel="stylesheet" href="style.css">
   <style>
+    /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
     .tool-heading {
       text-align: center;
-      background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+      background: linear-gradient(45deg, var(--primary-cyan, #0ea5e9), #4facfe);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -23,7 +24,7 @@
     .subtitle {
       text-align: center;
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: #64748b;
       margin-bottom: 25px;
       line-height: 1.6;
     }
@@ -41,14 +42,15 @@
     }
     .mode-selector label {
       cursor: pointer;
-      color: var(--text-main);
+      color: #334155;
       font-size: 1rem;
+      font-weight: bold;
       display: flex;
       align-items: center;
       gap: 5px;
     }
     .mode-selector input[type="radio"] {
-      accent-color: var(--primary-cyan);
+      accent-color: #0ea5e9;
       transform: scale(1.2);
     }
     .input-section {
@@ -56,23 +58,25 @@
     }
     textarea, .num-input {
       width: 100%;
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
       border-radius: 12px;
       padding: 15px;
-      color: var(--text-main);
+      color: #0f172a;
       font-family: inherit;
       font-size: 1rem;
       outline: none;
       transition: all 0.3s ease;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
     }
     textarea {
       height: 150px;
       resize: vertical;
+      line-height: 1.5;
     }
     textarea:focus, .num-input:focus {
-      border-color: var(--primary-cyan);
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+      border-color: #0ea5e9;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
     }
     .number-range-wrapper {
       display: flex;
@@ -82,34 +86,36 @@
     }
     .number-range-wrapper span {
       font-weight: bold;
-      color: var(--text-muted);
+      color: #64748b;
     }
     .btn-run {
       padding: 15px;
-      background: linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%);
-      color: #0f1123;
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: #ffffff;
       font-weight: bold;
       font-size: 1.1rem;
       border: none;
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
       margin-top: 10px;
     }
     .btn-run:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
     }
     .btn-run:disabled {
-      opacity: 0.7;
+      background: #e2e8f0;
+      color: #94a3b8;
+      box-shadow: none;
       cursor: not-allowed;
       transform: none;
     }
     .result-area {
       text-align: center;
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
       border-radius: 16px;
       padding: 40px 20px;
       min-height: 150px;
@@ -117,16 +123,17 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
     }
     .result-text {
       font-size: 2.5rem;
       font-weight: bold;
-      color: var(--text-main);
+      color: #0f172a;
       word-break: break-all;
       transition: color 0.3s;
     }
     .spinning {
-      color: var(--primary-cyan);
+      color: #0ea5e9;
       animation: pulse 0.1s infinite alternate;
     }
     @keyframes pulse {
@@ -136,9 +143,42 @@
     .footer-notice {
       text-align: center;
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: #94a3b8;
       margin: 15px 0;
       padding: 0 20px;
+    }
+
+    /* ==== SEO用テキストセクション ==== */
+    .seo-content { padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
+    .seo-content h2 { font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #0ea5e9; padding-left: 12px; }
+    .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
+    .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+    .seo-content li { margin-bottom: 8px; }
+    .seo-content strong { color: #0ea5e9; }
+    .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
+    .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+
+    /* スポンサーリンク用簡易スタイル */
+    .ad-slot {
+        margin: 20px auto;
+        text-align: center;
+    }
+    .ad-label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .ad-wrapper {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        padding: 20px;
+        color: #94a3b8;
+        border-radius: 8px;
+        min-height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
   </style>
 </head>
@@ -146,10 +186,11 @@
   <header>
     <a href="index.html" class="logo">
       <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
     </a>
     <nav>
       <a href="index.html">ホーム</a>
+      <a href="about.html">管理者情報</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>
@@ -157,6 +198,13 @@
   </header>
   
   <main>
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
+    </div>
+
     <div class="container">
       <h1 class="tool-heading">ランダム抽選・ルーレット</h1>
       <p class="subtitle">テキスト入力、または数字の範囲を指定して抽選ボタンを押してください。</p>
@@ -185,34 +233,42 @@
       <div class="result-area">
         <div id="result-display" class="result-text">？</div>
       </div>
-    </div>
 
-    <section class="seo-content">
-      <h2>ランダム抽選・ルーレット機能とは？</h2>
-      <p>入力したテキスト項目、または指定した数字の範囲から、完全にランダムで1つを選び出す無料のオンライン抽選ツールです。忘年会のビンゴ大会、座席決め、プレゼント抽選、今日の献立選びなど、様々なシーンでブラウザを開くだけですぐにご利用いただけます。</p>
-      
-      <h2>当ツールの特徴</h2>
-      <ul>
-        <li><strong>用途に合わせた2つのモード：</strong> 項目を自由に入力できる「テキスト入力モード」と、ビンゴやクジ引きに便利な「数字の範囲指定モード」をワンタッチで切り替え可能です。</li>
-        <li><strong>ワクワクするルーレット演出：</strong> ドラムロールのように項目が高速で切り替わり、徐々にスピードが落ちて決定する演出を採用。抽選の場を盛り上げます。</li>
-        <li><strong>完全ローカル処理で安全：</strong> 入力した個人名やデータは外部サーバーに一切送信されません。お使いの端末（ブラウザ内）だけで安全に処理されます。</li>
-      </ul>
-      
-      <h2>よくある質問 (FAQ)</h2>
-      <dl>
-        <dt>Q. 入力できる項目数に制限はありますか？</dt>
-        <dd>A. 厳密な制限はありません。数百件程度のリストでも問題なく動作しますが、あまりに膨大なテキストを貼り付けるとお使いの端末の動作が重くなる場合があります。</dd>
-        <dt>Q. 抽選の確率は本当にランダムですか？</dt>
-        <dd>A. はい。JavaScriptの乱数生成機能を使用しており、入力された全ての項目に対して均等な確率で抽選が行われます。</dd>
-        <dt>Q. 抽選結果の履歴は保存されますか？</dt>
-        <dd>A. 当ツールはプライバシー保護のため、サーバーへのデータ保存を一切行っておりません。ページをリロード（再読み込み）すると結果はリセットされますのでご注意ください。</dd>
-      </dl>
-    </section>
+      <div class="ad-slot">
+          <span class="ad-label">スポンサーリンク</span>
+          <div class="ad-wrapper">
+              (広告スペース)
+          </div>
+      </div>
+
+      <section class="seo-content">
+        <h2>ランダム抽選・ルーレット機能とは？</h2>
+        <p>入力したテキスト項目、または指定した数字の範囲から、完全にランダムで1つを選び出す無料のオンライン抽選ツールです。忘年会のビンゴ大会、座席決め、プレゼント抽選、今日の献立選びなど、様々なシーンでブラウザを開くだけですぐにご利用いただけます。</p>
+        
+        <h2>当ツールの特徴</h2>
+        <ul>
+          <li><strong>用途に合わせた2つのモード：</strong> 項目を自由に入力できる「テキスト入力モード」と、ビンゴやクジ引きに便利な「数字の範囲指定モード」をワンタッチで切り替え可能です。</li>
+          <li><strong>ワクワクするルーレット演出：</strong> ドラムロールのように項目が高速で切り替わり、徐々にスピードが落ちて決定する演出を採用。抽選の場を盛り上げます。</li>
+          <li><strong>完全ローカル処理で安全：</strong> 入力した個人名やデータは外部サーバーに一切送信されません。お使いの端末（ブラウザ内）だけで安全に処理されます。</li>
+        </ul>
+        
+        <h2>よくある質問 (FAQ)</h2>
+        <dl>
+          <dt>Q. 入力できる項目数に制限はありますか？</dt>
+          <dd>A. 厳密な制限はありません。数百件程度のリストでも問題なく動作しますが、あまりに膨大なテキストを貼り付けるとお使いの端末の動作が重くなる場合があります。</dd>
+          <dt>Q. 抽選の確率は本当にランダムですか？</dt>
+          <dd>A. はい。JavaScriptの乱数生成機能を使用しており、入力された全ての項目に対して均等な確率で抽選が行われます。</dd>
+          <dt>Q. 抽選結果の履歴は保存されますか？</dt>
+          <dd>A. 当ツールはプライバシー保護のため、サーバーへのデータ保存を一切行っておりません。ページをリロード（再読み込み）すると結果はリセットされますのでご注意ください。</dd>
+        </dl>
+      </section>
+    </div>
   </main>
   
   <footer>
     <div class="footer-links">
       <a href="index.html">ホーム</a>
+      <a href="about.html">管理者情報</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>
@@ -287,7 +343,7 @@
             setTimeout(spin, interval);
           } else {
             display.classList.remove('spinning');
-            display.style.color = '#ff4b2b'; 
+            display.style.color = '#ef4444'; // 決定時の文字色を赤（ライトテーマのTailwind Red）に
             setTimeout(() => { 
               display.style.color = ''; 
               drawBtn.disabled = false;

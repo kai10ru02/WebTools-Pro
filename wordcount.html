@@ -15,10 +15,13 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
+        /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
         h1 {
             text-align: center;
-            color: #00e5ff;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+            background: linear-gradient(45deg, var(--primary-cyan, #0ea5e9), #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-top: 0;
             margin-bottom: 35px;
             font-size: 1.8rem;
@@ -39,22 +42,23 @@
         }
 
         .stat-card {
-            background-color: #161b22;
-            border: 1.5px solid #30363d;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 10px;
             padding: 15px;
             text-align: center;
             transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
 
         .stat-card.primary {
-            border-color: #00e5ff;
-            background-color: rgba(0, 229, 255, 0.05);
+            border-color: #0ea5e9;
+            background-color: #f0f9ff;
         }
 
         .stat-label {
             font-size: 0.8rem;
-            color: #8b949e;
+            color: #64748b;
             margin-bottom: 8px;
             font-weight: bold;
         }
@@ -62,25 +66,26 @@
         .stat-value {
             font-size: 1.6rem;
             font-weight: 800;
-            color: #ffffff;
+            color: #0f172a;
             line-height: 1;
         }
 
-        .stat-card.primary .stat-value { color: #00e5ff; }
-        .stat-unit { font-size: 0.8rem; color: #8b949e; margin-left: 2px; }
+        .stat-card.primary .stat-value { color: #0284c7; }
+        .stat-unit { font-size: 0.8rem; color: #64748b; margin-left: 2px; }
 
         /* 文字種別分析パネル */
         .analysis-section {
-            background-color: #161b22;
-            border: 1.5px solid #30363d;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
         }
         .analysis-title {
             font-size: 0.95rem;
             font-weight: bold;
-            color: #c9d1d9;
+            color: #334155;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -95,15 +100,15 @@
             .type-bars { grid-template-columns: repeat(5, 1fr); }
         }
         .type-item {
-            background-color: #0d1117;
+            background-color: #f8fafc;
             padding: 10px;
             border-radius: 6px;
-            border: 1px solid #21262d;
+            border: 1px solid #cbd5e1;
             text-align: center;
         }
-        .type-name { font-size: 0.75rem; color: #8b949e; margin-bottom: 4px; }
-        .type-count { font-size: 1.1rem; font-weight: bold; color: #00e5ff; }
-        .type-ratio { font-size: 0.75rem; color: #8b949e; }
+        .type-name { font-size: 0.75rem; color: #64748b; margin-bottom: 4px; font-weight: bold; }
+        .type-count { font-size: 1.1rem; font-weight: bold; color: #0ea5e9; }
+        .type-ratio { font-size: 0.75rem; color: #94a3b8; }
 
         /* テキストエリア領域 */
         .textarea-container { margin-bottom: 20px; }
@@ -112,10 +117,10 @@
             width: 100%;
             height: 280px;
             padding: 15px;
-            background-color: #0d1117;
-            border: 1.5px solid #30363d;
+            background-color: #ffffff;
+            border: 1.5px solid #cbd5e1;
             border-radius: 10px;
-            color: #ffffff;
+            color: #0f172a;
             font-size: 1rem;
             line-height: 1.6;
             box-sizing: border-box;
@@ -123,12 +128,12 @@
             transition: all 0.2s;
             font-family: inherit;
         }
-        textarea:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15); }
+        textarea:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15); }
 
         /* テキスト変換・整形ボタンエリア */
         .tools-panel {
-            background-color: #161b22;
-            border: 1.5px solid #30363d;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
             border-radius: 10px;
             padding: 18px;
             margin-bottom: 25px;
@@ -136,7 +141,7 @@
         .tools-title {
             font-size: 0.85rem;
             font-weight: bold;
-            color: #8b949e;
+            color: #475569;
             margin-bottom: 12px;
         }
         .tools-buttons {
@@ -145,9 +150,9 @@
             gap: 8px;
         }
         .tool-btn {
-            background-color: #21262d;
-            color: #c9d1d9;
-            border: 1px solid #30363d;
+            background-color: #ffffff;
+            color: #475569;
+            border: 1px solid #cbd5e1;
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.8rem;
@@ -156,9 +161,9 @@
             transition: all 0.2s;
         }
         .tool-btn:hover {
-            background-color: #30363d;
-            color: #00e5ff;
-            border-color: #00e5ff;
+            background-color: #f0f9ff;
+            color: #0ea5e9;
+            border-color: #0ea5e9;
         }
 
         /* オプション＆メイン操作エリア */
@@ -177,9 +182,9 @@
         }
 
         .options-group label {
-            color: #c9d1d9; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 6px;
+            color: #334155; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: bold;
         }
-        .options-group input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #00e5ff; }
+        .options-group input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: #0ea5e9; }
 
         .action-bar { display: flex; gap: 12px; flex-wrap: wrap; }
 
@@ -187,25 +192,48 @@
             padding: 10px 20px; border-radius: 6px; font-size: 0.9rem; font-weight: bold;
             cursor: pointer; border: none; transition: all 0.2s;
         }
-        .btn-primary { background-color: #00e5ff; color: #0f1123; }
-        .btn-primary:hover { background-color: #00c4db; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
-        .btn-secondary { background-color: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
-        .btn-secondary:hover { background-color: #30363d; color: #ffffff; }
-        .btn-danger { background-color: rgba(218, 54, 51, 0.2); color: #f85149; border: 1px solid rgba(218, 54, 51, 0.4); }
-        .btn-danger:hover { background-color: #da3633; color: #ffffff; }
+        .btn-primary { background-color: #0ea5e9; color: #ffffff; }
+        .btn-primary:hover { background-color: #0284c7; box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3); }
+        .btn-secondary { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+        .btn-secondary:hover { background-color: #e2e8f0; color: #0f172a; }
+        .btn-danger { background-color: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
+        .btn-danger:hover { background-color: #ef4444; color: #ffffff; }
 
         /* SEO用テキストセクション */
-        .seo-content { margin-top: 60px; padding-top: 40px; border-top: 1px solid #30363d; }
+        .seo-content { margin-top: 60px; padding-top: 40px; border-top: 1px solid #e2e8f0; }
         .seo-content h2 {
-            font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; text-align: left;
-            border-left: 4px solid #00e5ff; padding-left: 12px; text-shadow: none;
+            font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; text-align: left;
+            border-left: 4px solid #0ea5e9; padding-left: 12px; text-shadow: none;
         }
-        .seo-content p, .seo-content li, .seo-content dd { color: #8b949e; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
         .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
         .seo-content li { margin-bottom: 8px; }
-        .seo-content strong { color: #c9d1d9; }
-        .seo-content dt { font-weight: bold; color: #00e5ff; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content strong { color: #0ea5e9; }
+        .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
         .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+        
+        /* スポンサーリンク用簡易スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -213,10 +241,11 @@
 <header>
     <a href="index.html" class="logo">
         <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-        <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
     </a>
     <nav>
         <a href="index.html">ホーム</a>
+        <a href="about.html">管理者情報</a>
         <a href="terms.html">利用規約</a>
         <a href="privacy.html">プライバシーポリシー</a>
         <a href="contact.html">お問い合わせ</a>
@@ -224,6 +253,13 @@
 </header>
 
 <main class="main-content">
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
+    </div>
+
     <div class="container">
         <h1>高機能文字数カウントツール</h1>
         
@@ -324,6 +360,13 @@
             </div>
         </div>
 
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
+        </div>
+
         <section class="seo-content">
             <h2>この文字数カウントツールの特徴・メリット</h2>
             <ul>
@@ -352,6 +395,7 @@
 <footer>
     <div class="footer-links">
         <a href="index.html">ホーム</a>
+        <a href="about.html">管理者情報</a> 
         <a href="terms.html">利用規約</a>
         <a href="privacy.html">プライバシーポリシー</a>
         <a href="contact.html">お問い合わせ</a>

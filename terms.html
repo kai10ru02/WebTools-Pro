@@ -25,23 +25,21 @@
             align-items: start;
         }
 
-        /* 左側：サイドナビゲーション（目次 / グラスモーフィズム調） */
+        /* 左側：サイドナビゲーション（ライトテーマ対応） */
         .terms-sidebar {
             position: sticky;
             top: 100px;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: #ffffff;
             padding: 24px;
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
         }
         .terms-sidebar h3 {
             margin-top: 0;
             margin-bottom: 18px;
             font-size: 0.9rem;
-            color: #00f2fe;
+            color: #0ea5e9;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             font-weight: bold;
@@ -55,7 +53,7 @@
             margin-bottom: 10px;
         }
         .terms-sidebar a {
-            color: #b3b3cc;
+            color: #475569;
             text-decoration: none;
             font-size: 0.92rem;
             transition: all 0.2s ease;
@@ -65,28 +63,25 @@
             border-radius: 6px;
         }
         .terms-sidebar a:hover {
-            color: #ffffff;
-            background: rgba(0, 242, 254, 0.1);
+            color: #0ea5e9;
+            background: #f0f9ff;
             transform: translateX(4px);
         }
 
-        /* 右側：本文コンテンツエリア（グラスモーフィズム調） */
+        /* 右側：本文コンテンツエリア（ライトテーマ対応） */
         .terms-content-side {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: #ffffff;
             padding: 45px;
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
         }
 
         .terms-content-side h1 {
             font-size: 2.2rem;
             margin-top: 0;
             margin-bottom: 20px;
-            color: #ffffff;
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -95,10 +90,10 @@
         .terms-lead {
             font-size: 1.05rem;
             line-height: 1.8;
-            color: #b3b3cc;
+            color: #475569;
             margin-bottom: 40px;
             padding-bottom: 25px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #e2e8f0;
         }
 
         /* 目次ジャンプ時のヘッダー被り防止 */
@@ -116,18 +111,18 @@
             margin-top: 0;
             margin-bottom: 18px;
             padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            color: #0f172a;
         }
         .terms-content-side h2 svg {
-            color: #00f2fe;
+            color: #0ea5e9;
             flex-shrink: 0;
         }
 
         .terms-content-side p {
             font-size: 0.98rem;
             line-height: 1.8;
-            color: #c4c4d4;
+            color: #475569;
             margin-bottom: 16px;
         }
 
@@ -139,17 +134,42 @@
         .terms-content-side ul li {
             font-size: 0.98rem;
             line-height: 1.8;
-            color: #c4c4d4;
+            color: #475569;
             margin-bottom: 8px;
         }
 
         .date-badge {
             margin-top: 50px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid #e2e8f0;
             text-align: right;
             font-size: 0.9rem;
-            color: #8b949e;
+            color: #94a3b8;
+        }
+
+        /* スポンサーリンク用簡易スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+            max-width: 1100px; /* 全体幅に合わせる */
+            padding: 0 20px;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* レスポンシブ対応（スマートフォン表示） */
@@ -181,10 +201,11 @@
     <header>
         <a href="index.html" class="logo">
             <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
         </a>
         <nav>
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html" class="active">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
@@ -192,6 +213,13 @@
     </header>
 
     <main>
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
+        </div>
+
         <div class="terms-modern-wrapper">
             
             <nav class="terms-sidebar" aria-label="ページ内目次">
@@ -273,6 +301,13 @@
                     <p>当サイトは、必要と判断した場合には、ユーザーに通知することなくいつでも本規約を変更することができるものとします。なお、本規約の変更後、本サービスの利用を開始した場合には、当該ユーザーは変更後の規約に同意したものとみなします。</p>
                 </div>
 
+                <div class="ad-slot" style="margin-top: 40px; margin-bottom: 0;">
+                    <span class="ad-label">スポンサーリンク</span>
+                    <div class="ad-wrapper">
+                        (広告スペース)
+                    </div>
+                </div>
+
                 <div class="date-badge">制定日：2026年7月21日</div>
             </div>
             
@@ -282,6 +317,7 @@
     <footer>
         <div class="footer-links">
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html" class="active">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>

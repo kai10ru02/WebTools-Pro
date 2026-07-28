@@ -16,11 +16,13 @@
     <script src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
 
     <style>
-        /* ==== ツール固有のスタイル ==== */
+        /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
         h1 {
             text-align: center;
-            color: #00e5ff;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+            background: linear-gradient(45deg, #ff416c, #ff4b2b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-top: 0;
             margin-bottom: 35px;
             font-size: 1.8rem;
@@ -29,58 +31,58 @@
         }
 
         .form-group { margin-bottom: 22px; }
-        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.9rem; color: #8b949e; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.9rem; color: #475569; }
         
         input[type="text"] {
-            width: 100%; padding: 12px; border: 1.5px solid #30363d; border-radius: 8px;
+            width: 100%; padding: 12px; border: 1.5px solid #cbd5e1; border-radius: 8px;
             box-sizing: border-box; font-size: 0.95rem; transition: all 0.2s;
-            background-color: #0d1117; color: #ffffff;
+            background-color: #ffffff; color: #0f172a;
         }
         input[type="text"]:focus {
-            outline: none; border-color: #00e5ff; background-color: #0d1117;
-            box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15);
+            outline: none; border-color: #ff4b2b; background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(255, 75, 108, 0.15);
         }
 
-        input[type="file"] { display: block; width: 100%; font-size: 0.9rem; color: #c9d1d9; }
+        input[type="file"] { display: block; width: 100%; font-size: 0.9rem; color: #334155; }
         .remove-logo-btn {
-            display: inline-block; background-color: #da3633; color: white; border: none;
+            display: inline-block; background-color: #ef4444; color: white; border: none;
             padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;
             margin-top: 8px; font-weight: bold; transition: 0.2s;
         }
-        .remove-logo-btn:hover { background-color: #b62b28; }
+        .remove-logo-btn:hover { background-color: #dc2626; }
 
         input[type="color"] {
-            border: 1.5px solid #30363d; height: 44px; width: 100%; border-radius: 8px;
-            cursor: pointer; background: #0d1117; padding: 4px; box-sizing: border-box; transition: all 0.2s;
+            border: 1.5px solid #cbd5e1; height: 44px; width: 100%; border-radius: 8px;
+            cursor: pointer; background: #ffffff; padding: 4px; box-sizing: border-box; transition: all 0.2s;
         }
-        input[type="color"]:hover { border-color: #00e5ff; }
+        input[type="color"]:hover { border-color: #ff4b2b; }
 
         .visual-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
         .visual-option {
-            border: 2px solid #30363d; border-radius: 10px; padding: 12px 5px; text-align: center;
-            cursor: pointer; transition: all 0.2s ease; background-color: #161b22; color: #8b949e;
+            border: 2px solid #e2e8f0; border-radius: 10px; padding: 12px 5px; text-align: center;
+            cursor: pointer; transition: all 0.2s ease; background-color: #f8fafc; color: #64748b;
         }
-        .visual-option:hover { border-color: #00e5ff; background-color: #1f293d; transform: translateY(-1px); }
+        .visual-option:hover { border-color: #ff4b2b; background-color: #fff0f0; transform: translateY(-1px); }
         .visual-option.selected {
-            border-color: #00e5ff; background-color: #0d1117; color: #00e5ff;
-            box-shadow: 0 4px 12px rgba(0, 229, 255, 0.2);
+            border-color: #ff4b2b; background-color: #ffffff; color: #ff4b2b;
+            box-shadow: 0 4px 12px rgba(255, 75, 108, 0.15);
         }
         .visual-option svg { width: 38px; height: 38px; margin-bottom: 6px; }
         .visual-option span { display: block; font-size: 0.75rem; font-weight: bold; }
 
         #canvas-container {
-            text-align: center; background-color: #ffffff; padding: 25px; border-radius: 14px;
-            border: 2px dashed #30363d; margin-bottom: 20px; display: flex;
+            text-align: center; background-color: #f8fafc; padding: 25px; border-radius: 14px;
+            border: 2px dashed #cbd5e1; margin-bottom: 20px; display: flex;
             justify-content: center; align-items: center; min-height: 290px; box-sizing: border-box;
         }
-        #canvas-container canvas { box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-radius: 10px; max-width: 100%; height: auto; }
+        #canvas-container canvas { box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-radius: 10px; max-width: 100%; height: auto; }
 
         button.download-btn {
-            width: 100%; padding: 15px; background: linear-gradient(135deg, #ff6b00 0%, #ff3c00 100%);
+            width: 100%; padding: 15px; background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
             color: white; border: none; border-radius: 8px; font-size: 1.05rem; font-weight: bold;
-            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 20px rgba(255, 107, 0, 0.25);
+            cursor: pointer; transition: all 0.2s ease; box-shadow: 0 6px 20px rgba(255, 75, 108, 0.35);
         }
-        button.download-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 107, 0, 0.4); }
+        button.download-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 75, 108, 0.55); }
 
         .layout-wrapper { display: flex; flex-direction: column; gap: 20px; }
 
@@ -95,19 +97,19 @@
         .seo-content {
             margin-top: 60px;
             padding-top: 40px;
-            border-top: 1px solid #30363d;
+            border-top: 1px solid #e2e8f0;
         }
         .seo-content h2 {
             font-size: 1.3rem;
-            color: #ffffff;
+            color: #0f172a;
             margin-bottom: 20px;
             text-align: left;
-            border-left: 4px solid #00e5ff;
+            border-left: 4px solid #ff4b2b;
             padding-left: 12px;
             text-shadow: none;
         }
         .seo-content p, .seo-content li, .seo-content dd {
-            color: #8b949e;
+            color: #475569;
             font-size: 0.95rem;
             line-height: 1.8;
         }
@@ -116,14 +118,37 @@
             margin-bottom: 30px;
         }
         .seo-content li { margin-bottom: 8px; }
-        .seo-content strong { color: #c9d1d9; }
+        .seo-content strong { color: #ff4b2b; }
         .seo-content dt {
             font-weight: bold;
-            color: #00e5ff;
+            color: #ff4b2b;
             margin-top: 20px;
             margin-bottom: 5px;
         }
         .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+        
+        /* スポンサーリンク用簡易スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -131,10 +156,11 @@
 <header>
     <a href="index.html" class="logo">
         <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-        <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
     </a>
     <nav>
         <a href="index.html">ホーム</a>
+        <a href="about.html">管理者情報</a>
         <a href="terms.html">利用規約</a>
         <a href="privacy.html">プライバシーポリシー</a>
         <a href="contact.html">お問い合わせ</a>
@@ -142,6 +168,13 @@
 </header>
 
 <main class="main-content">
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
+    </div>
+
     <div class="container">
         <h1>QRコード作成・生成ツール</h1>
         
@@ -265,6 +298,13 @@
             </div>
         </div>
 
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
+        </div>
+
         <section class="seo-content">
             <h2>このQRコード生成ツールの特徴・メリット</h2>
             <ul>
@@ -300,6 +340,7 @@
 <footer>
     <div class="footer-links">
         <a href="index.html">ホーム</a>
+        <a href="about.html">管理者情報</a>
         <a href="terms.html">利用規約</a>
         <a href="privacy.html">プライバシーポリシー</a>
         <a href="contact.html">お問い合わせ</a>

@@ -17,7 +17,7 @@
     <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
     
     <style>
-        /* ==== ツール固有のスタイル ==== */
+        /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
         h1 {
             text-align: center;
             background: linear-gradient(45deg, #ff416c, #ff4b2b);
@@ -34,7 +34,7 @@
         .subtitle {
             text-align: center;
             font-size: 0.85rem;
-            color: #b3b3cc;
+            color: #64748b; /* ライトテーマ用に暗く */
             margin-bottom: 35px;
         }
 
@@ -44,19 +44,18 @@
             padding: 40px 20px;
             border-radius: 16px;
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.02);
+            background-color: #f8fafc; /* ライトテーマ用の背景 */
             cursor: pointer;
             transition: all 0.25s ease;
         }
         .drop-zone:hover, .drop-zone.dragover {
             border-color: #ff4b2b;
-            background-color: rgba(255, 75, 108, 0.08);
-            box-shadow: 0 0 20px rgba(255, 75, 108, 0.25) inset;
+            background-color: rgba(255, 75, 108, 0.05);
         }
         .drop-zone svg {
             width: 50px;
             height: 50px;
-            color: #a0a0b8;
+            color: #94a3b8; /* アイコンを少し暗く */
             margin-bottom: 12px;
             transition: 0.2s;
         }
@@ -67,7 +66,7 @@
         .drop-zone p {
             margin: 0;
             font-size: 0.95rem;
-            color: #d1d1e9;
+            color: #334155; /* 白背景で読める色に */
             font-weight: bold;
             line-height: 1.6;
         }
@@ -85,12 +84,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff; /* 白背景に変更 */
+            border: 1px solid #e2e8f0; /* 枠線を変更 */
             padding: 12px 16px;
             border-radius: 12px;
             margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* 影をマイルドに */
             animation: fadeIn 0.3s ease;
         }
         @keyframes fadeIn {
@@ -100,7 +99,7 @@
         .file-name {
             font-size: 0.9rem;
             font-weight: bold;
-            color: #e2e8f0;
+            color: #334155; /* テキストをダークグレーに */
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -114,8 +113,8 @@
             gap: 6px;
         }
         .btn-icon {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #f1f5f9; /* ボタン背景をライトグレーに */
+            border: 1px solid #cbd5e1;
             border-radius: 8px;
             width: 32px;
             height: 32px;
@@ -125,18 +124,16 @@
             justify-content: center;
             font-size: 0.85rem;
             transition: 0.2s;
-            color: #cbd5e1;
+            color: #64748b;
         }
         .btn-icon:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
-            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+            background: #e2e8f0;
+            color: #0f172a;
         }
         .btn-icon.delete:hover {
-            background: rgba(255, 75, 75, 0.25);
-            border-color: #ff4b2b;
-            color: #ff6b6b;
-            box-shadow: 0 0 10px rgba(255, 75, 75, 0.3);
+            background: #fee2e2;
+            border-color: #f87171;
+            color: #ef4444;
         }
 
         /* 結合するボタン */
@@ -151,16 +148,16 @@
             font-weight: bold;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 6px 20px rgba(255, 75, 108, 0.35);
+            box-shadow: 0 4px 15px rgba(255, 75, 108, 0.3);
         }
         .merge-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 75, 108, 0.55);
+            box-shadow: 0 6px 20px rgba(255, 75, 108, 0.45);
         }
         .merge-btn:disabled {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: #595973;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            color: #94a3b8;
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
@@ -173,30 +170,30 @@
             margin-top: 18px;
             font-weight: bold;
         }
-        .status-success { color: #2ecc71; }
-        .status-error { color: #ff4b2b; }
-        .status-loading { color: #00f2fe; }
+        .status-success { color: #10b981; }
+        .status-error { color: #ef4444; }
+        .status-loading { color: #3b82f6; }
 
         /* ==== SEO用テキストセクション ==== */
         .seo-content {
             max-width: 800px;
             margin: 50px auto 30px auto;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid #e2e8f0; /* ボーダー色変更 */
         }
         .seo-content h2 {
             font-size: 1.25rem;
-            color: #ffffff;
+            color: #0f172a; /* ダークカラーに変更 */
             margin-bottom: 15px;
             margin-top: 30px;
             text-align: left;
             border-left: 3px solid #ff4b2b;
             padding-left: 10px;
             background: none;
-            -webkit-text-fill-color: #ffffff;
+            -webkit-text-fill-color: #0f172a; /* 透過色変更 */
         }
         .seo-content p, .seo-content li, .seo-content dd {
-            color: #8b949e;
+            color: #475569; /* グレー系に変更 */
             font-size: 0.9rem;
             line-height: 1.7;
         }
@@ -213,6 +210,29 @@
             margin-bottom: 4px;
         }
         .seo-content dd { margin-bottom: 15px; margin-left: 0; }
+        
+        /* スポンサーリンク用簡易スタイル(style.cssにない場合の保険) */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -220,17 +240,24 @@
   <header>
     <a href="index.html" class="logo">
       <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
     </a>
     <nav>
       <a href="index.html">ホーム</a>
+      <a href="about.html">管理者情報</a> </nav>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>
-    </nav>
   </header>
 
   <main>
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
+    </div>
+
     <div class="container">
         <h1>安全・簡単 PDF結合ツール</h1>
         <div class="subtitle">ファイルはサーバーに送信されず、あなたのパソコン内だけで安全に処理されます。</div>
@@ -250,6 +277,13 @@
 
         <button class="merge-btn" id="merge-btn" disabled onclick="processMerge()">PDFを結合してダウンロード</button>
         <div class="status-msg" id="status-msg"></div>
+    </div>
+
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
     </div>
 
     <section class="seo-content">
@@ -284,6 +318,7 @@
   <footer>
     <div class="footer-links">
       <a href="index.html">ホーム</a>
+      <a href="about.html">管理者情報</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>

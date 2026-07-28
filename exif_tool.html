@@ -9,9 +9,10 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
   <style>
+    /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
     .tool-heading {
       text-align: center;
-      background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+      background: linear-gradient(45deg, #0ea5e9, #4facfe);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -24,46 +25,47 @@
     .subtitle {
       text-align: center;
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: #64748b;
       margin-bottom: 35px;
       line-height: 1.6;
     }
 
     /* ドラッグ＆ドロップエリア */
     .drop-zone {
-      border: 2px dashed rgba(255, 255, 255, 0.2);
+      border: 2px dashed #94a3b8;
       border-radius: 16px;
       padding: 50px 20px;
       text-align: center;
-      background: rgba(0, 0, 0, 0.25);
+      background: #f8fafc;
       cursor: pointer;
       transition: all 0.3s ease;
       margin-bottom: 30px;
     }
     .drop-zone:hover, .drop-zone.dragover {
-      background: rgba(0, 242, 254, 0.1);
-      border-color: var(--primary-cyan);
-      box-shadow: inset 0 0 15px rgba(0, 242, 254, 0.1);
+      background: #f0f9ff;
+      border-color: #0ea5e9;
+      box-shadow: inset 0 0 15px rgba(14, 165, 233, 0.1);
     }
     .drop-zone-text {
-      color: var(--text-main);
+      color: #0f172a;
       font-weight: bold;
       font-size: 1.2rem;
       margin-bottom: 10px;
     }
     .drop-zone-subtext {
-      color: var(--text-muted);
+      color: #64748b;
       font-size: 0.9rem;
     }
 
     /* 解析結果エリア */
     .result-container {
       display: none;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
       border-radius: 16px;
       padding: 25px;
       margin-bottom: 30px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
     
     .preview-box {
@@ -74,7 +76,7 @@
       max-width: 100%;
       max-height: 250px;
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid #cbd5e1;
     }
 
     /* Exifデータのテーブル表示 */
@@ -82,14 +84,15 @@
       max-height: 300px;
       overflow-y: auto;
       border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid #cbd5e1;
       margin-bottom: 20px;
+      background: #f8fafc;
     }
     .exif-table-wrapper::-webkit-scrollbar {
       width: 8px;
     }
     .exif-table-wrapper::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
+      background: #cbd5e1;
       border-radius: 4px;
     }
     table {
@@ -99,17 +102,17 @@
     }
     th, td {
       padding: 12px 15px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid #e2e8f0;
       font-size: 0.95rem;
     }
     th {
-      background: rgba(0, 0, 0, 0.5);
-      color: var(--primary-cyan);
+      background: #f1f5f9;
+      color: #0284c7;
       font-weight: bold;
       width: 40%;
     }
     td {
-      color: var(--text-main);
+      color: #0f172a;
     }
     tr:last-child th, tr:last-child td {
       border-bottom: none;
@@ -117,9 +120,9 @@
 
     /* 警告メッセージ (GPSが含まれる場合など) */
     .warning-msg {
-      background: rgba(255, 75, 43, 0.1);
-      border-left: 4px solid var(--primary-pink);
-      color: #ffb3ba;
+      background: #fef2f2;
+      border-left: 4px solid #ef4444;
+      color: #b91c1c;
       padding: 12px 15px;
       border-radius: 4px;
       margin-bottom: 20px;
@@ -128,9 +131,9 @@
     }
     
     .safe-msg {
-      background: rgba(0, 230, 118, 0.1);
-      border-left: 4px solid #00e676;
-      color: #a5ffd6;
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      color: #15803d;
       padding: 12px 15px;
       border-radius: 4px;
       margin-bottom: 20px;
@@ -153,13 +156,13 @@
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.2s ease;
-      background: linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%);
-      color: #0f1123;
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
     }
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
     }
     .btn-danger {
       padding: 12px 25px;
@@ -169,21 +172,65 @@
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.2s ease;
-      background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
       color: #ffffff;
-      box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
     }
     .btn-danger:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 75, 43, 0.4);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
+    }
+
+    .btn-reset {
+      background: #f1f5f9;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+      box-shadow: none;
+    }
+    .btn-reset:hover {
+      background: #e2e8f0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
     .footer-notice {
       text-align: center;
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: #94a3b8;
       margin: 15px 0;
       padding: 0 20px;
+    }
+
+    /* ==== SEO用テキストセクション ==== */
+    .seo-content { padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
+    .seo-content h2 { font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #0ea5e9; padding-left: 12px; }
+    .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
+    .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+    .seo-content li { margin-bottom: 8px; }
+    .seo-content strong { color: #0ea5e9; }
+    .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
+    .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+
+    /* スポンサーリンク用簡易スタイル */
+    .ad-slot {
+        margin: 20px auto;
+        text-align: center;
+    }
+    .ad-label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .ad-wrapper {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        padding: 20px;
+        color: #94a3b8;
+        border-radius: 8px;
+        min-height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
   </style>
 </head>
@@ -191,10 +238,11 @@
   <header>
     <a href="index.html" class="logo">
       <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
     </a>
     <nav>
       <a href="index.html">ホーム</a>
+      <a href="about.html">管理者情報</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>
@@ -202,6 +250,13 @@
   </header>
   
   <main>
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
+    </div>
+
     <div class="container">
       <h1 class="tool-heading">画像メタデータ(Exif)確認・削除</h1>
       <p class="subtitle">写真に隠されたGPS等のプライバシー情報を確認し、安全な状態にしてダウンロードします。</p>
@@ -234,11 +289,18 @@
         </div>
 
         <div class="btn-action-area">
-          <button id="btn-reset" class="btn-primary" style="background: rgba(255,255,255,0.1); color: var(--text-main); box-shadow: none;">別の画像を選ぶ</button>
+          <button id="btn-reset" class="btn-primary btn-reset">別の画像を選ぶ</button>
           <button id="btn-remove-exif" class="btn-danger">🗑️ Exifを削除してダウンロード</button>
         </div>
 
       </div>
+    </div>
+
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
     </div>
 
     <section class="seo-content">
@@ -267,6 +329,7 @@
   <footer>
     <div class="footer-links">
       <a href="index.html">ホーム</a>
+      <a href="about.html">管理者情報</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>

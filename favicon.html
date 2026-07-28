@@ -18,10 +18,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
     <style>
-        /* ==== ツール固有のスタイルのみを記述 ==== */
+        /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
         h1 {
             text-align: center;
-            background: linear-gradient(45deg, var(--primary-cyan, #00f2fe), #4facfe);
+            background: linear-gradient(45deg, var(--primary-cyan, #0ea5e9), #4facfe);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -35,41 +35,42 @@
         .subtitle {
             text-align: center;
             font-size: 0.85rem;
-            color: var(--text-muted, #b3b3cc);
+            color: #64748b; /* ライトテーマ用のダークグレー */
             margin-bottom: 30px;
         }
 
         .tool-panel {
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 16px;
             padding: 30px;
             margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
         }
 
         .upload-area {
-            border: 2px dashed rgba(0, 242, 254, 0.5);
+            border: 2px dashed #cbd5e1;
             border-radius: 10px;
             padding: 40px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
             margin-bottom: 20px;
-            background-color: rgba(255, 255, 255, 0.02);
+            background-color: #f8fafc;
         }
         .upload-area:hover, .upload-area.dragover {
-            border-color: var(--primary-cyan, #00f2fe);
-            background-color: rgba(0, 242, 254, 0.05);
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15) inset;
+            border-color: #0ea5e9;
+            background-color: #f0f9ff;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1) inset;
         }
         .upload-area p {
-            color: #ffffff;
+            color: #334155;
             margin-bottom: 10px;
             font-size: 1rem;
             font-weight: bold;
         }
         .upload-area span {
-            color: var(--text-muted, #b3b3cc);
+            color: #94a3b8;
             font-size: 0.85rem;
         }
 
@@ -81,8 +82,9 @@
         .preview-container img {
             max-width: 150px;
             border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            background: #ffffff; /* 透過画像用に白背景を追加 */
         }
 
         .action-bar {
@@ -90,32 +92,41 @@
             margin-bottom: 20px;
         }
         
-        /* style.css の .btn-primary に合わせた上書き・調整 */
+        /* ボタンのデザイン */
         button.btn-primary {
             width: 100%;
             font-size: 1.1rem;
+            font-weight: bold;
             padding: 16px;
             cursor: pointer;
             border: none;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: #ffffff;
+            border-radius: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+        button.btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
         }
         button.btn-primary:disabled {
-            opacity: 0.5;
+            background: #e2e8f0;
+            color: #94a3b8;
+            box-shadow: none;
             cursor: not-allowed;
             pointer-events: none;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: none;
-            color: rgba(255, 255, 255, 0.3);
             transform: none;
         }
 
         .html-output-area {
             display: none;
             margin-top: 25px;
-            border-top: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            border-top: 1px solid #e2e8f0;
             padding-top: 25px;
         }
         .html-output-area label {
-            color: var(--primary-cyan, #00f2fe);
+            color: #0284c7;
             font-weight: bold;
             font-size: 1rem;
             display: block;
@@ -125,42 +136,68 @@
             width: 100%;
             height: 160px;
             padding: 15px;
-            background-color: rgba(0, 0, 0, 0.25);
-            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
             border-radius: 10px;
-            color: #ffffff;
+            color: #334155;
             font-size: 0.9rem;
             font-family: 'Courier New', Consolas, monospace;
             box-sizing: border-box;
             resize: vertical;
+            transition: all 0.2s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
+        textarea:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15); }
 
         /* ==== SEO用テキストセクション ==== */
-        .seo-content { padding-top: 20px; }
+        .seo-content { padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
         .seo-content h2 {
             font-size: 1.3rem;
-            color: #ffffff;
+            color: #0f172a;
             margin-bottom: 20px;
-            margin-top: 40px;
+            margin-top: 30px;
             text-align: left;
-            border-left: 4px solid var(--primary-cyan, #00f2fe);
+            border-left: 4px solid #0ea5e9;
             padding-left: 12px;
         }
         .seo-content p, .seo-content li, .seo-content dd {
-            color: var(--text-muted, #b3b3cc);
+            color: #475569;
             font-size: 0.95rem;
             line-height: 1.8;
         }
         .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
         .seo-content li { margin-bottom: 8px; }
-        .seo-content strong { color: var(--primary-cyan, #00f2fe); }
+        .seo-content strong { color: #0ea5e9; }
         .seo-content dt {
             font-weight: bold;
-            color: var(--primary-cyan, #00f2fe);
+            color: #0ea5e9;
             margin-top: 20px;
             margin-bottom: 5px;
         }
         .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+
+        /* スポンサーリンク用簡易スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -168,11 +205,11 @@
     <header>
         <a href="index.html" class="logo">
             <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
-        </a>
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
         </a>
         <nav>
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
@@ -180,6 +217,13 @@
     </header>
 
     <main>
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
+        </div>
+
         <div class="container">
             <h1>ファビコン一括生成器</h1>
             <div class="subtitle">1枚の画像から、Webサイトに必要なすべてのアイコンを自動生成します。</div>
@@ -202,6 +246,13 @@
                 <div class="html-output-area" id="html-output-area">
                     <label>📋 HTMLタグ (head内にコピー＆ペースト)</label>
                     <textarea id="html-code" readonly onclick="this.select()"></textarea>
+                </div>
+            </div>
+
+            <div class="ad-slot">
+                <span class="ad-label">スポンサーリンク</span>
+                <div class="ad-wrapper">
+                    (広告スペース)
                 </div>
             </div>
 
@@ -239,6 +290,7 @@
     <footer>
         <div class="footer-links">
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>

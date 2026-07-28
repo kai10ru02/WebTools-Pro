@@ -18,10 +18,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
 
     <style>
-        /* ==== ツール固有のスタイル ==== */
+        /* ==== ツール固有のスタイル（ライトテーマ対応） ==== */
         h1 {
             text-align: center;
-            background: linear-gradient(45deg, #a55eea, #4facfe);
+            background: linear-gradient(45deg, #6c5ce7, #00b894);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -35,33 +35,34 @@
         .subtitle {
             text-align: center;
             font-size: 0.85rem;
-            color: #b3b3cc;
+            color: #666666;
             margin-bottom: 30px;
         }
 
         /* ドラッグ＆ドロップエリア */
         .drop-zone {
-            border: 2px dashed rgba(165, 94, 234, 0.5);
+            border: 2px dashed #6c5ce7;
             padding: 30px 20px;
             border-radius: 16px;
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.02);
+            background-color: #f8f9fa;
             cursor: pointer;
             transition: all 0.25s ease;
             margin-bottom: 25px;
         }
         .drop-zone:hover {
-            border-color: #a55eea;
-            background-color: rgba(165, 94, 234, 0.05);
-            box-shadow: 0 0 20px rgba(165, 94, 234, 0.15) inset;
+            border-color: #5a4bcf;
+            background-color: #f1f0fe;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.1);
         }
-        .drop-zone p { margin: 0; font-size: 0.95rem; color: #d1d1e9; font-weight: bold; }
-        .file-select-link { color: #a55eea; text-decoration: underline; }
+        .drop-zone p { margin: 0; font-size: 0.95rem; color: #2d3748; font-weight: bold; }
+        .file-select-link { color: #6c5ce7; text-decoration: underline; }
 
         /* エディターエリア */
         .editor-panel {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             border-radius: 16px;
             padding: 25px;
             margin-bottom: 25px;
@@ -71,7 +72,7 @@
         .file-name-display {
             font-size: 1rem;
             font-weight: bold;
-            color: #00f2fe;
+            color: #2b6cb0;
             margin-bottom: 20px;
             text-align: center;
             word-break: break-all;
@@ -81,9 +82,9 @@
             display: block;
             width: 100%;
             padding: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border: 2px solid #a55eea;
+            background: #f7fafc;
+            color: #6c5ce7;
+            border: 2px solid #6c5ce7;
             border-radius: 10px;
             font-size: 1.1rem;
             font-weight: bold;
@@ -92,14 +93,14 @@
             transition: 0.2s;
         }
         .play-btn:hover {
-            background: rgba(165, 94, 234, 0.2);
-            box-shadow: 0 0 15px rgba(165, 94, 234, 0.3);
+            background: #f1f0fe;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.2);
         }
         .play-btn.playing {
-            background: #a55eea;
-            color: #fff;
-            border-color: #a55eea;
-            box-shadow: 0 0 20px rgba(165, 94, 234, 0.5);
+            background: #6c5ce7;
+            color: #ffffff;
+            border-color: #6c5ce7;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
         }
 
         /* スライダー共通デザイン */
@@ -110,14 +111,14 @@
             margin-bottom: 10px;
             font-weight: bold;
             font-size: 0.95rem;
-            color: #d1d1e9;
+            color: #2d3748;
         }
         .val-badge {
-            background: rgba(0, 242, 254, 0.15);
-            color: #00f2fe;
+            background: #ebf8ff;
+            color: #2b6cb0;
             padding: 2px 8px;
             border-radius: 6px;
-            border: 1px solid rgba(0, 242, 254, 0.3);
+            border: 1px solid #bee3f8;
             font-variant-numeric: tabular-nums;
         }
         input[type=range] {
@@ -131,51 +132,51 @@
             appearance: none;
             height: 22px; width: 22px;
             border-radius: 50%;
-            background: #00f2fe;
+            background: #3182ce;
             cursor: pointer;
             margin-top: -9px;
-            box-shadow: 0 0 12px rgba(0, 242, 254, 0.8);
+            box-shadow: 0 2px 6px rgba(49, 130, 206, 0.4);
             transition: 0.1s;
         }
         input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.15); }
         input[type=range]::-webkit-slider-runnable-track {
             width: 100%; height: 5px; cursor: pointer;
-            background: rgba(255, 255, 255, 0.15);
+            background: #e2e8f0;
             border-radius: 3px;
         }
 
         /* シークバー用カスタム */
         .seek-group input[type=range]::-webkit-slider-thumb {
-            background: #a55eea;
-            box-shadow: 0 0 12px rgba(165, 94, 234, 0.8);
+            background: #6c5ce7;
+            box-shadow: 0 2px 6px rgba(108, 92, 231, 0.4);
         }
         .seek-group .val-badge {
-            background: rgba(165, 94, 234, 0.15);
-            color: #b881ff;
-            border: 1px solid rgba(165, 94, 234, 0.3);
+            background: #f1f0fe;
+            color: #6c5ce7;
+            border: 1px solid #d6d1fa;
         }
 
         .format-selection { margin-bottom: 20px; display: none; }
         .radio-group { display: flex; gap: 10px; }
         .radio-label {
             flex: 1; text-align: center; cursor: pointer; font-weight: bold;
-            padding: 10px; border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1); transition: 0.2s;
+            padding: 10px; border-radius: 8px; background: #ffffff;
+            border: 1px solid #cbd5e0; color: #4a5568; transition: 0.2s;
         }
         .radio-label input { display: none; }
         .radio-label.checked {
-            border-color: #00f2fe; background: rgba(0, 242, 254, 0.1); color: #00f2fe;
+            border-color: #6c5ce7; background: #f1f0fe; color: #6c5ce7;
         }
 
         .convert-btn {
             width: 100%; padding: 16px;
-            background: linear-gradient(135deg, #a55eea 0%, #4facfe 100%);
+            background: linear-gradient(135deg, #6c5ce7 0%, #00b894 100%);
             color: #ffffff; border: none; border-radius: 10px;
             font-size: 1.05rem; font-weight: bold; cursor: pointer;
-            transition: 0.2s; box-shadow: 0 6px 20px rgba(165, 94, 234, 0.3);
+            transition: 0.2s; box-shadow: 0 4px 15px rgba(108, 92, 231, 0.2);
             display: none;
         }
-        .convert-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(165, 94, 234, 0.5); }
+        .convert-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108, 92, 231, 0.3); }
         .convert-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .download-action-btn {
@@ -183,45 +184,68 @@
             background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
             color: #ffffff; border: none; border-radius: 10px; text-decoration: none;
             font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.2s;
-            box-shadow: 0 6px 20px rgba(46, 204, 113, 0.3); text-align: center; margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); text-align: center; margin-top: 15px;
         }
         .download-action-btn:hover {
-            transform: translateY(-2px); box-shadow: 0 8px 25px rgba(46, 204, 113, 0.5);
+            transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
         }
 
         .progress-wrapper {
-            margin-top: 15px; background: rgba(0,0,0,0.2); border-radius: 10px;
-            padding: 4px; border: 1px solid rgba(255,255,255,0.05); display: none;
+            margin-top: 15px; background: #edf2f7; border-radius: 10px;
+            padding: 4px; border: 1px solid #e2e8f0; display: none;
         }
         .progress-bar {
-            height: 10px; width: 0%; background: linear-gradient(90deg, #a55eea, #4facfe);
+            height: 10px; width: 0%; background: linear-gradient(90deg, #6c5ce7, #00b894);
             border-radius: 6px; transition: width 0.1s linear;
         }
         .status-msg { text-align: center; font-size: 0.9rem; margin-top: 15px; font-weight: bold; line-height: 1.5; }
-        .status-loading { color: #a55eea; }
-        .status-success { color: #00f2fe; }
+        .status-loading { color: #6c5ce7; }
+        .status-success { color: #27ae60; }
         .status-error { color: #e74c3c; }
+
+        /* スポンサーリンク */
+        .sponsor-link {
+            text-align: center;
+            margin: 30px auto;
+            max-width: 800px;
+        }
+        .sponsor-link p {
+            font-size: 0.8rem;
+            color: #666666;
+            margin-bottom: 5px;
+        }
+        .sponsor-box {
+            background: #f8f9fa;
+            border: 1px dashed #cbd5e0;
+            padding: 20px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+            border-radius: 8px;
+        }
 
         /* ==== SEO用テキストセクション ==== */
         .seo-content {
             max-width: 800px;
-            margin: 50px auto 30px auto;
+            margin: 40px auto 30px auto;
             padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid #e2e8f0;
         }
         .seo-content h2 {
             font-size: 1.25rem;
-            color: #ffffff;
+            color: #2d3748;
             margin-bottom: 15px;
             margin-top: 30px;
             text-align: left;
-            border-left: 3px solid #a55eea;
+            border-left: 3px solid #6c5ce7;
             padding-left: 10px;
             background: none;
-            -webkit-text-fill-color: #ffffff;
+            -webkit-text-fill-color: initial;
         }
         .seo-content p, .seo-content li, .seo-content dd {
-            color: #8b949e;
+            color: #4a5568;
             font-size: 0.9rem;
             line-height: 1.7;
         }
@@ -230,10 +254,10 @@
             margin-bottom: 20px;
         }
         .seo-content li { margin-bottom: 6px; }
-        .seo-content strong { color: #a55eea; }
+        .seo-content strong { color: #6c5ce7; }
         .seo-content dt {
             font-weight: bold;
-            color: #a55eea;
+            color: #6c5ce7;
             margin-top: 15px;
             margin-bottom: 4px;
         }
@@ -245,10 +269,11 @@
     <header>
         <a href="index.html" class="logo">
             <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+            <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
         </a>
         <nav>
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
@@ -315,6 +340,13 @@
             </div>
         </div>
 
+        <div class="sponsor-link">
+            <p>スポンサーリンク</p>
+            <div class="sponsor-box">
+                広告スペース
+            </div>
+        </div>
+
         <section class="seo-content">
             <h2>キー・テンポ変更ツールの特徴</h2>
             <ul>
@@ -348,6 +380,7 @@
     <footer>
         <div class="footer-links">
             <a href="index.html">ホーム</a>
+            <a href="about.html">管理者情報</a>
             <a href="terms.html">利用規約</a>
             <a href="privacy.html">プライバシーポリシー</a>
             <a href="contact.html">お問い合わせ</a>
@@ -415,7 +448,7 @@
 
             try {
                 await Tone.start();
-                const arrayBuffer = await file.buffer ? await file.buffer() : await file.arrayBuffer();
+                const arrayBuffer = await file.arrayBuffer();
                 targetBuffer = await Tone.context.decodeAudioData(arrayBuffer);
 
                 setupAudioNodes();

@@ -8,9 +8,10 @@
   <link rel="icon" href="logo.jpg">
   <link rel="stylesheet" href="style.css">
   <style>
+    /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
     .tool-heading {
       text-align: center;
-      background: linear-gradient(45deg, var(--primary-cyan), #4facfe);
+      background: linear-gradient(45deg, #0ea5e9, #4facfe);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -23,19 +24,19 @@
     .subtitle {
       text-align: center;
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: #64748b;
       margin-bottom: 35px;
       line-height: 1.6;
     }
 
     .metronome-container {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
       border-radius: 16px;
       padding: 40px 20px;
       margin-bottom: 30px;
       text-align: center;
-      box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
     }
 
     .beat-indicators {
@@ -49,16 +50,16 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
+      background: #e2e8f0;
       transition: background 0.1s, box-shadow 0.1s;
     }
     .beat-dot.active {
-      background: var(--primary-cyan);
-      box-shadow: 0 0 15px var(--primary-cyan);
+      background: #0ea5e9;
+      box-shadow: 0 0 12px rgba(14, 165, 233, 0.5);
     }
     .beat-dot.active-accent {
-      background: var(--primary-pink);
-      box-shadow: 0 0 15px var(--primary-pink);
+      background: #ec4899;
+      box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
     }
 
     .bpm-display-area {
@@ -67,7 +68,7 @@
     .bpm-value {
       font-size: 4.5rem;
       font-weight: bold;
-      color: var(--text-main);
+      color: #0f172a;
       font-family: 'Courier New', Courier, monospace;
       line-height: 1;
       display: inline-block;
@@ -75,7 +76,7 @@
     }
     .bpm-label {
       font-size: 1.2rem;
-      color: var(--text-muted);
+      color: #64748b;
       font-weight: bold;
     }
 
@@ -87,9 +88,9 @@
       margin-bottom: 30px;
     }
     .bpm-btn {
-      background: rgba(255, 255, 255, 0.1);
+      background: #e2e8f0;
       border: none;
-      color: var(--text-main);
+      color: #0f172a;
       font-size: 1.5rem;
       width: 45px;
       height: 45px;
@@ -101,18 +102,17 @@
       justify-content: center;
     }
     .bpm-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: #cbd5e1;
       transform: scale(1.1);
     }
     
-    /* 修正箇所：appearance: none; を追記しました */
     .bpm-slider {
       -webkit-appearance: none;
       appearance: none; 
       width: 100%;
       max-width: 300px;
       height: 8px;
-      background: rgba(255, 255, 255, 0.1);
+      background: #e2e8f0;
       border-radius: 4px;
       outline: none;
     }
@@ -122,23 +122,24 @@
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      background: var(--primary-cyan);
+      background: #0ea5e9;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+      box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
     }
     
     .beats-selector {
       margin-bottom: 30px;
     }
     .beats-selector label {
-      color: var(--text-muted);
+      color: #64748b;
       margin-right: 10px;
       font-size: 0.9rem;
+      font-weight: bold;
     }
     .beats-select {
-      background: rgba(0, 0, 0, 0.3);
-      color: var(--text-main);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #ffffff;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
       padding: 8px 15px;
       border-radius: 8px;
       font-size: 1rem;
@@ -154,29 +155,62 @@
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.2s ease;
-      background: linear-gradient(135deg, var(--primary-cyan) 0%, #4facfe 100%);
-      color: #0f1123;
-      box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
     }
     .play-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+      box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
     }
     .play-btn.playing {
-      background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(255, 75, 43, 0.2);
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
     }
     .play-btn.playing:hover {
-      box-shadow: 0 6px 20px rgba(255, 75, 43, 0.4);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.45);
     }
 
     .footer-notice {
       text-align: center;
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: #94a3b8;
       margin: 15px 0;
       padding: 0 20px;
+    }
+
+    /* ==== SEO用テキストセクション ==== */
+    .seo-content { padding-top: 20px; border-top: 1px solid #e2e8f0; margin-top: 40px; }
+    .seo-content h2 { font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; margin-top: 40px; text-align: left; border-left: 4px solid #0ea5e9; padding-left: 12px; }
+    .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
+    .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
+    .seo-content li { margin-bottom: 8px; }
+    .seo-content strong { color: #0ea5e9; }
+    .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
+    .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+
+    /* スポンサーリンク用簡易スタイル */
+    .ad-slot {
+        margin: 20px auto;
+        text-align: center;
+    }
+    .ad-label {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .ad-wrapper {
+        background: #f8fafc;
+        border: 1px dashed #cbd5e1;
+        padding: 20px;
+        color: #94a3b8;
+        border-radius: 8px;
+        min-height: 90px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
   </style>
 </head>
@@ -184,10 +218,11 @@
   <header>
     <a href="index.html" class="logo">
       <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+      <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
     </a>
     <nav>
       <a href="index.html">ホーム</a>
+      <a href="about.html">管理者情報</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>
@@ -195,6 +230,13 @@
   </header>
   
   <main>
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
+    </div>
+
     <div class="container">
       <h1 class="tool-heading">メトロノーム</h1>
       <p class="subtitle">楽器の練習やリズムトレーニングに使える高精度なメトロノームです。</p>
@@ -233,6 +275,13 @@
       </div>
     </div>
 
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
+    </div>
+
     <section class="seo-content">
       <h2>高精度オンラインメトロノームとは？</h2>
       <p>ブラウザ上で正確なリズムを刻むことができる、完全無料のメトロノームツールです。ギターやピアノなどの楽器練習はもちろん、ダンスのテンポ確認、スポーツの反復練習、プレゼンのタイムマネジメントまで、一定のペースを保ちたいあらゆる場面でご活用いただけます。</p>
@@ -259,6 +308,7 @@
   <footer>
     <div class="footer-links">
       <a href="index.html">ホーム</a>
+      <a href="about.html">管理者情報</a>
       <a href="terms.html">利用規約</a>
       <a href="privacy.html">プライバシーポリシー</a>
       <a href="contact.html">お問い合わせ</a>

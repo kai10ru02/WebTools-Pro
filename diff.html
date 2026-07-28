@@ -17,11 +17,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/diff_match_patch/20121119/diff_match_patch.js"></script>
 
     <style>
-        /* ==== ツール固有のスタイル ==== */
+        /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
         h1 {
             text-align: center;
-            color: #00e5ff;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+            background: linear-gradient(45deg, var(--primary-cyan, #0ea5e9), #4facfe);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-top: 0;
             margin-bottom: 35px;
             font-size: 1.8rem;
@@ -50,10 +52,10 @@
         }
 
         .input-group label {
-            color: #c9d1d9;
+            color: #334155;
             font-weight: bold;
             font-size: 0.95rem;
-            border-left: 3px solid #00e5ff;
+            border-left: 3px solid #0ea5e9;
             padding-left: 8px;
         }
 
@@ -61,18 +63,19 @@
             width: 100%;
             height: 250px;
             padding: 15px;
-            background-color: #0d1117;
-            border: 1.5px solid #30363d;
+            background-color: #ffffff;
+            border: 1.5px solid #cbd5e1;
             border-radius: 10px;
-            color: #ffffff;
+            color: #0f172a;
             font-size: 0.95rem;
             line-height: 1.6;
             box-sizing: border-box;
             resize: vertical;
             transition: all 0.2s;
             font-family: 'Courier New', Consolas, monospace, 'Hiragino Kaku Gothic ProN', sans-serif;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
-        textarea:focus { outline: none; border-color: #00e5ff; box-shadow: 0 0 0 4px rgba(0, 229, 255, 0.15); }
+        textarea:focus { outline: none; border-color: #0ea5e9; box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15); }
 
         /* ボタンエリア */
         .action-bar {
@@ -87,24 +90,25 @@
             font-weight: bold;
             cursor: pointer;
             border: none;
-            background: linear-gradient(135deg, #00e5ff 0%, #007bb5 100%);
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
             color: #ffffff;
             transition: all 0.2s;
-            box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 229, 255, 0.5);
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
         }
 
         /* 差分結果表示エリア */
         .result-panel {
-            background-color: #161b22;
-            border: 1px solid #30363d;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 10px;
             padding: 20px;
             min-height: 150px;
             display: none; /* 初期は非表示 */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         
         .result-header {
@@ -113,11 +117,11 @@
             align-items: center;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #30363d;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .result-title {
-            color: #ffffff;
+            color: #0f172a;
             font-weight: bold;
             font-size: 1.1rem;
         }
@@ -127,44 +131,71 @@
             gap: 15px;
             font-size: 0.85rem;
         }
-        .legend span.added { color: #2ecc71; font-weight: bold; }
-        .legend span.removed { color: #e74c3c; font-weight: bold; text-decoration: line-through; }
+        .legend span.added { color: #10b981; font-weight: bold; }
+        .legend span.removed { color: #ef4444; font-weight: bold; text-decoration: line-through; }
 
         .diff-output {
-            color: #c9d1d9;
+            color: #334155;
             font-family: 'Courier New', Consolas, monospace, 'Hiragino Kaku Gothic ProN', sans-serif;
             font-size: 0.95rem;
             line-height: 1.8;
             white-space: pre-wrap;
             word-wrap: break-word;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
         }
 
         /* ハイライト用の装飾 */
         ins.diff-added {
-            background-color: rgba(46, 204, 113, 0.2);
-            color: #2ecc71;
+            background-color: #d1fae5;
+            color: #047857;
             text-decoration: none;
             border-radius: 3px;
-            padding: 0 2px;
+            padding: 1px 3px;
             font-weight: bold;
         }
         del.diff-removed {
-            background-color: rgba(231, 76, 60, 0.2);
-            color: #e74c3c;
+            background-color: #fee2e2;
+            color: #b91c1c;
             text-decoration: line-through;
             border-radius: 3px;
-            padding: 0 2px;
+            padding: 1px 3px;
         }
 
         /* SEO用テキストセクション */
-        .seo-content { margin-top: 60px; padding-top: 40px; border-top: 1px solid #30363d; }
-        .seo-content h2 { font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; text-align: left; border-left: 4px solid #00e5ff; padding-left: 12px; text-shadow: none; }
-        .seo-content p, .seo-content li, .seo-content dd { color: #8b949e; font-size: 0.95rem; line-height: 1.8; }
+        .seo-content { margin-top: 60px; padding-top: 40px; border-top: 1px solid #e2e8f0; }
+        .seo-content h2 { font-size: 1.3rem; color: #0f172a; margin-bottom: 20px; text-align: left; border-left: 4px solid #0ea5e9; padding-left: 12px; text-shadow: none; }
+        .seo-content p, .seo-content li, .seo-content dd { color: #475569; font-size: 0.95rem; line-height: 1.8; }
         .seo-content ul, .seo-content ol { padding-left: 20px; margin-bottom: 30px; }
         .seo-content li { margin-bottom: 8px; }
-        .seo-content strong { color: #c9d1d9; }
-        .seo-content dt { font-weight: bold; color: #00e5ff; margin-top: 20px; margin-bottom: 5px; }
+        .seo-content strong { color: #0ea5e9; }
+        .seo-content dt { font-weight: bold; color: #0ea5e9; margin-top: 20px; margin-bottom: 5px; }
         .seo-content dd { margin-bottom: 20px; margin-left: 0; }
+        
+        /* スポンサーリンク用簡易スタイル */
+        .ad-slot {
+            margin: 20px auto;
+            text-align: center;
+        }
+        .ad-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ad-wrapper {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 20px;
+            color: #94a3b8;
+            border-radius: 8px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
@@ -172,10 +203,11 @@
 <header>
     <a href="index.html" class="logo">
         <img src="logo.jpg" alt="WebTools Pro" class="logo-img">
-        <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem; color: #fff;">WebTools Pro</span>
+        <span class="logo-text" style="margin-left: 10px; font-weight: bold; font-size: 1.2rem;">WebTools Pro</span>
     </a>
     <nav>
         <a href="index.html">ホーム</a>
+        <a href="about.html">管理者情報</a>
         <a href="terms.html">利用規約</a>
         <a href="privacy.html">プライバシーポリシー</a>
         <a href="contact.html">お問い合わせ</a>
@@ -183,6 +215,13 @@
 </header>
 
 <main class="main-content">
+    <div class="ad-slot">
+        <span class="ad-label">スポンサーリンク</span>
+        <div class="ad-wrapper">
+            (広告スペース)
+        </div>
+    </div>
+
     <div class="container">
         <h1>テキスト差分チェッカー</h1>
         
@@ -210,6 +249,13 @@
                 </div>
             </div>
             <div class="diff-output" id="diff-output"></div>
+        </div>
+
+        <div class="ad-slot">
+            <span class="ad-label">スポンサーリンク</span>
+            <div class="ad-wrapper">
+                (広告スペース)
+            </div>
         </div>
 
         <section class="seo-content">
@@ -246,6 +292,7 @@
 <footer>
     <div class="footer-links">
         <a href="index.html">ホーム</a>
+        <a href="about.html">管理者情報</a>
         <a href="terms.html">利用規約</a>
         <a href="privacy.html">プライバシーポリシー</a>
         <a href="contact.html">お問い合わせ</a>
