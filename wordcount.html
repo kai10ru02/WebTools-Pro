@@ -10,9 +10,12 @@
     <meta property="og:title" content="高機能文字数カウントツール - WebTools Pro">
     <meta property="og:description" content="文字数・バイト数・読了時間・文字種別内訳を即座に分析。テキスト変換機能も備えた無料Webツール。">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://webtools-pro.com/wordcount.html">
     
     <link rel="icon" href="logo.jpg">
     <link rel="stylesheet" href="style.css">
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3840367321068720" crossorigin="anonymous"></script>
 
     <style>
         /* ==== ツール固有のスタイル (ライトテーマ対応) ==== */
@@ -505,12 +508,12 @@
             case 'toFull':
                 text = text.replace(/[!-~]/g, function(s) {
                     return String.fromCharCode(s.charCodeAt(0) + 0xFEE0);
-                }).replace(/ /g, " ");
+                }).replace(/ /g, " "); // 半角スペースを全角に
                 break;
             case 'toHalf':
                 text = text.replace(/[！-～]/g, function(s) {
                     return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-                }).replace(/ /g, " ");
+                }).replace(/ /g, " "); // 全角スペースを半角に
                 break;
             case 'removeSpace':
                 text = text.replace(/[ \t\u3000]/g, "");
